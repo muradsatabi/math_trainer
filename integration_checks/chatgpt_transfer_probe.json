@@ -1,0 +1,8 @@
+{
+  "probe_id": "chatgpt-bank-transfer-check-20261010",
+  "schema_version": 1,
+  "kind": "technical_connection_test",
+  "source_chat": "Тема: Вынесение общего множителя за скобки",
+  "contains_math_tasks": false,
+  "payload": "Проверка передачи ChatGPT → GitHub → локальный Git"
+}
