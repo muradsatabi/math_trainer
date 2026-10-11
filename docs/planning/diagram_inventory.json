@@ -1,0 +1,1070 @@
+{
+  "formatVersion": 1,
+  "purpose": "planning_inventory_not_runtime_bank",
+  "diagrams": [
+    {
+      "sourceFile": "sources/graphs.drawio",
+      "sourceSha256": "530c0bcc9fafabbc074363f43841146cee1aaebb12034f74ee5ff92feccdd5b0",
+      "pages": [
+        {
+          "sourcePageId": "uT07-7RVkq_Tk84zn0q4",
+          "name": "Страница-1",
+          "nodes": [
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-15",
+              "label": "Действие деления (без остатка) для целых предметов",
+              "rawValue": "Действие деления (без остатка) для целых предметов",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"270\" y=\"-890\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-20",
+              "label": "Элементы деления",
+              "rawValue": "Элементы деления",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1900\" y=\"-500\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-22",
+              "label": "Делители числа",
+              "rawValue": "Делители числа",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"90\" y=\"20\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-24",
+              "label": "Простые и составные числа",
+              "rawValue": "Простые и составные числа",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"30\" y=\"230\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-26",
+              "label": "Разложение числа на простые множители",
+              "rawValue": "Разложение числа на простые множители",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"160\" y=\"360\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-30",
+              "label": "Общие делители нескольких чисел",
+              "rawValue": "Общие делители нескольких чисел",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"340\" y=\"150\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-32",
+              "label": "Связь: разложение на множители → общие делители/кратные",
+              "rawValue": "Связь: разложение на множители → общие делители/кратные",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"150\" x=\"370\" y=\"250\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-35",
+              "label": "Наибольший общий делитель (НОД)",
+              "rawValue": "Наибольший общий делитель (НОД)",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"300\" y=\"490\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-37",
+              "label": "Важные свойства НОД",
+              "rawValue": "Важные свойства НОД",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"730\" y=\"670\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-41",
+              "label": "Кратные числа",
+              "rawValue": "Кратные числа",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"490\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-43",
+              "label": "Общие кратные нескольких чисел",
+              "rawValue": "Общие кратные нескольких чисел",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"630\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-45",
+              "label": "Наименьшее общее кратное (НОК)",
+              "rawValue": "Наименьшее общее кратное (НОК)",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1030\" y=\"210\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-1",
+              "label": "Важные свойства НОК",
+              "rawValue": "Важные свойства НОК",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1210\" y=\"210\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-4",
+              "label": "Доли: деление ОДНОЙ вещи на равные части",
+              "rawValue": "Доли: деление ОДНОЙ вещи на равные части",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1580\" y=\"-500\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-11",
+              "label": "Дробь как деление: соответствие a/b и a : b",
+              "rawValue": "Дробь как деление: соответствие a/b и a : b",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"1970\" y=\"-310\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-12",
+              "label": "Обыкновенная дробь (ядро)",
+              "rawValue": "Обыкновенная дробь (ядро)",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"180\" x=\"1730\" y=\"-310\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-14",
+              "label": "Сравнение дробей с одинаковым знаменателем",
+              "rawValue": "Сравнение дробей с одинаковым знаменателем",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"1000\" y=\"-180\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-16",
+              "label": "Сложение дробей с одинаковым знаменателем",
+              "rawValue": "Сложение&nbsp;<span style=\"background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));\">дробей с одинаковым знаменателем</span>",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"1180\" y=\"-180\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-18",
+              "label": "Вычитание дробей с одинаковым знаменателем",
+              "rawValue": "Вычитание&nbsp;<span style=\"background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));\">дробей с одинаковым знаменателем</span>",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"1360\" y=\"-180\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-21",
+              "label": "Основное свойство дроби",
+              "rawValue": "Основное свойство дроби",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"850\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-23",
+              "label": "Сокращение дробей",
+              "rawValue": "Сокращение дробей",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"140\" x=\"840\" y=\"420\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-30",
+              "label": "Несократимая дробь",
+              "rawValue": "Несократимая дробь",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"960\" y=\"670\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-1",
+              "label": "Приведение дроби к другому знаменателю",
+              "rawValue": "Приведение дроби к другому знаменателю",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1210\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-10",
+              "label": "Сравнение дробей с разным знаменателем",
+              "rawValue": "Сравнение дробей с разным знаменателем",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1420\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-11",
+              "label": "Сложение дробей с разным знаменателем",
+              "rawValue": "Сложение дробей с разным знаменателем",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1560\" y=\"60\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-12",
+              "label": "Вычитание дробей с разным знаменателем",
+              "rawValue": "Вычитание дробей с разным знаменателем",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"1700\" y=\"60\" as=\"geometry\" />"
+            }
+          ],
+          "edges": [
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-21",
+              "from": "FoXki5D361j79Knh_EV0-15",
+              "to": "FoXki5D361j79Knh_EV0-20",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-23",
+              "from": "FoXki5D361j79Knh_EV0-15",
+              "to": "FoXki5D361j79Knh_EV0-22",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-42",
+              "from": "FoXki5D361j79Knh_EV0-15",
+              "to": "FoXki5D361j79Knh_EV0-41",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-5",
+              "from": "FoXki5D361j79Knh_EV0-15",
+              "to": "u4g4o8F8SSn1dTF35gcQ-4",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-25",
+              "from": "FoXki5D361j79Knh_EV0-22",
+              "to": "FoXki5D361j79Knh_EV0-24",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"454.2857142857142\" y=\"250\" as=\"sourcePoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-29",
+              "from": "FoXki5D361j79Knh_EV0-22",
+              "to": "FoXki5D361j79Knh_EV0-26",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-31",
+              "from": "FoXki5D361j79Knh_EV0-22",
+              "to": "FoXki5D361j79Knh_EV0-30",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-27",
+              "from": "FoXki5D361j79Knh_EV0-24",
+              "to": "FoXki5D361j79Knh_EV0-26",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-34",
+              "from": "FoXki5D361j79Knh_EV0-26",
+              "to": "FoXki5D361j79Knh_EV0-32",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-33",
+              "from": "FoXki5D361j79Knh_EV0-30",
+              "to": "FoXki5D361j79Knh_EV0-32",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-36",
+              "from": "FoXki5D361j79Knh_EV0-30",
+              "to": "FoXki5D361j79Knh_EV0-35",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-47",
+              "from": "FoXki5D361j79Knh_EV0-32",
+              "to": "FoXki5D361j79Knh_EV0-45",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-38",
+              "from": "FoXki5D361j79Knh_EV0-35",
+              "to": "FoXki5D361j79Knh_EV0-37",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-7",
+              "from": "FoXki5D361j79Knh_EV0-37",
+              "to": "u4g4o8F8SSn1dTF35gcQ-23",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-9",
+              "from": "FoXki5D361j79Knh_EV0-37",
+              "to": "u4g4o8F8SSn1dTF35gcQ-1",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"850\" y=\"530\" /><mxPoint x=\"1230\" y=\"530\" /><mxPoint x=\"1230\" y=\"270\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-39",
+              "from": "FoXki5D361j79Knh_EV0-32",
+              "to": "FoXki5D361j79Knh_EV0-37",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;exitX=0.5;exitY=1;exitDx=0;exitDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"500\" y=\"320\" as=\"sourcePoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-44",
+              "from": "FoXki5D361j79Knh_EV0-41",
+              "to": "FoXki5D361j79Knh_EV0-43",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "FoXki5D361j79Knh_EV0-46",
+              "from": "FoXki5D361j79Knh_EV0-43",
+              "to": "FoXki5D361j79Knh_EV0-45",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-2",
+              "from": "FoXki5D361j79Knh_EV0-45",
+              "to": "u4g4o8F8SSn1dTF35gcQ-1",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-19",
+              "from": "u4g4o8F8SSn1dTF35gcQ-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-10",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-20",
+              "from": "u4g4o8F8SSn1dTF35gcQ-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-11",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-21",
+              "from": "u4g4o8F8SSn1dTF35gcQ-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-12",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-7",
+              "from": "u4g4o8F8SSn1dTF35gcQ-4",
+              "to": "u4g4o8F8SSn1dTF35gcQ-12",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"1780\" y=\"-330\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-9",
+              "from": "FoXki5D361j79Knh_EV0-20",
+              "to": "u4g4o8F8SSn1dTF35gcQ-11",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"1828.16\" y=\"-332.0999999999999\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-13",
+              "from": "u4g4o8F8SSn1dTF35gcQ-12",
+              "to": "u4g4o8F8SSn1dTF35gcQ-11",
+              "label": "",
+              "style": "edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;elbow=vertical;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-15",
+              "from": "u4g4o8F8SSn1dTF35gcQ-12",
+              "to": "u4g4o8F8SSn1dTF35gcQ-14",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"1670\" y=\"-280\" /><mxPoint x=\"1670\" y=\"-280\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-19",
+              "from": "u4g4o8F8SSn1dTF35gcQ-12",
+              "to": "u4g4o8F8SSn1dTF35gcQ-18",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.45;exitY=1.02;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"1811\" y=\"-250\" /><mxPoint x=\"1810\" y=\"-250\" /><mxPoint x=\"1810\" y=\"-160\" /><mxPoint x=\"1370\" y=\"-160\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-22",
+              "from": "u4g4o8F8SSn1dTF35gcQ-12",
+              "to": "u4g4o8F8SSn1dTF35gcQ-21",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-16",
+              "from": "u4g4o8F8SSn1dTF35gcQ-14",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-10",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-17",
+              "from": "u4g4o8F8SSn1dTF35gcQ-12",
+              "to": "u4g4o8F8SSn1dTF35gcQ-16",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.34;entryY=-0.054;entryDx=0;entryDy=0;entryPerimeter=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"1775\" y=\"-215\" /><mxPoint x=\"1234\" y=\"-215\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-18",
+              "from": "u4g4o8F8SSn1dTF35gcQ-18",
+              "to": null,
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><mxPoint x=\"1750\" y=\"50\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-24",
+              "from": "u4g4o8F8SSn1dTF35gcQ-21",
+              "to": "u4g4o8F8SSn1dTF35gcQ-23",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-2",
+              "from": "u4g4o8F8SSn1dTF35gcQ-21",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-1",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "u4g4o8F8SSn1dTF35gcQ-31",
+              "from": "u4g4o8F8SSn1dTF35gcQ-23",
+              "to": "u4g4o8F8SSn1dTF35gcQ-30",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-13",
+              "from": "Z9gG3Rif8hPDq7yI9o3U-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-10",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-14",
+              "from": "Z9gG3Rif8hPDq7yI9o3U-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-11",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"1330\" y=\"60\" /><mxPoint x=\"1330\" y=\"20\" /><mxPoint x=\"1445\" y=\"20\" /><mxPoint x=\"1445\" y=\"40\" /><mxPoint x=\"1620\" y=\"40\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-15",
+              "from": "Z9gG3Rif8hPDq7yI9o3U-1",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-12",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\"><Array as=\"points\"><mxPoint x=\"1240\" y=\"-40\" /><mxPoint x=\"1760\" y=\"-40\" /></Array></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            },
+            {
+              "sourceCellId": "Z9gG3Rif8hPDq7yI9o3U-17",
+              "from": "u4g4o8F8SSn1dTF35gcQ-16",
+              "to": "Z9gG3Rif8hPDq7yI9o3U-11",
+              "label": "",
+              "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.667;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" as=\"geometry\" />",
+              "interpretation": "unreviewed",
+              "endpointIssues": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFile": "sources/логика приложения.drawio",
+      "sourceSha256": "07f79b45c1c82529f8a8b88f3f4747b9a1282e934a0c5bd17eceda7914bf89c4",
+      "pages": [
+        {
+          "sourcePageId": "lmkTAR7QAUs03MxvKsRz",
+          "name": "Страница-1",
+          "nodes": [
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-1",
+              "label": "РЕШЕНИЕ ПРИМЕРОВ",
+              "rawValue": "РЕШЕНИЕ ПРИМЕРОВ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"180\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-2",
+              "label": "АНАЛИЗ ОШИБОК",
+              "rawValue": "АНАЛИЗ ОШИБОК",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"530\" y=\"525\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-3",
+              "label": "ВХОДНОЕ ДИАГНОСТИЧЕСКОЕ ТЕСТИРОВАНИЕ",
+              "rawValue": "ВХОДНОЕ ДИАГНОСТИЧЕСКОЕ ТЕСТИРОВАНИЕ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"530\" y=\"450\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-4",
+              "label": "ТЕОРИЯ (МИНИМУМ)",
+              "rawValue": "ТЕОРИЯ (МИНИМУМ)",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"260\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-5",
+              "label": "СПРАВОЧНИК",
+              "rawValue": "СПРАВОЧНИК",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"10\" y=\"600\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-7",
+              "label": "ТЕМЫ",
+              "rawValue": "ТЕМЫ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"10\" y=\"525\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-8",
+              "label": "ИЗБРАННОЕ",
+              "rawValue": "ИЗБРАННОЕ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"530\" y=\"600\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-9",
+              "label": "ТРАЕКТОРИЯ",
+              "rawValue": "ТРАЕКТОРИЯ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"260\" y=\"450\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-10",
+              "label": "ПРОГРЕСС",
+              "rawValue": "ПРОГРЕСС",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"260\" y=\"525\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-11",
+              "label": "СТАТИСТИКА",
+              "rawValue": "СТАТИСТИКА",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"260\" y=\"600\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-12",
+              "label": "ВЫБОР КЛАССА",
+              "rawValue": "ВЫБОР КЛАССА",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"36\" y=\"1120\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-13",
+              "label": "ВПР",
+              "rawValue": "ВПР",
+              "parent": "1",
+              "style": "shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" y=\"1530\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-14",
+              "label": "ОГЭ",
+              "rawValue": "ОГЭ",
+              "parent": "1",
+              "style": "shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"110\" y=\"1530\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-17",
+              "label": "ЕГЭ",
+              "rawValue": "ЕГЭ",
+              "parent": "1",
+              "style": "shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=20;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"220\" y=\"1530\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-22",
+              "label": "МАРАФОН (ПО ОПРЕДЕЛЕННОЙ ТЕМЕ ИЛИ ЗАДАНИЮ)",
+              "rawValue": "МАРАФОН (ПО ОПРЕДЕЛЕННОЙ ТЕМЕ ИЛИ ЗАДАНИЮ)",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"160\" x=\"176\" y=\"1120\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-23",
+              "label": "ДОСТУПНЫЕ ОПЦИИ",
+              "rawValue": "ДОСТУПНЫЕ ОПЦИИ",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"196\" y=\"1010\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-24",
+              "label": "ТЕСТ НА ВРЕМЯ",
+              "rawValue": "ТЕСТ НА ВРЕМЯ",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"350\" y=\"1120\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-25",
+              "label": "МИНИМАЛЬНЫЙ ФУНКЦИОНАЛ",
+              "rawValue": "МИНИМАЛЬНЫЙ ФУНКЦИОНАЛ",
+              "parent": "1",
+              "style": "shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"200\" x=\"20\" y=\"20\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-26",
+              "label": "ТРАЕКТОРИЯ (ПРОГРЕСС ПО ТЕМАМ)",
+              "rawValue": "ТРАЕКТОРИЯ (ПРОГРЕСС ПО ТЕМАМ)",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"156\" y=\"180\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-27",
+              "label": "ТЕОРИЯ",
+              "rawValue": "ТЕОРИЯ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"10\" y=\"450\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "-bhcdHc_p-pIJX9cyTzW-28",
+              "label": "ПРОВЕРОЧНОЕ ТЕСТИРОВАНИЕ",
+              "rawValue": "ПРОВЕРОЧНОЕ ТЕСТИРОВАНИЕ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"156\" y=\"260\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-1",
+              "label": "НАСТРОЙКИ",
+              "rawValue": "НАСТРОЙКИ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"2080\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-2",
+              "label": "СПИСОК ТЕМ ПО КЛАССАМ",
+              "rawValue": "СПИСОК ТЕМ ПО КЛАССАМ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"10\" y=\"680\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-3",
+              "label": "СИСТЕМА НАГРАЖДЕНИЯ",
+              "rawValue": "СИСТЕМА НАГРАЖДЕНИЯ",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"490\" y=\"1120\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-4",
+              "label": "ГЭМИФИКАЦИЯ",
+              "rawValue": "ГЭМИФИКАЦИЯ",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"620\" y=\"1120\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-5",
+              "label": "ВИКТОРИНА",
+              "rawValue": "ВИКТОРИНА",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"1860\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-6",
+              "label": "ВИДЫ ЗАДАНИЙ",
+              "rawValue": "ВИДЫ ЗАДАНИЙ",
+              "parent": "1",
+              "style": "shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"200\" x=\"20\" y=\"1760\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-7",
+              "label": "ВВОД ОТВЕТА",
+              "rawValue": "ВВОД ОТВЕТА",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"156\" y=\"1860\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-8",
+              "label": "ПРАВДА - ЛОЖЬ",
+              "rawValue": "ПРАВДА - ЛОЖЬ",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"1940\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-10",
+              "label": "ЗАДАНИЯ ПОВЫШЕННОЙ СЛОЖНОСТИ (СО ЗВЕЗДОЧКОЙ)",
+              "rawValue": "ЗАДАНИЯ ПОВЫШЕННОЙ СЛОЖНОСТИ (СО ЗВЕЗДОЧКОЙ)",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"160\" x=\"530\" y=\"680\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-11",
+              "label": "РЕЖИМ БИЛЕТОВ",
+              "rawValue": "РЕЖИМ БИЛЕТОВ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"530\" y=\"760\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-12",
+              "label": "ПОВТОРЕНИЕ ПРОЙДЕННЫХ ТЕМ ВНУТРИ ТРАЕКТОРИИ",
+              "rawValue": "ПОВТОРЕНИЕ ПРОЙДЕННЫХ ТЕМ ВНУТРИ ТРАЕКТОРИИ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"140\" x=\"260\" y=\"680\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-14",
+              "label": "ДРУЗЬЯ",
+              "rawValue": "ДРУЗЬЯ",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"120\" x=\"36\" y=\"1220\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-15",
+              "label": "РЕЙТИНГ (В КЛАССЕ, В ШКОЛЕ)",
+              "rawValue": "РЕЙТИНГ (В КЛАССЕ, В ШКОЛЕ)",
+              "parent": "1",
+              "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;",
+              "geometryXml": "<mxGeometry height=\"80\" width=\"150\" x=\"180\" y=\"1220\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-17",
+              "label": "РЕЖИМЫ",
+              "rawValue": "РЕЖИМЫ",
+              "parent": "1",
+              "style": "shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"2230\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-18",
+              "label": "РОДИТЕЛЬ",
+              "rawValue": "РОДИТЕЛЬ",
+              "parent": "1",
+              "style": "shape=display;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"40\" width=\"120\" x=\"310\" y=\"2320\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-19",
+              "label": "УЧЕНИК",
+              "rawValue": "УЧЕНИК",
+              "parent": "1",
+              "style": "shape=display;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"40\" width=\"120\" x=\"20\" y=\"2320\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-20",
+              "label": "ТЬЮТОР",
+              "rawValue": "ТЬЮТОР",
+              "parent": "1",
+              "style": "shape=display;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"40\" width=\"120\" x=\"170\" y=\"2320\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-21",
+              "label": "БЛОК: ДРОБИ",
+              "rawValue": "БЛОК: ДРОБИ",
+              "parent": "1",
+              "style": "whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"20\" y=\"100\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-22",
+              "label": "ЧАТЫ",
+              "rawValue": "ЧАТЫ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"156\" y=\"2080\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-23",
+              "label": "FAQ",
+              "rawValue": "FAQ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"290\" y=\"2080\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-24",
+              "label": "ТЕХПОДДЕРЖКА",
+              "rawValue": "ТЕХПОДДЕРЖКА",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"430\" y=\"2080\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-25",
+              "label": "ИИ -ЧАТ",
+              "rawValue": "ИИ -ЧАТ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"560\" y=\"2080\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-26",
+              "label": "ПРАКТИКА",
+              "rawValue": "ПРАКТИКА",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"260\" y=\"760\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "fqmFRYnEpJoJTifWC4Sy-27",
+              "label": "МАТЕРИАЛЫ ДЛЯ ПЕЧАТИ",
+              "rawValue": "МАТЕРИАЛЫ ДЛЯ ПЕЧАТИ",
+              "parent": "1",
+              "style": "rounded=1;whiteSpace=wrap;html=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"120\" x=\"260\" y=\"840\" as=\"geometry\" />"
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-5",
+              "label": "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ",
+              "rawValue": "ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ",
+              "parent": "1",
+              "style": "shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;",
+              "geometryXml": "<mxGeometry height=\"60\" width=\"200\" x=\"30\" y=\"1420\" as=\"geometry\" />"
+            }
+          ],
+          "edges": [
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-2",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"350\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"350\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-3",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"940\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"940\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-4",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"1380\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"1380\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-8",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"1700\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"1700\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-9",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"2040\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"2040\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            },
+            {
+              "sourceCellId": "k0mFKzm0tO_W3i0aBJkF-10",
+              "from": null,
+              "to": null,
+              "label": "",
+              "style": "shape=link;html=1;rounded=0;",
+              "geometryXml": "<mxGeometry relative=\"1\" width=\"100\" as=\"geometry\"><mxPoint y=\"2190\" as=\"sourcePoint\" /><mxPoint x=\"820\" y=\"2190\" as=\"targetPoint\" /></mxGeometry>",
+              "interpretation": "unreviewed",
+              "endpointIssues": [
+                "missing_source",
+                "missing_target"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

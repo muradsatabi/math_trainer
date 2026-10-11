@@ -1,0 +1,248 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 YaBrowser/25.10.0.0 Safari/537.36" version="29.2.3">
+  <diagram name="Страница-1" id="uT07-7RVkq_Tk84zn0q4">
+    <mxGraphModel dx="1028" dy="1651" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FoXki5D361j79Knh_EV0-21" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-15" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-23" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-15" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-22" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-42" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-15" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-41" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-5" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-15" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="u4g4o8F8SSn1dTF35gcQ-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-15" parent="1" style="whiteSpace=wrap;html=1;" value="Действие деления (без остатка) для целых предметов" vertex="1">
+          <mxGeometry height="60" width="120" x="270" y="-890" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-20" parent="1" style="whiteSpace=wrap;html=1;" value="Элементы деления" vertex="1">
+          <mxGeometry height="60" width="120" x="1900" y="-500" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-25" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-22" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;elbow=vertical;" target="FoXki5D361j79Knh_EV0-24" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="454.2857142857142" y="250" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-29" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-22" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;elbow=vertical;" target="FoXki5D361j79Knh_EV0-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-31" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-22" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-22" parent="1" style="whiteSpace=wrap;html=1;" value="Делители числа" vertex="1">
+          <mxGeometry height="60" width="120" x="90" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-27" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-24" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-26" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-24" parent="1" style="whiteSpace=wrap;html=1;" value="Простые и составные числа" vertex="1">
+          <mxGeometry height="60" width="120" x="30" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-34" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-26" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;elbow=vertical;" target="FoXki5D361j79Knh_EV0-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-26" parent="1" style="whiteSpace=wrap;html=1;" value="Разложение числа на простые множители" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-33" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-30" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-36" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-30" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-35" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-30" parent="1" style="whiteSpace=wrap;html=1;" value="Общие делители нескольких чисел" vertex="1">
+          <mxGeometry height="60" width="120" x="340" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-47" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-32" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;elbow=vertical;" target="FoXki5D361j79Knh_EV0-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-32" parent="1" style="whiteSpace=wrap;html=1;" value="Связь: разложение на множители → общие делители/кратные" vertex="1">
+          <mxGeometry height="60" width="150" x="370" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-38" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-35" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-37" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-35" parent="1" style="whiteSpace=wrap;html=1;" value="Наибольший общий делитель (НОД)" vertex="1">
+          <mxGeometry height="60" width="120" x="300" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-7" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="u4g4o8F8SSn1dTF35gcQ-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-9" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="u4g4o8F8SSn1dTF35gcQ-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="530" />
+              <mxPoint x="1230" y="530" />
+              <mxPoint x="1230" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-37" parent="1" style="whiteSpace=wrap;html=1;" value="Важные свойства НОД" vertex="1">
+          <mxGeometry height="60" width="120" x="730" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-39" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-32" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="FoXki5D361j79Knh_EV0-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="320" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-44" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-41" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-43" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-41" parent="1" style="whiteSpace=wrap;html=1;" value="Кратные числа" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-46" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-43" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="FoXki5D361j79Knh_EV0-45" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-43" parent="1" style="whiteSpace=wrap;html=1;" value="Общие кратные нескольких чисел" vertex="1">
+          <mxGeometry height="60" width="120" x="630" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-2" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-45" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" target="u4g4o8F8SSn1dTF35gcQ-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FoXki5D361j79Knh_EV0-45" parent="1" style="whiteSpace=wrap;html=1;" value="Наименьшее общее кратное (НОК)" vertex="1">
+          <mxGeometry height="60" width="120" x="1030" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-19" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-20" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-21" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-1" parent="1" style="whiteSpace=wrap;html=1;" value="Важные свойства НОК" vertex="1">
+          <mxGeometry height="60" width="120" x="1210" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-7" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-4" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;elbow=vertical;" target="u4g4o8F8SSn1dTF35gcQ-12" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1780" y="-330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-4" parent="1" style="whiteSpace=wrap;html=1;" value="Доли: деление ОДНОЙ вещи на равные части" vertex="1">
+          <mxGeometry height="60" width="120" x="1580" y="-500" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-9" edge="1" parent="1" source="FoXki5D361j79Knh_EV0-20" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;elbow=vertical;" target="u4g4o8F8SSn1dTF35gcQ-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1828.16" y="-332.0999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-11" parent="1" style="whiteSpace=wrap;html=1;" value="Дробь как деление: соответствие a/b и a : b" vertex="1">
+          <mxGeometry height="60" width="160" x="1970" y="-310" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-13" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-12" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;elbow=vertical;" target="u4g4o8F8SSn1dTF35gcQ-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-15" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="u4g4o8F8SSn1dTF35gcQ-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1670" y="-280" />
+              <mxPoint x="1670" y="-280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-19" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.45;exitY=1.02;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="u4g4o8F8SSn1dTF35gcQ-18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1811" y="-250" />
+              <mxPoint x="1810" y="-250" />
+              <mxPoint x="1810" y="-160" />
+              <mxPoint x="1370" y="-160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-22" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="u4g4o8F8SSn1dTF35gcQ-21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-12" parent="1" style="whiteSpace=wrap;html=1;" value="Обыкновенная дробь (ядро)" vertex="1">
+          <mxGeometry height="60" width="180" x="1730" y="-310" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-16" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-14" parent="1" style="whiteSpace=wrap;html=1;" value="Сравнение дробей с одинаковым знаменателем" vertex="1">
+          <mxGeometry height="60" width="160" x="1000" y="-180" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-16" parent="1" style="whiteSpace=wrap;html=1;" value="Сложение&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;дробей с одинаковым знаменателем&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="160" x="1180" y="-180" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-17" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.34;entryY=-0.054;entryDx=0;entryDy=0;entryPerimeter=0;" target="u4g4o8F8SSn1dTF35gcQ-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1775" y="-215" />
+              <mxPoint x="1234" y="-215" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-18" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1750" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-18" parent="1" style="whiteSpace=wrap;html=1;" value="Вычитание&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;дробей с одинаковым знаменателем&lt;/span&gt;" vertex="1">
+          <mxGeometry height="60" width="160" x="1360" y="-180" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-24" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="u4g4o8F8SSn1dTF35gcQ-23" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-2" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Z9gG3Rif8hPDq7yI9o3U-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-21" parent="1" style="whiteSpace=wrap;html=1;" value="Основное свойство дроби" vertex="1">
+          <mxGeometry height="60" width="120" x="850" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-31" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="u4g4o8F8SSn1dTF35gcQ-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-23" parent="1" style="whiteSpace=wrap;html=1;" value="Сокращение дробей" vertex="1">
+          <mxGeometry height="60" width="140" x="840" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="u4g4o8F8SSn1dTF35gcQ-30" parent="1" style="whiteSpace=wrap;html=1;" value="Несократимая дробь" vertex="1">
+          <mxGeometry height="60" width="160" x="960" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-13" edge="1" parent="1" source="Z9gG3Rif8hPDq7yI9o3U-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-14" edge="1" parent="1" source="Z9gG3Rif8hPDq7yI9o3U-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1330" y="60" />
+              <mxPoint x="1330" y="20" />
+              <mxPoint x="1445" y="20" />
+              <mxPoint x="1445" y="40" />
+              <mxPoint x="1620" y="40" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-15" edge="1" parent="1" source="Z9gG3Rif8hPDq7yI9o3U-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Z9gG3Rif8hPDq7yI9o3U-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1240" y="-40" />
+              <mxPoint x="1760" y="-40" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-1" parent="1" style="whiteSpace=wrap;html=1;" value="Приведение дроби к другому знаменателю" vertex="1">
+          <mxGeometry height="60" width="120" x="1210" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-10" parent="1" style="whiteSpace=wrap;html=1;" value="Сравнение дробей с разным знаменателем" vertex="1">
+          <mxGeometry height="60" width="120" x="1420" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-11" parent="1" style="whiteSpace=wrap;html=1;" value="Сложение дробей с разным знаменателем" vertex="1">
+          <mxGeometry height="60" width="120" x="1560" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-12" parent="1" style="whiteSpace=wrap;html=1;" value="Вычитание дробей с разным знаменателем" vertex="1">
+          <mxGeometry height="60" width="120" x="1700" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9gG3Rif8hPDq7yI9o3U-17" edge="1" parent="1" source="u4g4o8F8SSn1dTF35gcQ-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.667;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="Z9gG3Rif8hPDq7yI9o3U-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

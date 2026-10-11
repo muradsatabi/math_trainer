@@ -1,0 +1,184 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 YaBrowser/25.12.0.0 Safari/537.36" version="29.3.0">
+  <diagram name="Страница-1" id="lmkTAR7QAUs03MxvKsRz">
+    <mxGraphModel dx="1437" dy="654" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="РЕШЕНИЕ ПРИМЕРОВ" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="АНАЛИЗ ОШИБОК" vertex="1">
+          <mxGeometry height="60" width="120" x="530" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ВХОДНОЕ ДИАГНОСТИЧЕСКОЕ ТЕСТИРОВАНИЕ" vertex="1">
+          <mxGeometry height="60" width="160" x="530" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТЕОРИЯ (МИНИМУМ)" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="СПРАВОЧНИК" vertex="1">
+          <mxGeometry height="60" width="120" x="10" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТЕМЫ" vertex="1">
+          <mxGeometry height="60" width="120" x="10" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ИЗБРАННОЕ" vertex="1">
+          <mxGeometry height="60" width="120" x="530" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТРАЕКТОРИЯ" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ПРОГРЕСС" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="СТАТИСТИКА" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-12" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="ВЫБОР КЛАССА" vertex="1">
+          <mxGeometry height="80" width="120" x="36" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-13" parent="1" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="ВПР" vertex="1">
+          <mxGeometry height="80" width="120" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-14" parent="1" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="ОГЭ" vertex="1">
+          <mxGeometry height="80" width="120" x="110" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-17" parent="1" style="shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=20;" value="ЕГЭ" vertex="1">
+          <mxGeometry height="80" width="120" x="220" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-22" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="МАРАФОН (ПО ОПРЕДЕЛЕННОЙ ТЕМЕ ИЛИ ЗАДАНИЮ)" vertex="1">
+          <mxGeometry height="80" width="160" x="176" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-23" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="ДОСТУПНЫЕ ОПЦИИ" vertex="1">
+          <mxGeometry height="80" width="120" x="196" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-24" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="ТЕСТ НА ВРЕМЯ" vertex="1">
+          <mxGeometry height="80" width="120" x="350" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-25" parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" value="МИНИМАЛЬНЫЙ ФУНКЦИОНАЛ" vertex="1">
+          <mxGeometry height="60" width="200" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТРАЕКТОРИЯ (ПРОГРЕСС ПО ТЕМАМ)" vertex="1">
+          <mxGeometry height="60" width="120" x="156" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТЕОРИЯ" vertex="1">
+          <mxGeometry height="60" width="120" x="10" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="-bhcdHc_p-pIJX9cyTzW-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ПРОВЕРОЧНОЕ ТЕСТИРОВАНИЕ" vertex="1">
+          <mxGeometry height="60" width="120" x="156" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="НАСТРОЙКИ" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="СПИСОК ТЕМ ПО КЛАССАМ" vertex="1">
+          <mxGeometry height="60" width="120" x="10" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-3" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="СИСТЕМА НАГРАЖДЕНИЯ" vertex="1">
+          <mxGeometry height="80" width="120" x="490" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-4" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="ГЭМИФИКАЦИЯ" vertex="1">
+          <mxGeometry height="80" width="120" x="620" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-5" parent="1" style="whiteSpace=wrap;html=1;" value="ВИКТОРИНА" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="1860" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-6" parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" value="ВИДЫ ЗАДАНИЙ" vertex="1">
+          <mxGeometry height="60" width="200" x="20" y="1760" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-7" parent="1" style="whiteSpace=wrap;html=1;" value="ВВОД ОТВЕТА" vertex="1">
+          <mxGeometry height="60" width="120" x="156" y="1860" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-8" parent="1" style="whiteSpace=wrap;html=1;" value="ПРАВДА - ЛОЖЬ" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="1940" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ЗАДАНИЯ ПОВЫШЕННОЙ СЛОЖНОСТИ (СО ЗВЕЗДОЧКОЙ)" vertex="1">
+          <mxGeometry height="60" width="160" x="530" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="РЕЖИМ БИЛЕТОВ" vertex="1">
+          <mxGeometry height="60" width="120" x="530" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ПОВТОРЕНИЕ ПРОЙДЕННЫХ ТЕМ ВНУТРИ ТРАЕКТОРИИ" vertex="1">
+          <mxGeometry height="60" width="140" x="260" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-14" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="ДРУЗЬЯ" vertex="1">
+          <mxGeometry height="80" width="120" x="36" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-15" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="РЕЙТИНГ (В КЛАССЕ, В ШКОЛЕ)" vertex="1">
+          <mxGeometry height="80" width="150" x="180" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-17" parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" value="РЕЖИМЫ" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="2230" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-18" parent="1" style="shape=display;whiteSpace=wrap;html=1;" value="РОДИТЕЛЬ" vertex="1">
+          <mxGeometry height="40" width="120" x="310" y="2320" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-19" parent="1" style="shape=display;whiteSpace=wrap;html=1;" value="УЧЕНИК" vertex="1">
+          <mxGeometry height="40" width="120" x="20" y="2320" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-20" parent="1" style="shape=display;whiteSpace=wrap;html=1;" value="ТЬЮТОР" vertex="1">
+          <mxGeometry height="40" width="120" x="170" y="2320" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-21" parent="1" style="whiteSpace=wrap;html=1;" value="БЛОК: ДРОБИ" vertex="1">
+          <mxGeometry height="60" width="120" x="20" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ЧАТЫ" vertex="1">
+          <mxGeometry height="60" width="120" x="156" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="FAQ" vertex="1">
+          <mxGeometry height="60" width="120" x="290" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ТЕХПОДДЕРЖКА" vertex="1">
+          <mxGeometry height="60" width="120" x="430" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ИИ -ЧАТ" vertex="1">
+          <mxGeometry height="60" width="120" x="560" y="2080" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="ПРАКТИКА" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="fqmFRYnEpJoJTifWC4Sy-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="МАТЕРИАЛЫ ДЛЯ ПЕЧАТИ" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-2" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="350" as="sourcePoint" />
+            <mxPoint x="820" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-3" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="940" as="sourcePoint" />
+            <mxPoint x="820" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-4" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="1380" as="sourcePoint" />
+            <mxPoint x="820" y="1380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-5" parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" value="ПЕРСПЕКТИВНЫЕ НАПРАВЛЕНИЯ" vertex="1">
+          <mxGeometry height="60" width="200" x="30" y="1420" as="geometry" />
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-8" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="1700" as="sourcePoint" />
+            <mxPoint x="820" y="1700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-9" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="2040" as="sourcePoint" />
+            <mxPoint x="820" y="2040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="k0mFKzm0tO_W3i0aBJkF-10" edge="1" parent="1" style="shape=link;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <mxPoint y="2190" as="sourcePoint" />
+            <mxPoint x="820" y="2190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
