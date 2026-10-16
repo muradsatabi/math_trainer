@@ -547,6 +547,7 @@ class DemoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = ScreenColors(context);
+    final compactPracticeHeader = !showLabel && showSuccess;
     return Scaffold(
       backgroundColor: c.paper,
       bottomNavigationBar: footerBuilder == null
@@ -602,26 +603,49 @@ class DemoPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton.icon(
-                        onPressed: onTopics ?? () => returnToTopics(context),
-                        style: TextButton.styleFrom(
-                          foregroundColor: c.sub,
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size(
-                            0,
-                            low
-                                ? 24
-                                : compact
-                                ? 26
-                                : 30,
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 226,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed:
+                                  onTopics ?? () => returnToTopics(context),
+                              style: TextButton.styleFrom(
+                                foregroundColor: c.sub,
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(
+                                  0,
+                                  low
+                                      ? 24
+                                      : compact
+                                      ? 26
+                                      : 30,
+                                ),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              icon: const Icon(Icons.arrow_back, size: 16),
+                              label: Text(
+                                'К темам',
+                                style: screenText(15, c.sub),
+                              ),
+                            ),
                           ),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        icon: const Icon(Icons.arrow_back, size: 16),
-                        label: Text('К темам', style: screenText(15, c.sub)),
-                      ),
+                        if (compactPracticeHeader) ...[
+                          SizedBox(width: wide ? 44 : 32),
+                          Expanded(
+                            flex: 100,
+                            child: InkWell(
+                              onTap: () => showSuccessInfo(context),
+                              child: SuccessLabel(
+                                style: screenText(wide ? 17 : 14, c.sub),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     SizedBox(
                       height: low
@@ -631,7 +655,9 @@ class DemoPage extends StatelessWidget {
                           : 12,
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: compactPracticeHeader
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 226,
@@ -654,6 +680,7 @@ class DemoPage extends StatelessWidget {
                               ],
                               Text(
                                 topic,
+                                key: const ValueKey('demo-topic-title'),
                                 style: screenText(
                                   low
                                       ? 22
@@ -678,10 +705,12 @@ class DemoPage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SuccessLabel(
-                                    style: screenText(wide ? 17 : 14, c.sub),
-                                  ),
-                                  const SizedBox(height: 8),
+                                  if (!compactPracticeHeader) ...[
+                                    SuccessLabel(
+                                      style: screenText(wide ? 17 : 14, c.sub),
+                                    ),
+                                    const SizedBox(height: 8),
+                                  ],
                                   SizedBox(
                                     width: bounds.maxWidth < 720 ? 140 : 216,
                                     child: Row(
@@ -706,6 +735,9 @@ class DemoPage extends StatelessWidget {
                                         const SizedBox(width: 16),
                                         Text(
                                           '${successPercent.floor()}%',
+                                          key: const ValueKey(
+                                            'demo-success-percent',
+                                          ),
                                           style: screenText(
                                             compact ? 25 : 30,
                                             c.ink,
@@ -723,13 +755,23 @@ class DemoPage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: low
+                      height: compactPracticeHeader
+                          ? (low
+                                ? 8
+                                : compact
+                                ? 10
+                                : 14)
+                          : low
                           ? 10
                           : compact
                           ? 12
                           : 20,
                     ),
-                    Divider(height: 1, color: c.line),
+                    Divider(
+                      key: const ValueKey('demo-header-divider'),
+                      height: 1,
+                      color: c.line,
+                    ),
                     SizedBox(
                       height: low
                           ? 12

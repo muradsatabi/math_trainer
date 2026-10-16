@@ -87,6 +87,13 @@ void main() {
       await tester.tap(find.text('Начать практику'));
       await tester.pumpAndSettle();
       Future<void> save(String state) async {
+        final title = tester.getRect(
+          find.byKey(const ValueKey('demo-topic-title')),
+        );
+        final percent = tester.getRect(
+          find.byKey(const ValueKey('demo-success-percent')),
+        );
+        expect(title.bottom, closeTo(percent.bottom, .01));
         final boundary = tester.renderObject<RenderRepaintBoundary>(
           find.byKey(capture),
         );
