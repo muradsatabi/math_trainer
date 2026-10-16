@@ -88,6 +88,24 @@ void main() {
             '2(a',
           );
           await tester.pump();
+          // Finish must remain available while browsing any old task.
+          await tester.tap(find.text('Предыдущее задание'));
+          await tester.pumpAndSettle();
+          for (var index = 9; index >= 1; index--) {
+            expect(find.byKey(ValueKey('bank-task-$index')), findsOneWidget);
+            expect(finish, findsOneWidget);
+            expect(tester.widget<FilledButton>(finish).onPressed, isNotNull);
+            expect(find.text('90%'), findsOneWidget);
+            if (index > 1) {
+              await tester.tap(find.text('Предыдущее задание'));
+              await tester.pumpAndSettle();
+            }
+          }
+          await tester.tap(find.text('Дальше'));
+          await tester.pumpAndSettle();
+          expect(finish, findsOneWidget);
+          await tester.tap(find.text('Предыдущее задание'));
+          await tester.pumpAndSettle();
           await tester.tap(finish);
           await tester.pumpAndSettle();
           expect(
@@ -103,6 +121,7 @@ void main() {
           await tester.tap(find.text('Назад к решению'));
           await tester.pumpAndSettle();
           expect(find.byType(AlertDialog), findsNothing);
+          expect(finish, findsNothing);
           expect(find.byKey(const ValueKey('bank-task-1')), findsOneWidget);
           expect(find.text('Предыдущее задание'), findsNothing);
           expect(

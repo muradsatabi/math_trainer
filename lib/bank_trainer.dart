@@ -50,8 +50,7 @@ class _BankTrainerState extends State<BankTrainer> {
       ? _record!.correct
       : session!.checked && session!.attempts.last.correct;
   bool get _usesInput => _record?.usesInput ?? session!.usesInput;
-  bool get _offerFinish =>
-      !_history && !session!.isFinished && session!.canFinish;
+  bool get _offerFinish => !session!.isFinished && session!.canFinish;
 
   void _saveView() {
     savedViews[historyIndex ?? -1] = _SavedPracticeView(

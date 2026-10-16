@@ -189,6 +189,16 @@ void main() {
       expect(viewport.contains(finish.topLeft), isTrue);
       expect(viewport.contains(finish.bottomRight), isTrue);
       await save('finish-available');
+      await tester.tap(find.text('Предыдущее задание'));
+      await tester.pumpAndSettle();
+      final historyFinish = find.byKey(const ValueKey('bank-finish'));
+      expect(historyFinish, findsOneWidget);
+      final historyFinishBounds = tester.getRect(historyFinish);
+      expect(viewport.contains(historyFinishBounds.topLeft), isTrue);
+      expect(viewport.contains(historyFinishBounds.bottomRight), isTrue);
+      await save('history-finish-available');
+      await tester.tap(find.byKey(const ValueKey('bank-return-current')));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Завершить занятие'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Назад к решению'));
