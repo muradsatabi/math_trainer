@@ -68,6 +68,12 @@ void main() {
           await tapVisible(find.byKey(ValueKey('bank-symbol-$symbol')));
         }
         final field = find.byKey(const ValueKey('bank-answer'));
+        final fieldBounds = tester.getRect(field);
+        for (final key in ['bank-delete', 'bank-clear']) {
+          final action = tester.getRect(find.byKey(ValueKey(key)));
+          expect(action.left, greaterThanOrEqualTo(fieldBounds.right));
+          expect(action.center.dy, closeTo(fieldBounds.center.dy, .01));
+        }
         final controller = tester.widget<TextField>(field).controller!;
         expect(controller.text, '7(a+b)');
         controller.selection = const TextSelection(

@@ -61,6 +61,8 @@ void main() {
     (const Size(1366, 768), ThemeMode.dark, 'dark-1366x768'),
     (const Size(1920, 1080), ThemeMode.light, 'light-1920x1080'),
     (const Size(1920, 1080), ThemeMode.dark, 'dark-1920x1080'),
+    (const Size(390, 844), ThemeMode.light, 'light-390x844'),
+    (const Size(390, 844), ThemeMode.dark, 'dark-390x844'),
   ]) {
     testWidgets('capture real bank $name', (tester) async {
       tester.view.physicalSize = size;
@@ -145,6 +147,8 @@ void main() {
       final viewport = Offset.zero & size;
       for (final key in [
         'bank-answer',
+        'bank-delete',
+        'bank-clear',
         'bank-key-group-Числа',
         'bank-key-group-Буквы',
         'bank-key-group-Знаки и скобки',

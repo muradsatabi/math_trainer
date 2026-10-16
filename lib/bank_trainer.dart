@@ -251,6 +251,14 @@ class _BankTrainerState extends State<BankTrainer> {
     });
   }
 
+  void _clear() {
+    if (_checked) return;
+    setState(() {
+      entry.clear();
+      inputMessage = null;
+    });
+  }
+
   void _delete() {
     if (_checked) return;
     final selection = entry.selection;
@@ -465,86 +473,114 @@ class _BankTrainerState extends State<BankTrainer> {
             const SizedBox(height: 12),
             if (!_usesInput) _choiceCards(task, c, compact),
             if (_usesInput) ...[
-              Container(
-                height: compact ? 56 : 72,
-                decoration: BoxDecoration(
-                  color: !_checked
-                      ? c.paper
-                      : correct
-                      ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
-                      : Color(c.dark ? 0xff452e36 : 0xfffff0ee),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    width: 2,
-                    color: !_checked
-                        ? c.blue
-                        : correct
-                        ? Color(c.dark ? 0xff68c98b : 0xff28934c)
-                        : Color(c.dark ? 0xffb97e84 : 0xffcf7772),
-                  ),
-                ),
-                child: TextField(
-                  key: const ValueKey('bank-answer'),
-                  controller: entry,
-                  readOnly: _checked,
-                  autofocus: false,
-                  style: TextStyle(
-                    fontFamily: 'Caladea',
-                    fontSize: compact ? 28 : 32,
-                    color: c.ink,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: compact ? 22 : 24,
-                      vertical: compact ? 6 : 14,
-                    ),
-                    suffixIcon: _checked
-                        ? Icon(
-                            correct ? Icons.check : Icons.close,
-                            color: feedbackColor,
+              LayoutBuilder(
+                builder: (context, bounds) {
+                  final textActions = bounds.maxWidth >= 600;
+                  final canEdit = !_checked && entry.text.isNotEmpty;
+                  return TextFieldTapRegion(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: compact ? 56 : 72,
+                            decoration: BoxDecoration(
+                              color: !_checked
+                                  ? c.paper
+                                  : correct
+                                  ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
+                                  : Color(c.dark ? 0xff452e36 : 0xfffff0ee),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                width: 2,
+                                color: !_checked
+                                    ? c.blue
+                                    : correct
+                                    ? Color(c.dark ? 0xff68c98b : 0xff28934c)
+                                    : Color(c.dark ? 0xffb97e84 : 0xffcf7772),
+                              ),
+                            ),
+                            child: TextField(
+                              key: const ValueKey('bank-answer'),
+                              controller: entry,
+                              readOnly: _checked,
+                              autofocus: false,
+                              style: TextStyle(
+                                fontFamily: 'Caladea',
+                                fontSize: compact ? 28 : 32,
+                                color: c.ink,
+                              ),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: compact ? 22 : 24,
+                                  vertical: compact ? 6 : 14,
+                                ),
+                                suffixIcon: _checked
+                                    ? Icon(
+                                        correct ? Icons.check : Icons.close,
+                                        color: feedbackColor,
+                                      )
+                                    : null,
+                              ),
+                              onChanged: (_) =>
+                                  setState(() => inputMessage = null),
+                              onTapOutside: (_) {
+                                if (!_checked &&
+                                    entry.text.isNotEmpty &&
+                                    !_complete) {
+                                  setState(
+                                    () => inputMessage = _unsupportedSymbol
+                                        ? 'Эта запись пока не поддерживается. Ответ не оценён.'
+                                        : 'Ты не закончил запись. Допиши ответ',
+                                  );
+                                }
+                              },
+                              onSubmitted: (_) {
+                                if (!_checked) _check();
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (textActions)
+                          TextButton.icon(
+                            key: const ValueKey('bank-delete'),
+                            onPressed: canEdit ? _delete : null,
+                            icon: const Icon(
+                              Icons.backspace_outlined,
+                              size: 20,
+                            ),
+                            label: const Text('Удалить символ'),
                           )
-                        : null,
-                  ),
-                  onChanged: (_) => setState(() => inputMessage = null),
-                  onTapOutside: (_) {
-                    if (!_checked && entry.text.isNotEmpty && !_complete) {
-                      setState(
-                        () => inputMessage = _unsupportedSymbol
-                            ? 'Эта запись пока не поддерживается. Ответ не оценён.'
-                            : 'Ты не закончил запись. Допиши ответ',
-                      );
-                    }
-                  },
-                  onSubmitted: (_) {
-                    if (!_checked) _check();
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 12,
-                children: [
-                  TextButton.icon(
-                    key: const ValueKey('bank-delete'),
-                    onPressed: _checked || entry.text.isEmpty ? null : _delete,
-                    icon: const Icon(Icons.backspace_outlined, size: 20),
-                    label: const Text('Удалить символ'),
-                  ),
-                  TextButton(
-                    key: const ValueKey('bank-clear'),
-                    onPressed: _checked || entry.text.isEmpty
-                        ? null
-                        : () => setState(() {
-                            entry.clear();
-                            inputMessage = null;
-                          }),
-                    child: const Text('Очистить'),
-                  ),
-                ],
+                        else
+                          IconButton(
+                            key: const ValueKey('bank-delete'),
+                            onPressed: canEdit ? _delete : null,
+                            tooltip: 'Удалить символ',
+                            icon: const Icon(
+                              Icons.backspace_outlined,
+                              size: 20,
+                            ),
+                          ),
+                        if (textActions)
+                          TextButton(
+                            key: const ValueKey('bank-clear'),
+                            onPressed: canEdit ? _clear : null,
+                            child: const Text('Очистить'),
+                          )
+                        else
+                          IconButton(
+                            key: const ValueKey('bank-clear'),
+                            onPressed: canEdit ? _clear : null,
+                            tooltip: 'Очистить',
+                            icon: const Icon(Icons.clear_all, size: 22),
+                          ),
+                      ],
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 12),
               TextFieldTapRegion(
