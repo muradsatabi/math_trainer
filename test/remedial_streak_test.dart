@@ -56,14 +56,7 @@ void main() {
           await tap(find.byKey(ValueKey('bank-choice-$selected')));
         }
         await tap(find.text('Проверить себя'));
-        if (i == 4) {
-          expect(find.textContaining('Верных подряд:'), findsNothing);
-        } else {
-          expect(
-            find.text('Верных подряд: ${answers[i] ? 1 : 0} из 2'),
-            findsOneWidget,
-          );
-        }
+        expect(find.textContaining('Верных подряд:'), findsNothing);
         await tap(find.text('Дальше'));
       }
       expect(find.text(bank.blocks[1].tasks.first.expression), findsOneWidget);

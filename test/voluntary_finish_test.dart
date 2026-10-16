@@ -111,13 +111,28 @@ void main() {
                 .onTap,
             isNull,
           );
+          expect(find.textContaining('Твой ответ:'), findsNothing);
+          final footer = find.byKey(const ValueKey('demo-footer'));
+          final backToResults = find.byKey(
+            const ValueKey('bank-history-results'),
+          );
           expect(
-            find.text(
-              'Твой ответ: ${bank.blocks.first.tasks.first.expectedAnswer}',
-            ),
+            find.descendant(of: footer, matching: backToResults),
             findsOneWidget,
           );
-          await tester.tap(find.widgetWithText(TextButton, 'К итогам'));
+          final resultBounds = tester.getRect(backToResults);
+          final continueBounds = tester.getRect(
+            find.byKey(const ValueKey('bank-return-current')),
+          );
+          expect(resultBounds.right, closeTo(size.width - 56, .01));
+          expect(resultBounds.bottom, lessThanOrEqualTo(size.height));
+          expect(
+            continueBounds.bottom,
+            lessThanOrEqualTo(tester.getRect(footer).top),
+          );
+          expect(continueBounds.right, closeTo(resultBounds.right, .01));
+
+          await tester.tap(find.byKey(const ValueKey('bank-history-results')));
           await tester.pumpAndSettle();
           expect(
             find.text('Решено: 9. Пройдено блоков: 9 из 22.'),
@@ -129,6 +144,10 @@ void main() {
           for (var i = 0; i < 8; i++) {
             await tester.tap(find.text('Дальше'));
             await tester.pumpAndSettle();
+            expect(
+              find.byKey(const ValueKey('bank-history-results')),
+              findsOneWidget,
+            );
           }
           expect(find.byKey(const ValueKey('bank-task-9')), findsOneWidget);
           expect(
@@ -138,8 +157,8 @@ void main() {
             isTrue,
           );
           expect(find.text('Проверить себя'), findsNothing);
-          await tester.ensureVisible(find.text('Продолжить практику'));
-          await tester.tap(find.text('Продолжить практику'));
+          await tester.ensureVisible(find.text('Продолжить решение'));
+          await tester.tap(find.text('Продолжить решение'));
           await tester.pumpAndSettle();
           expect(find.byKey(const ValueKey('bank-task-10')), findsOneWidget);
           final field = tester.widget<TextField>(

@@ -203,6 +203,20 @@ void main() {
             .readOnly,
         isTrue,
       );
+      final historyFooter = tester.getRect(
+        find.byKey(const ValueKey('demo-footer')),
+      );
+      final resultsAction = tester.getRect(
+        find.byKey(const ValueKey('bank-history-results')),
+      );
+      final continueAction = tester.getRect(
+        find.byKey(const ValueKey('bank-return-current')),
+      );
+      expect(viewport.contains(resultsAction.topLeft), isTrue);
+      expect(viewport.contains(resultsAction.bottomRight), isTrue);
+      expect(continueAction.bottom, lessThanOrEqualTo(historyFooter.top));
+      expect(resultsAction.top, greaterThanOrEqualTo(historyFooter.top));
+      expect(find.textContaining('Твой ответ:'), findsNothing);
       await save('history-input');
     });
   }

@@ -126,7 +126,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(AlertDialog), findsNothing);
         expect(find.text('7a + 7b'), findsOneWidget);
-        expect(find.text('Твой ответ: 7(a+b)'), findsOneWidget);
+        expect(find.textContaining('Твой ответ:'), findsNothing);
         await tester.tap(find.text('Вернуться к текущему'));
         await tester.pumpAndSettle();
         expect(controller.value, draft);
@@ -193,7 +193,7 @@ void main() {
           await tester.tap(find.text('Проверить себя'));
           await tester.pumpAndSettle();
           expect(find.text('Пока не получилось!'), findsOneWidget);
-          expect(find.text('Верных подряд: 0 из 2'), findsOneWidget);
+          expect(find.textContaining('Верных подряд:'), findsNothing);
           await tester.tap(find.text('Узнать, как правильно'));
           await tester.pumpAndSettle();
           expect(find.text('7(a + b)'), findsOneWidget);
@@ -395,14 +395,14 @@ void main() {
       await tester.tap(find.text('Назад к решению'));
       await tester.pumpAndSettle();
       expect(find.byType(AlertDialog), findsNothing);
-      expect(find.text('Твой ответ: 7(a+b)'), findsOneWidget);
+      expect(find.textContaining('Твой ответ:'), findsNothing);
       expect(
         tester
             .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
             .readOnly,
         isTrue,
       );
-      await tester.tap(find.widgetWithText(TextButton, 'К итогам'));
+      await tester.tap(find.byKey(const ValueKey('bank-history-results')));
       await tester.pumpAndSettle();
       expect(find.text('Решено: 1. Пройдено блоков: 1 из 1.'), findsOneWidget);
       expect(tester.takeException(), isNull);

@@ -84,6 +84,34 @@ class _BankTrainerState extends State<BankTrainer> {
     if (finished && session!.checked) _next();
   }
 
+  void _returnToResults() {
+    _saveView();
+    setState(() => page = 'results');
+  }
+
+  Widget _historyAction(BuildContext context, bool wide, bool compact) {
+    final action = Align(
+      alignment: Alignment.centerRight,
+      child: SecondaryAction(
+        key: const ValueKey('bank-return-current'),
+        label: session!.isFinished
+            ? 'Продолжить решение'
+            : 'Вернуться к текущему',
+        compact: compact,
+        onPressed: _returnToPractice,
+      ),
+    );
+    return LayoutBuilder(
+      builder: (context, bounds) => bounds.maxWidth < 720
+          ? action
+          : DemoColumns(
+              wide: wide,
+              left: const SizedBox.shrink(),
+              right: action,
+            ),
+    );
+  }
+
   bool get _complete => isCompleteAnswer(entry.text.replaceAll('·', '×'));
   bool get _unsupportedSymbol =>
       RegExp(r'[^0-9a-zA-Z\s()+−×÷*/·-]').hasMatch(entry.text);
@@ -138,14 +166,31 @@ class _BankTrainerState extends State<BankTrainer> {
           ),
         ),
       );
+      final results = _history && session!.isFinished
+          ? Align(
+              alignment: Alignment.centerRight,
+              child: SecondaryAction(
+                key: const ValueKey('bank-history-results'),
+                label: 'К итогам',
+                compact: compact,
+                onPressed: _returnToResults,
+              ),
+            )
+          : const SizedBox.shrink();
       return LayoutBuilder(
         builder: (context, bounds) => bounds.maxWidth < 720
-            ? left
-            : DemoColumns(
-                wide: wide,
-                left: left,
-                right: const SizedBox.shrink(),
-              ),
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  left,
+                  if (_history && session!.isFinished) ...[
+                    const SizedBox(height: 8),
+                    results,
+                  ],
+                ],
+              )
+            : DemoColumns(wide: wide, left: left, right: results),
       );
     }
     if (page == 'results') {
@@ -433,35 +478,6 @@ class _BankTrainerState extends State<BankTrainer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (_history) ...[
-              Wrap(
-                spacing: 12,
-                children: [
-                  TextButton(
-                    key: const ValueKey('bank-return-current'),
-                    onPressed: _returnToPractice,
-                    child: Text(
-                      s.isFinished
-                          ? 'Продолжить практику'
-                          : 'Вернуться к текущему',
-                    ),
-                  ),
-                  if (s.isFinished)
-                    TextButton(
-                      onPressed: () {
-                        _saveView();
-                        setState(() => page = 'results');
-                      },
-                      child: const Text('К итогам'),
-                    ),
-                ],
-              ),
-              Text(
-                'Твой ответ: ${_record!.answer}',
-                style: screenText(16, c.sub),
-              ),
-              const SizedBox(height: 8),
-            ],
             _text(task.instruction, c, size: compact ? 19 : 23),
             SizedBox(height: compact ? 8 : 18),
             DemoMath(task.expression, size: compact ? 36 : 54, height: 1.2),
@@ -608,11 +624,6 @@ class _BankTrainerState extends State<BankTrainer> {
               const SizedBox(height: 12),
               _text(message, c, size: 16),
             ],
-            if (!_history && s.pendingExtraTasks > 0)
-              Text(
-                'Верных подряд: ${settings.extraTasksPerError - s.pendingExtraTasks} из ${settings.extraTasksPerError}',
-                style: screenText(16, c.sub),
-              ),
           ],
         ),
       ),
@@ -795,6 +806,9 @@ class _BankTrainerState extends State<BankTrainer> {
         );
       }
       return DemoPage(
+        aboveFooterBuilder: page == 'practice' && _history
+            ? _historyAction
+            : null,
         showLabel: page != 'practice',
         label: page == 'results'
             ? 'Итоги'

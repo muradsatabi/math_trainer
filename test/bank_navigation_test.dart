@@ -62,7 +62,7 @@ void main() {
         expect(find.byKey(const ValueKey('bank-task-1')), findsOneWidget);
         expect(find.text('Предыдущее задание'), findsNothing);
         expect(find.text('Пока не получилось!'), findsOneWidget);
-        expect(find.text('Твой ответ: ${firstChoices[wrong]}'), findsOneWidget);
+        expect(find.textContaining('Твой ответ:'), findsNothing);
         expect(find.text('10%'), findsOneWidget);
         await tap(find.text('Дальше'));
         expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);

@@ -531,6 +531,7 @@ class DemoPage extends StatelessWidget {
     this.showSuccess = false,
     this.visibleScrollbar = false,
     this.footerBuilder,
+    this.aboveFooterBuilder,
     this.successPercent = 0,
     this.onTopics,
     this.scrollKey,
@@ -541,6 +542,7 @@ class DemoPage extends StatelessWidget {
   final bool showSuccess;
   final bool visibleScrollbar;
   final DemoBodyBuilder? footerBuilder;
+  final DemoBodyBuilder? aboveFooterBuilder;
   final double successPercent;
   final VoidCallback? onTopics;
   final Object? scrollKey;
@@ -557,21 +559,48 @@ class DemoPage extends StatelessWidget {
                 final size = MediaQuery.sizeOf(context);
                 final wide = size.width >= 1280;
                 return SafeArea(
-                  child: Container(
-                    key: const ValueKey('demo-footer'),
-                    decoration: BoxDecoration(
-                      color: c.paper,
-                      border: Border(top: BorderSide(color: c.line)),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: wide
-                          ? 56
-                          : size.width < 720
-                          ? 16
-                          : 40,
-                      vertical: 12,
-                    ),
-                    child: footerBuilder!(context, wide, size.height <= 840),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (aboveFooterBuilder != null)
+                        Padding(
+                          key: const ValueKey('demo-above-footer'),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: wide
+                                ? 56
+                                : size.width < 720
+                                ? 16
+                                : 40,
+                            vertical: 12,
+                          ),
+                          child: aboveFooterBuilder!(
+                            context,
+                            wide,
+                            size.height <= 840,
+                          ),
+                        ),
+                      Container(
+                        key: const ValueKey('demo-footer'),
+                        decoration: BoxDecoration(
+                          color: c.paper,
+                          border: Border(top: BorderSide(color: c.line)),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: wide
+                              ? 56
+                              : size.width < 720
+                              ? 16
+                              : 40,
+                          vertical: 12,
+                        ),
+                        child: footerBuilder!(
+                          context,
+                          wide,
+                          size.height <= 840,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
