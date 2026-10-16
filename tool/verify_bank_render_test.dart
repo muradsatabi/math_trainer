@@ -116,6 +116,12 @@ void main() {
       await save('choice-correct');
       await tester.tap(find.text('Дальше'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Предыдущее задание'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      await save('history-choice');
+      await tester.tap(find.text('Дальше'));
+      await tester.pumpAndSettle();
       // Fill the real 22-answer window enough to admit input (16/22 >= 70%).
       for (var blockIndex = 1; blockIndex < 16; blockIndex++) {
         final task = bank.blocks[blockIndex].tasks.first;
@@ -172,6 +178,21 @@ void main() {
       expect(viewport.contains(finish.topLeft), isTrue);
       expect(viewport.contains(finish.bottomRight), isTrue);
       await save('finish-available');
+      await tester.tap(find.text('Завершить занятие'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Назад к решению'));
+      await tester.pumpAndSettle();
+      for (var i = 0; i < 16; i++) {
+        await tester.tap(find.text('Дальше'));
+        await tester.pumpAndSettle();
+      }
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
+            .readOnly,
+        isTrue,
+      );
+      await save('history-input');
     });
   }
 }

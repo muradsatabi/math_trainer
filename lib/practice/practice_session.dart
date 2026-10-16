@@ -33,12 +33,14 @@ class TaskAttempt {
     required this.answer,
     required this.correct,
     required this.isExtra,
+    this.usesInput = false,
   });
   final BankTask task;
   final String blockId;
   final String answer;
   final bool correct;
   final bool isExtra;
+  final bool usesInput;
 }
 
 /// One initial task per block. Every error adds tasks from that same block.
@@ -103,6 +105,12 @@ class PracticeSession {
     _finished = true;
   }
 
+  /// Continuing is an explicit action; viewing old answers does not reopen it.
+  void resume() {
+    if (!_finished) throw StateError('Practice is already active');
+    _finished = false;
+  }
+
   /// Called only after a supported answer has been checked, never for previews.
   void submit({required String answer, required bool correct}) {
     if (_checked || _finished) {
@@ -115,6 +123,7 @@ class PracticeSession {
         answer: answer,
         correct: correct,
         isExtra: _isExtra,
+        usesInput: _usesInput,
       ),
     );
     if (_isExtra) {

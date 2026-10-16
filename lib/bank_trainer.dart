@@ -20,6 +20,13 @@ class BankTrainer extends StatefulWidget {
   State<BankTrainer> createState() => _BankTrainerState();
 }
 
+class _SavedPracticeView {
+  const _SavedPracticeView(this.entry, this.message, this.showAnswer);
+  final TextEditingValue entry;
+  final String? message;
+  final bool showAnswer;
+}
+
 class _BankTrainerState extends State<BankTrainer> {
   final entry = TextEditingController();
   late final Future<TaskBank> loading = _load();
@@ -29,6 +36,54 @@ class _BankTrainerState extends State<BankTrainer> {
   String? inputMessage;
   bool showAnswer = false;
   int reviewIndex = 0;
+  int? historyIndex;
+  final Map<int, _SavedPracticeView> savedViews = {};
+  bool get _history => historyIndex != null;
+  TaskAttempt? get _record =>
+      _history ? session!.attempts[historyIndex!] : null;
+  BankTask get _task => _record?.task ?? session!.currentTask;
+  BankBlock get _block => _history
+      ? session!.bank.blocks.firstWhere((b) => b.id == _record!.blockId)
+      : session!.currentBlock;
+  bool get _checked => _history || session!.checked;
+  bool get _correct => _history
+      ? _record!.correct
+      : session!.checked && session!.attempts.last.correct;
+  bool get _usesInput => _record?.usesInput ?? session!.usesInput;
+  bool get _offerFinish =>
+      !_history && !session!.isFinished && session!.canFinish;
+
+  void _saveView() {
+    savedViews[historyIndex ?? -1] = _SavedPracticeView(
+      entry.value,
+      inputMessage,
+      showAnswer,
+    );
+  }
+
+  void _openTask(int? index) {
+    setState(() {
+      if (page == 'practice') _saveView();
+      historyIndex = index;
+      final saved = savedViews[index ?? -1];
+      entry.value =
+          saved?.entry ??
+          TextEditingValue(
+            text: index == null ? '' : session!.attempts[index].answer,
+          );
+      inputMessage = saved?.message;
+      showAnswer = saved?.showAnswer ?? false;
+      page = 'practice';
+    });
+  }
+
+  void _returnToPractice() {
+    final finished = session!.isFinished;
+    if (finished) session!.resume();
+    _openTask(null);
+    if (finished && session!.checked) _next();
+  }
+
   bool get _complete => isCompleteAnswer(entry.text.replaceAll('·', '×'));
   bool get _unsupportedSymbol =>
       RegExp(r'[^0-9a-zA-Z\s()+−×÷*/·-]').hasMatch(entry.text);
@@ -42,7 +97,6 @@ class _BankTrainerState extends State<BankTrainer> {
     bool compact,
     TaskBank bank,
   ) {
-    final s = session;
     if (page == 'practice') {
       final left = Container(
         padding: EdgeInsets.only(right: wide ? 42 : 30),
@@ -53,24 +107,27 @@ class _BankTrainerState extends State<BankTrainer> {
           builder: (context, bounds) => Row(
             children: [
               SizedBox(
-                width: s!.usesInput
+                key: const ValueKey('bank-previous-slot'),
+                width: _usesInput
                     ? (bounds.maxWidth - 48) / 3
                     : (bounds.maxWidth - 12) / 3,
-                child: SecondaryAction(
-                  key: const ValueKey('bank-previous'),
-                  label: 'Предыдущее задание',
-                  onPressed: _previousIndex >= 0 ? _previous : null,
-                  compact: compact,
-                ),
+                child: _previousIndex < 0
+                    ? const SizedBox.shrink()
+                    : SecondaryAction(
+                        key: const ValueKey('bank-previous'),
+                        label: 'Предыдущее задание',
+                        onPressed: _previousIndex >= 0 ? _previous : null,
+                        compact: compact,
+                      ),
               ),
-              SizedBox(width: s.usesInput ? 24 : 12),
+              SizedBox(width: _usesInput ? 24 : 12),
               Expanded(
                 child: PrimaryAction(
                   key: const ValueKey('bank-primary'),
-                  label: s.checked ? 'Дальше' : 'Проверить себя',
-                  onPressed: !s.checked && !_complete
+                  label: _checked ? 'Дальше' : 'Проверить себя',
+                  onPressed: !_checked && !_complete
                       ? null
-                      : s.checked
+                      : _checked
                       ? _next
                       : _check,
                   wide: wide,
@@ -98,7 +155,7 @@ class _BankTrainerState extends State<BankTrainer> {
           SecondaryAction(
             label: 'Назад к решению',
             compact: compact,
-            onPressed: () => _showAttempt(s!.attempts.first, fromResults: true),
+            onPressed: () => _openTask(0),
           ),
           SecondaryAction(
             label: 'Чему мы научились',
@@ -181,7 +238,7 @@ class _BankTrainerState extends State<BankTrainer> {
   }
 
   void _insert(String symbol) {
-    if (session!.checked) return;
+    if (_checked) return;
     final selection = entry.selection;
     final start = selection.isValid ? selection.start : entry.text.length;
     final end = selection.isValid ? selection.end : entry.text.length;
@@ -195,7 +252,7 @@ class _BankTrainerState extends State<BankTrainer> {
   }
 
   void _delete() {
-    if (session!.checked) return;
+    if (_checked) return;
     final selection = entry.selection;
     final start = selection.isValid ? selection.start : entry.text.length;
     final end = selection.isValid ? selection.end : entry.text.length;
@@ -217,52 +274,12 @@ class _BankTrainerState extends State<BankTrainer> {
     });
   }
 
-  int get _previousIndex =>
-      session!.attempts.length - (session!.checked ? 2 : 1);
+  int get _previousIndex => _history
+      ? historyIndex! - 1
+      : session!.attempts.length - (session!.checked ? 2 : 1);
 
   void _previous() {
-    if (_previousIndex < 0) return;
-    final record = session!.attempts[_previousIndex];
-    _showAttempt(record);
-  }
-
-  void _showAttempt(TaskAttempt record, {bool fromResults = false}) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        final c = ScreenColors(dialogContext);
-        return AlertDialog(
-          backgroundColor: c.paper,
-          title: Text(fromResults ? 'Первое решение' : 'Предыдущее задание'),
-          content: SizedBox(
-            width: 560,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _text(record.task.instruction, c),
-                  const SizedBox(height: 12),
-                  DemoMath(record.task.expression, size: 32),
-                  const SizedBox(height: 12),
-                  _text('Твой ответ: ${record.answer}', c),
-                  _text(
-                    record.correct ? 'Абсолютно верно!' : 'Пока не получилось!',
-                    c,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(fromResults ? 'К итогам' : 'Вернуться к текущему'),
-            ),
-          ],
-        );
-      },
-    );
+    if (_previousIndex >= 0) _openTask(_previousIndex);
   }
 
   Future<TaskBank> _load() async {
@@ -288,7 +305,7 @@ class _BankTrainerState extends State<BankTrainer> {
 
   void _check() {
     final s = session!;
-    if (s.checked || s.isFinished) return;
+    if (_checked || (!_history && s.isFinished)) return;
     if (!_complete) {
       setState(
         () => inputMessage = _unsupportedSymbol
@@ -297,7 +314,7 @@ class _BankTrainerState extends State<BankTrainer> {
       );
       return;
     }
-    final verdict = checkFactorAnswer(s.currentTask, entry.text);
+    final verdict = checkFactorAnswer(_task, entry.text);
     setState(() {
       inputMessage = null;
       if (verdict == AnswerVerdict.incomplete) {
@@ -315,8 +332,22 @@ class _BankTrainerState extends State<BankTrainer> {
 
   void _next() {
     final s = session!;
+    if (_history) {
+      final next = historyIndex! + 1;
+      if (next < s.attempts.length) {
+        _openTask(next);
+      } else if (s.isFinished) {
+        _saveView();
+        setState(() => page = 'results');
+      } else {
+        _openTask(null);
+        if (s.checked) _next();
+      }
+      return;
+    }
     setState(() {
       s.advance();
+      savedViews.remove(-1);
       entry.clear();
       inputMessage = null;
       showAnswer = false;
@@ -327,6 +358,7 @@ class _BankTrainerState extends State<BankTrainer> {
     final s = session!;
     if (!s.canFinish || s.isFinished) return;
     setState(() {
+      _saveView();
       s.finish();
       page = 'results';
     });
@@ -369,8 +401,8 @@ class _BankTrainerState extends State<BankTrainer> {
 
   Widget _practice(TaskBank bank, ScreenColors c, bool wide, bool compact) {
     final s = session!;
-    final task = s.currentTask;
-    final correct = s.checked && s.attempts.last.correct;
+    final task = _task;
+    final correct = _correct;
     final message =
         inputMessage ??
         (_unsupportedSymbol
@@ -381,7 +413,7 @@ class _BankTrainerState extends State<BankTrainer> {
         : Color(c.dark ? 0xfff0aaa5 : 0xffa74743);
     return DemoColumns(
       wide: wide,
-      narrowRightFirst: s.checked || s.canFinish,
+      narrowRightFirst: _checked || _offerFinish,
       left: Container(
         padding: EdgeInsets.only(right: wide ? 42 : 30),
         decoration: BoxDecoration(
@@ -390,23 +422,52 @@ class _BankTrainerState extends State<BankTrainer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(s.currentBlock.title, style: screenText(16, c.sub)),
+            if (_history) ...[
+              Wrap(
+                spacing: 12,
+                children: [
+                  TextButton(
+                    key: const ValueKey('bank-return-current'),
+                    onPressed: _returnToPractice,
+                    child: Text(
+                      s.isFinished
+                          ? 'Продолжить практику'
+                          : 'Вернуться к текущему',
+                    ),
+                  ),
+                  if (s.isFinished)
+                    TextButton(
+                      onPressed: () {
+                        _saveView();
+                        setState(() => page = 'results');
+                      },
+                      child: const Text('К итогам'),
+                    ),
+                ],
+              ),
+              Text(
+                'Твой ответ: ${_record!.answer}',
+                style: screenText(16, c.sub),
+              ),
+              const SizedBox(height: 8),
+            ],
+            Text(_block.title, style: screenText(16, c.sub)),
             SizedBox(height: compact ? 8 : 16),
             _text(task.instruction, c, size: compact ? 19 : 23),
             SizedBox(height: compact ? 8 : 18),
             DemoMath(task.expression, size: compact ? 36 : 54, height: 1.2),
             SizedBox(height: compact ? 10 : 24),
             Text(
-              s.usesInput ? 'Собери ответ:' : 'Выбери ответ:',
+              _usesInput ? 'Собери ответ:' : 'Выбери ответ:',
               style: screenText(compact ? 15 : 18, c.sub),
             ),
             const SizedBox(height: 12),
-            if (!s.usesInput) _choiceCards(task, s, c, compact),
-            if (s.usesInput) ...[
+            if (!_usesInput) _choiceCards(task, c, compact),
+            if (_usesInput) ...[
               Container(
                 height: compact ? 56 : 72,
                 decoration: BoxDecoration(
-                  color: !s.checked
+                  color: !_checked
                       ? c.paper
                       : correct
                       ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
@@ -414,7 +475,7 @@ class _BankTrainerState extends State<BankTrainer> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     width: 2,
-                    color: !s.checked
+                    color: !_checked
                         ? c.blue
                         : correct
                         ? Color(c.dark ? 0xff68c98b : 0xff28934c)
@@ -424,7 +485,7 @@ class _BankTrainerState extends State<BankTrainer> {
                 child: TextField(
                   key: const ValueKey('bank-answer'),
                   controller: entry,
-                  readOnly: s.checked,
+                  readOnly: _checked,
                   autofocus: false,
                   style: TextStyle(
                     fontFamily: 'Caladea',
@@ -439,7 +500,7 @@ class _BankTrainerState extends State<BankTrainer> {
                       horizontal: compact ? 22 : 24,
                       vertical: compact ? 6 : 14,
                     ),
-                    suffixIcon: s.checked
+                    suffixIcon: _checked
                         ? Icon(
                             correct ? Icons.check : Icons.close,
                             color: feedbackColor,
@@ -448,7 +509,7 @@ class _BankTrainerState extends State<BankTrainer> {
                   ),
                   onChanged: (_) => setState(() => inputMessage = null),
                   onTapOutside: (_) {
-                    if (!s.checked && entry.text.isNotEmpty && !_complete) {
+                    if (!_checked && entry.text.isNotEmpty && !_complete) {
                       setState(
                         () => inputMessage = _unsupportedSymbol
                             ? 'Эта запись пока не поддерживается. Ответ не оценён.'
@@ -457,7 +518,7 @@ class _BankTrainerState extends State<BankTrainer> {
                     }
                   },
                   onSubmitted: (_) {
-                    if (!s.checked) _check();
+                    if (!_checked) _check();
                   },
                 ),
               ),
@@ -468,13 +529,13 @@ class _BankTrainerState extends State<BankTrainer> {
                 children: [
                   TextButton.icon(
                     key: const ValueKey('bank-delete'),
-                    onPressed: s.checked || entry.text.isEmpty ? null : _delete,
+                    onPressed: _checked || entry.text.isEmpty ? null : _delete,
                     icon: const Icon(Icons.backspace_outlined, size: 20),
                     label: const Text('Удалить символ'),
                   ),
                   TextButton(
                     key: const ValueKey('bank-clear'),
-                    onPressed: s.checked || entry.text.isEmpty
+                    onPressed: _checked || entry.text.isEmpty
                         ? null
                         : () => setState(() {
                             entry.clear();
@@ -500,7 +561,7 @@ class _BankTrainerState extends State<BankTrainer> {
                           .toSet()
                           .toList()
                         ..sort()),
-                  enabled: !s.checked,
+                  enabled: !_checked,
                   compact: compact,
                   onInsert: _insert,
                 ),
@@ -512,11 +573,11 @@ class _BankTrainerState extends State<BankTrainer> {
             ],
             const SizedBox(height: 20),
             Text(
-              'Задание ${s.attempts.length + (s.checked ? 0 : 1)}'
-              '${s.currentIsExtra ? ' · дополнительное' : ''}',
+              'Задание ${_history ? historyIndex! + 1 : s.attempts.length + (_checked ? 0 : 1)}'
+              '${(_record?.isExtra ?? s.currentIsExtra) ? ' · дополнительное' : ''}',
               style: screenText(16, c.sub),
             ),
-            if (s.pendingExtraTasks > 0)
+            if (!_history && s.pendingExtraTasks > 0)
               Text(
                 'Дополнительных заданий осталось: ${s.pendingExtraTasks}',
                 style: screenText(16, c.sub),
@@ -524,7 +585,7 @@ class _BankTrainerState extends State<BankTrainer> {
           ],
         ),
       ),
-      right: s.checked || s.canFinish
+      right: _checked || _offerFinish
           ? Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -534,29 +595,29 @@ class _BankTrainerState extends State<BankTrainer> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (s.checked)
+                  if (_checked)
                     Text(
                       correct ? 'Абсолютно верно!' : 'Пока не получилось!',
                       key: const ValueKey('bank-feedback'),
                       style: screenText(24, feedbackColor, heading: true),
                     ),
-                  if (s.checked && !correct && !showAnswer) ...[
+                  if (_checked && !correct && !showAnswer) ...[
                     const SizedBox(height: 20),
                     OutlinedButton(
                       onPressed: () => setState(() => showAnswer = true),
                       child: const Text('Узнать, как правильно'),
                     ),
                   ],
-                  if (s.checked && showAnswer) ...[
+                  if (_checked && showAnswer) ...[
                     const SizedBox(height: 16),
                     _text('Правильная запись', c),
                     const SizedBox(height: 8),
                     DemoMath(task.expectedAnswer, size: 28),
                     const SizedBox(height: 12),
-                    _text(s.currentBlock.skill, c, size: 16),
+                    _text(_block.skill, c, size: 16),
                   ],
-                  if (s.canFinish) ...[
-                    if (s.checked) const Divider(height: 32),
+                  if (_offerFinish) ...[
+                    if (_checked) const Divider(height: 32),
                     Text(
                       'Целевая успешность достигнута',
                       key: const ValueKey('bank-finish-notice'),
@@ -587,12 +648,7 @@ class _BankTrainerState extends State<BankTrainer> {
     );
   }
 
-  Widget _choiceCards(
-    BankTask task,
-    PracticeSession s,
-    ScreenColors c,
-    bool compact,
-  ) {
+  Widget _choiceCards(BankTask task, ScreenColors c, bool compact) {
     final options = answerChoices(task);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -602,16 +658,16 @@ class _BankTrainerState extends State<BankTrainer> {
           Builder(
             builder: (context) {
               final selected = entry.text == options[i];
-              final correct = s.checked && s.attempts.last.correct;
+              final correct = _correct;
               final borderColor = selected
-                  ? s.checked
+                  ? _checked
                         ? correct
                               ? Color(c.dark ? 0xff68c98b : 0xff28934c)
                               : Color(c.dark ? 0xffb97e84 : 0xffcf7772)
                         : c.blue
                   : c.line;
               final background = selected
-                  ? s.checked
+                  ? _checked
                         ? correct
                               ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
                               : Color(c.dark ? 0xff452e36 : 0xfffff0ee)
@@ -620,7 +676,7 @@ class _BankTrainerState extends State<BankTrainer> {
               return Semantics(
                 button: true,
                 selected: selected,
-                enabled: !s.checked,
+                enabled: !_checked,
                 child: Material(
                   color: background,
                   shape: RoundedRectangleBorder(
@@ -633,7 +689,7 @@ class _BankTrainerState extends State<BankTrainer> {
                   child: InkWell(
                     key: ValueKey('bank-choice-$i'),
                     borderRadius: BorderRadius.circular(16),
-                    onTap: s.checked
+                    onTap: _checked
                         ? null
                         : () => setState(() {
                             entry.text = options[i];
@@ -655,7 +711,7 @@ class _BankTrainerState extends State<BankTrainer> {
                                 height: 1.2,
                               ),
                             ),
-                            if (selected && s.checked) ...[
+                            if (selected && _checked) ...[
                               const SizedBox(width: 12),
                               Icon(
                                 correct ? Icons.check : Icons.close,
@@ -721,7 +777,7 @@ class _BankTrainerState extends State<BankTrainer> {
         successPercent: s?.successPercent ?? 0,
         visibleScrollbar: true,
         scrollKey: page == 'practice'
-            ? '${s!.currentTask.id}-${s.checked}'
+            ? '${historyIndex ?? -1}-${_task.id}-$_checked'
             : page,
         bodyBuilder: (context, wide, compact) {
           final c = ScreenColors(context);

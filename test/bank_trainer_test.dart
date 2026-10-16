@@ -44,7 +44,7 @@ void main() {
           OutlinedButton,
           'Предыдущее задание',
         );
-        expect(tester.widget<OutlinedButton>(previous).onPressed, isNull);
+        expect(previous, findsNothing);
         final numbers = tester.getRect(
           find.byKey(const ValueKey('bank-key-group-Числа')),
         );
@@ -55,7 +55,7 @@ void main() {
           find.byKey(const ValueKey('bank-key-group-Знаки и скобки')),
         );
         final previousBounds = tester.getRect(
-          find.byKey(const ValueKey('bank-previous')),
+          find.byKey(const ValueKey('bank-previous-slot')),
         );
         final primaryBounds = tester.getRect(
           find.byKey(const ValueKey('bank-primary')),
@@ -118,7 +118,7 @@ void main() {
         final draft = controller.value;
         await tester.tap(find.text('Предыдущее задание'));
         await tester.pumpAndSettle();
-        expect(find.byType(AlertDialog), findsOneWidget);
+        expect(find.byType(AlertDialog), findsNothing);
         expect(find.text('7a + 7b'), findsOneWidget);
         expect(find.text('Твой ответ: 7(a+b)'), findsOneWidget);
         await tester.tap(find.text('Вернуться к текущему'));
@@ -391,9 +391,14 @@ void main() {
       expect(find.text('Разобрать ошибки'), findsNothing);
       await tester.tap(find.text('Назад к решению'));
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(AlertDialog), findsNothing);
       expect(find.text('Твой ответ: 7(a+b)'), findsOneWidget);
-      expect(find.byType(TextField), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
+            .readOnly,
+        isTrue,
+      );
       await tester.tap(find.widgetWithText(TextButton, 'К итогам'));
       await tester.pumpAndSettle();
       expect(find.text('Решено: 1. Пройдено блоков: 1 из 1.'), findsOneWidget);

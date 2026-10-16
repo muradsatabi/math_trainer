@@ -229,6 +229,26 @@ void main() {
     expect(s.attempts, isEmpty);
   });
 
+  test('resume keeps all attempts and scoring; next answer is a new task', () {
+    final s = session(window: 1);
+    s.submit(answer: 'first', correct: true);
+    expect(s.attempts.single.usesInput, isFalse);
+    final attempt = s.attempts.single;
+    s.finish();
+    s.resume();
+    expect(s.isFinished, isFalse);
+    expect(s.attempts.single, same(attempt));
+    expect(s.successPercent, 100);
+    expect(() => s.submit(answer: 'changed', correct: false), throwsStateError);
+    s.advance();
+    expect(s.currentTask.id, isNot(attempt.task.id));
+    expect(s.usesInput, isTrue);
+    s.submit(answer: 'second', correct: true);
+    expect(s.attempts.length, 2);
+    expect(s.attempts.first.answer, 'first');
+    expect(s.attempts.last.usesInput, isTrue);
+  });
+
   test('duplicate IDs across blocks are rejected', () {
     final bank = fixtureBank(2);
     expect(
