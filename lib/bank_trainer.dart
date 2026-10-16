@@ -784,7 +784,7 @@ class _BankTrainerState extends State<BankTrainer> {
         return TopicsScreen(
           titles: [bank.title.replaceFirst('общего ', 'общего\n')],
           successes: [s?.successPercent.floor()],
-          completedStates: [s?.isFinished ?? false],
+          completedStates: [s?.canFinish ?? false],
           onTopicSelected: (_) => setState(() {
             page = s == null
                 ? 'start'

@@ -78,7 +78,8 @@ void main() {
           // Leaving and returning while eligible still resumes practice.
           await tester.tap(find.text('К темам'));
           await tester.pumpAndSettle();
-          expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
+          expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+          expect(find.byIcon(Icons.schedule_rounded), findsNothing);
           await tester.tap(find.byKey(const ValueKey('topic-0')));
           await tester.pumpAndSettle();
           expect(find.byKey(const ValueKey('bank-task-10')), findsOneWidget);
