@@ -148,22 +148,19 @@ void main() {
     expect(s.currentIsExtra, isFalse);
   });
 
-  test(
-    'new remedial errors add two; three consecutive errors request detail',
-    () {
-      final s = session();
-      for (var i = 0; i < 3; i++) {
-        s.submit(answer: 'wrong', correct: false);
-        expect(s.pendingExtraTasks, i + 2);
-        if (i < 2) s.advance();
-      }
-      expect(s.needsDetailedExplanation, isTrue);
-      s.advance();
-      s.submit(answer: 'fixture', correct: true);
-      expect(s.currentBlockErrorStreak, 0);
-      expect(s.needsDetailedExplanation, isFalse);
-    },
-  );
+  test('new errors reset the required streak; three errors request detail', () {
+    final s = session();
+    for (var i = 0; i < 3; i++) {
+      s.submit(answer: 'wrong', correct: false);
+      expect(s.pendingExtraTasks, 2);
+      if (i < 2) s.advance();
+    }
+    expect(s.needsDetailedExplanation, isTrue);
+    s.advance();
+    s.submit(answer: 'fixture', correct: true);
+    expect(s.currentBlockErrorStreak, 0);
+    expect(s.needsDetailedExplanation, isFalse);
+  });
 
   test(
     'window excludes older answers, counts extras and uses exact threshold',
@@ -209,6 +206,42 @@ void main() {
     s.advance();
     s.submit(answer: 'fixture', correct: true);
     expect(s.canFinish, isTrue);
+  });
+
+  test('wrong-correct-wrong restarts the streak in every block and topic', () {
+    for (final topic in ['arithmetic', 'algebra']) {
+      final source = fixtureBank(3);
+      final s = PracticeSession(
+        bank: TaskBank(topicId: topic, title: topic, blocks: source.blocks),
+        settings: PracticeSettings(
+          minimumAnswers: 10,
+          successWindow: 10,
+          passPercent: 85,
+          extraTasksPerError: 2,
+        ),
+      );
+      for (var block = 0; block < 3; block++) {
+        const answers = [false, true, false, true, false, true, true];
+        const remaining = [2, 1, 2, 1, 2, 1, 0];
+        for (var i = 0; i < answers.length; i++) {
+          expect(s.currentBlock.id, 'block-$block');
+          s.submit(answer: 'attempt-$i', correct: answers[i]);
+          expect(s.pendingExtraTasks, remaining[i]);
+          final count = s.attempts.length;
+          expect(
+            () => s.submit(answer: 'duplicate', correct: true),
+            throwsStateError,
+          );
+          expect(s.attempts.length, count);
+          expect(s.pendingExtraTasks, remaining[i]);
+          s.advance();
+        }
+        expect(s.currentBlock.id, block < 2 ? 'block-${block + 1}' : 'block-0');
+        expect(s.currentIsExtra, isFalse);
+      }
+      expect(s.attempts.length, 21);
+      expect(s.attempts.where((a) => a.correct).length, 12);
+    }
   });
 
   test('display/history reads cannot submit or advance an unchecked task', () {

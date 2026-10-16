@@ -43,7 +43,8 @@ class TaskAttempt {
   final bool usesInput;
 }
 
-/// One initial task per block. Every error adds tasks from that same block.
+/// One initial task per block. After an error, require a consecutive correct
+/// streak on that block; another error resets the required streak.
 /// No new mathematical exercises are generated; source tasks rotate on reuse.
 class PracticeSession {
   PracticeSession({required this.bank, required this.settings}) {
@@ -133,6 +134,8 @@ class PracticeSession {
     }
     _errorStreaks[_blockIndex] = correct ? 0 : currentBlockErrorStreak + 1;
     if (!correct) {
+      // A new error restarts the streak, rather than accumulating a task debt.
+      _extraBlocks.removeWhere((block) => block == _blockIndex);
       _extraBlocks.insertAll(
         0,
         List.filled(settings.extraTasksPerError, _blockIndex),

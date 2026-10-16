@@ -193,10 +193,7 @@ void main() {
           await tester.tap(find.text('Проверить себя'));
           await tester.pumpAndSettle();
           expect(find.text('Пока не получилось!'), findsOneWidget);
-          expect(
-            find.text('Дополнительных заданий осталось: 2'),
-            findsOneWidget,
-          );
+          expect(find.text('Верных подряд: 0 из 2'), findsOneWidget);
           await tester.tap(find.text('Узнать, как правильно'));
           await tester.pumpAndSettle();
           expect(find.text('7(a + b)'), findsOneWidget);

@@ -392,7 +392,7 @@ class _BankTrainerState extends State<BankTrainer> {
         ),
         const SizedBox(height: 12),
         _text(
-          'После ошибки — ещё ${settings.extraTasksPerError} задания того же блока.',
+          'После ошибки нужно решить ${settings.extraTasksPerError} задания того же типа правильно подряд.',
           c,
         ),
         if (s != null) ...[
@@ -610,7 +610,7 @@ class _BankTrainerState extends State<BankTrainer> {
             ],
             if (!_history && s.pendingExtraTasks > 0)
               Text(
-                'Дополнительных заданий осталось: ${s.pendingExtraTasks}',
+                'Верных подряд: ${settings.extraTasksPerError - s.pendingExtraTasks} из ${settings.extraTasksPerError}',
                 style: screenText(16, c.sub),
               ),
           ],
