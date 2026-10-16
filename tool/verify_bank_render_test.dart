@@ -146,6 +146,25 @@ void main() {
         await tester.tap(find.text('Дальше'));
         await tester.pumpAndSettle();
       }
+      await tester.enterText(find.byKey(const ValueKey('bank-answer')), '2^3');
+      await tester.pumpAndSettle();
+      final messageBounds = tester.getRect(
+        find.byKey(const ValueKey('bank-input-message')),
+      );
+      final numbersPage = tester.getRect(
+        find.byKey(const ValueKey('bank-page-Числа')),
+      );
+      final lettersGroup = tester.getRect(
+        find.byKey(const ValueKey('bank-key-group-Буквы')),
+      );
+      final symbolsGroup = tester.getRect(
+        find.byKey(const ValueKey('bank-key-group-Знаки и скобки')),
+      );
+      expect(messageBounds.left, closeTo(lettersGroup.left, .01));
+      expect(messageBounds.right, closeTo(symbolsGroup.right, .01));
+      expect(messageBounds.center.dy, closeTo(numbersPage.center.dy, .01));
+      expect(messageBounds.top, greaterThanOrEqualTo(lettersGroup.bottom));
+      await save('input-message');
       await tester.enterText(
         find.byKey(const ValueKey('bank-answer')),
         bank.blocks[7].tasks.first.expectedAnswer,

@@ -597,6 +597,7 @@ class _BankTrainerState extends State<BankTrainer> {
               TextFieldTapRegion(
                 child: AnswerKeyboard(
                   key: ValueKey('keyboard-${task.id}'),
+                  message: message,
                   requiredDigits: RegExp(r'[0-9]')
                       .allMatches(task.expectedAnswer)
                       .map((m) => m.group(0)!)
@@ -615,7 +616,7 @@ class _BankTrainerState extends State<BankTrainer> {
                 ),
               ),
             ],
-            if (message != null) ...[
+            if (!_usesInput && message != null) ...[
               const SizedBox(height: 12),
               _text(message, c, size: 16),
             ],

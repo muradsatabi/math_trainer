@@ -9,6 +9,7 @@ class AnswerKeyboard extends StatefulWidget {
     super.key,
     required this.letters,
     this.requiredDigits = const [],
+    this.message,
     required this.enabled,
     required this.compact,
     required this.onInsert,
@@ -16,6 +17,7 @@ class AnswerKeyboard extends StatefulWidget {
 
   final List<String> letters;
   final List<String> requiredDigits;
+  final String? message;
   final bool enabled;
   final bool compact;
   final ValueChanged<String> onInsert;
@@ -28,13 +30,7 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
   int digitPage = 0;
   int letterPage = 0;
 
-  Widget _group(
-    String title,
-    List<String> symbols,
-    ScreenColors c, {
-    VoidCallback? onPage,
-    String? pageLabel,
-  }) {
+  Widget _group(String title, List<String> symbols, ScreenColors c) {
     return Column(
       key: ValueKey('bank-key-group-$title'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,12 +54,6 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
             ],
           ),
         ],
-        if (onPage != null)
-          TextButton(
-            key: ValueKey('bank-page-$title'),
-            onPressed: widget.enabled ? onPage : null,
-            child: Text(pageLabel!),
-          ),
       ],
     );
   }
@@ -132,31 +122,70 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
             .take(letterPageSize)
             .toList()
           ..sort();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: _group(
-            'Числа',
-            digits,
-            c,
-            onPage: digitPages > 1 ? () => setState(() => digitPage++) : null,
-            pageLabel: 'Другие числа',
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _group('Числа', digits, c)),
+            const SizedBox(width: 24),
+            Expanded(child: _group('Буквы', letters, c)),
+            const SizedBox(width: 24),
+            Expanded(
+              child: _group('Знаки и скобки', [
+                '+',
+                '−',
+                '×',
+                '÷',
+                '(',
+                ')',
+              ], c),
+            ),
+          ],
         ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _group(
-            'Буквы',
-            letters,
-            c,
-            onPage: pages > 1 ? () => setState(() => letterPage++) : null,
-            pageLabel: 'Другие буквы',
+        LayoutBuilder(
+          builder: (context, bounds) => Row(
+            children: [
+              SizedBox(
+                width: (bounds.maxWidth - 48) / 3,
+                child: digitPages > 1
+                    ? TextButton(
+                        key: const ValueKey('bank-page-Числа'),
+                        onPressed: widget.enabled
+                            ? () => setState(() => digitPage++)
+                            : null,
+                        child: const Text('Другие числа'),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (pages > 1)
+                      TextButton(
+                        key: const ValueKey('bank-page-Буквы'),
+                        onPressed: widget.enabled
+                            ? () => setState(() => letterPage++)
+                            : null,
+                        child: const Text('Другие буквы'),
+                      ),
+                    if (widget.message != null)
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          widget.message!,
+                          key: const ValueKey('bank-input-message'),
+                          style: screenText(16, c.ink, height: 1.5),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: _group('Знаки и скобки', ['+', '−', '×', '÷', '(', ')'], c),
         ),
       ],
     );
