@@ -122,8 +122,8 @@ void main() {
       await save('history-choice');
       await tester.tap(find.text('Дальше'));
       await tester.pumpAndSettle();
-      // Fill the real 22-answer window enough to admit input (16/22 >= 70%).
-      for (var blockIndex = 1; blockIndex < 16; blockIndex++) {
+      // Fill the real 10-answer window enough to admit input (7/10 >= 70%).
+      for (var blockIndex = 1; blockIndex < 7; blockIndex++) {
         final task = bank.blocks[blockIndex].tasks.first;
         final options = answerChoices(task);
         await tester.tap(
@@ -139,7 +139,7 @@ void main() {
       }
       await tester.enterText(
         find.byKey(const ValueKey('bank-answer')),
-        bank.blocks[16].tasks.first.expectedAnswer,
+        bank.blocks[7].tasks.first.expectedAnswer,
       );
       await tester.pumpAndSettle();
       final viewport = Offset.zero & size;
@@ -163,7 +163,7 @@ void main() {
       expect(viewport.contains(feedback.topLeft), isTrue);
       expect(viewport.contains(feedback.bottomRight), isTrue);
       await save('feedback-correct');
-      for (var blockIndex = 17; blockIndex < 19; blockIndex++) {
+      for (var blockIndex = 8; blockIndex < 9; blockIndex++) {
         await tester.tap(find.text('Дальше'));
         await tester.pumpAndSettle();
         await tester.enterText(
@@ -182,7 +182,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Назад к решению'));
       await tester.pumpAndSettle();
-      for (var i = 0; i < 16; i++) {
+      for (var i = 0; i < 7; i++) {
         await tester.tap(find.text('Дальше'));
         await tester.pumpAndSettle();
       }

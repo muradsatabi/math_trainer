@@ -7,6 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "bank/sources/common_factor_v8.json"
+# Owner-requested short window for checking application features.
+PRACTICE_WINDOW = 10
 
 
 def encode(value):
@@ -75,7 +77,7 @@ def build_outputs(source):
         "schema_version": 1, "topic_id": records[0]["topic_id"],
         "title": "Вынесение общего множителя за скобки",
         "blocks": blocks,
-        "practice": {"minimum_answers": len(blocks), "success_window": len(blocks),
+        "practice": {"minimum_answers": PRACTICE_WINDOW, "success_window": PRACTICE_WINDOW,
                      "pass_percent": 85, "extra_tasks_per_error": 2},
         "source_snapshot": "bank/sources/common_factor_v8.json",
         "source_snapshot_sha256": hashlib.sha256(encode(source).encode("utf-8")).hexdigest(),

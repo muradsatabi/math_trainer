@@ -63,7 +63,7 @@ void main() {
         expect(find.text('Предыдущее задание'), findsNothing);
         expect(find.text('Пока не получилось!'), findsOneWidget);
         expect(find.text('Твой ответ: ${firstChoices[wrong]}'), findsOneWidget);
-        expect(find.text('4%'), findsOneWidget);
+        expect(find.text('10%'), findsOneWidget);
         await tap(find.text('Дальше'));
         expect(find.text('Задание 2 · дополнительное'), findsOneWidget);
         await tap(find.text('Дальше'));
@@ -82,7 +82,7 @@ void main() {
         );
         expect(semantics.properties.selected, isTrue);
         expect(choice.onTap, isNotNull);
-        expect(find.text('4%'), findsOneWidget);
+        expect(find.text('10%'), findsOneWidget);
         expect(tester.takeException(), isNull);
       },
     );

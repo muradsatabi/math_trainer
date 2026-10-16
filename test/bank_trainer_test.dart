@@ -125,7 +125,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(controller.value, draft);
         expect(find.text('Задание 2'), findsOneWidget);
-        expect(find.text('4%'), findsOneWidget);
+        expect(find.text('10%'), findsOneWidget);
         await tapVisible(find.text('К темам'));
         expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
         expect(find.byIcon(Icons.check_rounded), findsNothing);

@@ -23,8 +23,8 @@ void main() {
         final reference = PracticeSession(
           bank: bank,
           settings: PracticeSettings(
-            minimumAnswers: 22,
-            successWindow: 22,
+            minimumAnswers: 10,
+            successWindow: 10,
             passPercent: 85,
             extraTasksPerError: 2,
           ),
@@ -42,7 +42,7 @@ void main() {
         await tester.pumpAndSettle();
         final primary = find.widgetWithText(FilledButton, 'Проверить себя');
         expect(find.text('0%'), findsOneWidget);
-        for (var answerIndex = 0; answerIndex < 17; answerIndex++) {
+        for (var answerIndex = 0; answerIndex < 8; answerIndex++) {
           final correct = answerIndex > 0;
           expect(find.byKey(const ValueKey('bank-answer')), findsNothing);
           expect(find.text('Выбери ответ:'), findsOneWidget);
@@ -66,10 +66,10 @@ void main() {
           reference.submit(answer: choices[index], correct: correct);
           expect(
             reference.successPercent,
-            closeTo(answerIndex * 100 / 22, .000001),
+            closeTo(answerIndex * 100 / 10, .000001),
           );
           expect(
-            find.text('${(answerIndex * 100 / 22).floor()}%'),
+            find.text('${(answerIndex * 100 / 10).floor()}%'),
             findsOneWidget,
           );
           expect(
@@ -89,11 +89,11 @@ void main() {
           await tester.pumpAndSettle();
           reference.advance();
         }
-        expect(reference.successPercent, closeTo(16 * 100 / 22, .000001));
+        expect(reference.successPercent, closeTo(7 * 100 / 10, .000001));
         final field = find.byKey(const ValueKey('bank-answer'));
         expect(field, findsOneWidget);
         expect(find.byKey(const ValueKey('bank-choice-0')), findsNothing);
-        for (final correct in List.filled(7, false)) {
+        for (final correct in List.filled(4, false)) {
           await tester.enterText(
             field,
             correct ? reference.currentTask.expectedAnswer : '0',

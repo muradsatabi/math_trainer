@@ -27,8 +27,8 @@
     "bank/blocks/common_factor_22.json"
   ],
   "practice": {
-    "minimum_answers": 22,
-    "success_window": 22,
+    "minimum_answers": 10,
+    "success_window": 10,
     "pass_percent": 85,
     "extra_tasks_per_error": 2
   },

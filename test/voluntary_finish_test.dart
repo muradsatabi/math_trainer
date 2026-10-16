@@ -30,10 +30,10 @@ void main() {
           await tester.pumpAndSettle();
           await tester.tap(find.text('Начать практику'));
           await tester.pumpAndSettle();
-          for (var i = 0; i < 19; i++) {
+          for (var i = 0; i < 9; i++) {
             expect(find.text('Завершить занятие'), findsNothing);
             final task = bank.blocks[i].tasks.first;
-            if (i < 16) {
+            if (i < 7) {
               final choices = answerChoices(task);
               await tester.tap(
                 find.byKey(
@@ -52,13 +52,13 @@ void main() {
             await tester.tap(find.text('Проверить себя'));
             await tester.pumpAndSettle();
             expect(find.text('Абсолютно верно!'), findsOneWidget);
-            if (i < 18) {
+            if (i < 8) {
               expect(find.text('Завершить занятие'), findsNothing);
               await tester.tap(find.text('Дальше'));
               await tester.pumpAndSettle();
             }
           }
-          expect(find.text('86%'), findsOneWidget);
+          expect(find.text('90%'), findsOneWidget);
           final finish = find.byKey(const ValueKey('bank-finish'));
           final bounds = tester.getRect(finish);
           expect((Offset.zero & size).contains(bounds.topLeft), isTrue);
@@ -67,7 +67,7 @@ void main() {
           // Continue explicitly: eligibility must not automatically open results.
           await tester.tap(find.text('Дальше'));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 20'), findsOneWidget);
+          expect(find.text('Задание 10'), findsOneWidget);
           expect(
             tester
                 .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
@@ -81,7 +81,7 @@ void main() {
           expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
           await tester.tap(find.byKey(const ValueKey('topic-0')));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 20'), findsOneWidget);
+          expect(find.text('Задание 10'), findsOneWidget);
           await tester.enterText(
             find.byKey(const ValueKey('bank-answer')),
             '2(a',
@@ -90,7 +90,7 @@ void main() {
           await tester.tap(finish);
           await tester.pumpAndSettle();
           expect(
-            find.text('Решено: 19. Пройдено блоков: 19 из 22.'),
+            find.text('Решено: 9. Пройдено блоков: 9 из 22.'),
             findsOneWidget,
           );
           await tester.tap(find.text('Чему мы научились'));
@@ -119,17 +119,17 @@ void main() {
           await tester.tap(find.widgetWithText(TextButton, 'К итогам'));
           await tester.pumpAndSettle();
           expect(
-            find.text('Решено: 19. Пройдено блоков: 19 из 22.'),
+            find.text('Решено: 9. Пройдено блоков: 9 из 22.'),
             findsOneWidget,
           );
           await tester.tap(find.text('Назад к решению'));
           await tester.pumpAndSettle();
           // Walk forward through the actual saved screens, preserving format.
-          for (var i = 0; i < 18; i++) {
+          for (var i = 0; i < 8; i++) {
             await tester.tap(find.text('Дальше'));
             await tester.pumpAndSettle();
           }
-          expect(find.text('Задание 19'), findsOneWidget);
+          expect(find.text('Задание 9'), findsOneWidget);
           expect(
             tester
                 .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
@@ -140,16 +140,16 @@ void main() {
           await tester.ensureVisible(find.text('Продолжить практику'));
           await tester.tap(find.text('Продолжить практику'));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 20'), findsOneWidget);
+          expect(find.text('Задание 10'), findsOneWidget);
           final field = tester.widget<TextField>(
             find.byKey(const ValueKey('bank-answer')),
           );
           expect(field.readOnly, isFalse);
           expect(field.controller!.text, '2(a');
-          expect(find.text('86%'), findsOneWidget);
+          expect(find.text('90%'), findsOneWidget);
           await tester.enterText(
             find.byKey(const ValueKey('bank-answer')),
-            bank.blocks[19].tasks.first.expectedAnswer,
+            bank.blocks[9].tasks.first.expectedAnswer,
           );
           await tester.pump();
           await tester.tap(find.text('Проверить себя'));
@@ -157,7 +157,7 @@ void main() {
           await tester.tap(find.text('Завершить занятие'));
           await tester.pumpAndSettle();
           expect(
-            find.text('Решено: 20. Пройдено блоков: 20 из 22.'),
+            find.text('Решено: 10. Пройдено блоков: 10 из 22.'),
             findsOneWidget,
           );
           expect(tester.takeException(), isNull);
