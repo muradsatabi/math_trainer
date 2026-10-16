@@ -88,28 +88,35 @@ class _BankTrainerState extends State<BankTrainer> {
     setState(() => page = 'results');
   }
 
-  Widget _historyAction(BuildContext context, bool wide, bool compact) {
-    final action = Align(
-      alignment: Alignment.centerRight,
-      child: SecondaryAction(
-        key: const ValueKey('bank-return-current'),
-        label: session!.isFinished
-            ? 'Продолжить решение'
-            : 'Вернуться к текущему',
-        compact: compact,
-        onPressed: _returnToPractice,
-      ),
-    );
-    return LayoutBuilder(
-      builder: (context, bounds) => bounds.maxWidth < 720
-          ? action
-          : DemoColumns(
-              wide: wide,
-              left: const SizedBox.shrink(),
-              right: action,
+  Widget _historyActions(bool compact) => IntrinsicHeight(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (session!.isFinished) ...[
+          Expanded(
+            child: SecondaryAction(
+              key: const ValueKey('bank-history-results'),
+              label: 'К итогам',
+              compact: compact,
+              onPressed: _returnToResults,
             ),
-    );
-  }
+          ),
+          const SizedBox(width: 12),
+        ],
+        Expanded(
+          flex: 2,
+          child: SecondaryAction(
+            key: const ValueKey('bank-return-current'),
+            label: session!.isFinished
+                ? 'Продолжить решение'
+                : 'Вернуться к текущему',
+            compact: compact,
+            onPressed: _returnToPractice,
+          ),
+        ),
+      ],
+    ),
+  );
 
   bool get _complete => isCompleteAnswer(entry.text.replaceAll('·', '×'));
   bool get _unsupportedSymbol =>
@@ -165,16 +172,8 @@ class _BankTrainerState extends State<BankTrainer> {
           ),
         ),
       );
-      final results = _history && session!.isFinished
-          ? Align(
-              alignment: Alignment.centerRight,
-              child: SecondaryAction(
-                key: const ValueKey('bank-history-results'),
-                label: 'К итогам',
-                compact: compact,
-                onPressed: _returnToResults,
-              ),
-            )
+      final historyActions = _history
+          ? _historyActions(compact)
           : const SizedBox.shrink();
       return LayoutBuilder(
         builder: (context, bounds) => bounds.maxWidth < 720
@@ -183,13 +182,10 @@ class _BankTrainerState extends State<BankTrainer> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   left,
-                  if (_history && session!.isFinished) ...[
-                    const SizedBox(height: 8),
-                    results,
-                  ],
+                  if (_history) ...[const SizedBox(height: 8), historyActions],
                 ],
               )
-            : DemoColumns(wide: wide, left: left, right: results),
+            : DemoColumns(wide: wide, left: left, right: historyActions),
       );
     }
     if (page == 'results') {
@@ -628,6 +624,7 @@ class _BankTrainerState extends State<BankTrainer> {
       ),
       right: _checked || _offerFinish
           ? Container(
+              key: const ValueKey('bank-feedback-panel'),
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: c.help,
@@ -805,9 +802,6 @@ class _BankTrainerState extends State<BankTrainer> {
         );
       }
       return DemoPage(
-        aboveFooterBuilder: page == 'practice' && _history
-            ? _historyAction
-            : null,
         showLabel: page != 'practice',
         label: page == 'results'
             ? 'Итоги'

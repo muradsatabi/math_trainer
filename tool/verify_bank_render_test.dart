@@ -224,7 +224,15 @@ void main() {
       );
       expect(viewport.contains(resultsAction.topLeft), isTrue);
       expect(viewport.contains(resultsAction.bottomRight), isTrue);
-      expect(continueAction.bottom, lessThanOrEqualTo(historyFooter.top));
+      final panel = tester.getRect(
+        find.byKey(const ValueKey('bank-feedback-panel')),
+      );
+      expect(continueAction.top, closeTo(resultsAction.top, .01));
+      expect(continueAction.bottom, closeTo(resultsAction.bottom, .01));
+      expect(resultsAction.left, closeTo(panel.left, .01));
+      expect(continueAction.right, closeTo(panel.right, .01));
+      expect(continueAction.left - resultsAction.right, closeTo(12, .01));
+      expect(viewport.contains(continueAction.bottomRight), isTrue);
       expect(resultsAction.top, greaterThanOrEqualTo(historyFooter.top));
       expect(find.textContaining('Твой ответ:'), findsNothing);
       await save('history-input');
