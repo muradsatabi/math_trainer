@@ -33,7 +33,7 @@ class DemoMath extends StatelessWidget {
   Widget build(BuildContext context) => Text.rich(
     TextSpan(
       style: TextStyle(
-        fontFamily: 'Cambria',
+        fontFamily: 'Caladea',
         fontSize: size,
         height: height,
         color: ScreenColors(context).ink,
@@ -58,15 +58,19 @@ class DemoColumns extends StatelessWidget {
     required this.left,
     required this.right,
     required this.wide,
+    this.narrowRightFirst = false,
   });
   final Widget left, right;
   final bool wide;
+  final bool narrowRightFirst;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, bounds) => bounds.maxWidth < 720
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [left, const SizedBox(height: 16), right],
+            children: narrowRightFirst
+                ? [right, const SizedBox(height: 12), left]
+                : [left, const SizedBox(height: 16), right],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,

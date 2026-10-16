@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_15",
+  "title": "15 — Три слагаемых с двумя буквами, сложение",
+  "skill": "Вынести числовой общий множитель из суммы трёх слагаемых с двумя буквами в каждом",
+  "micro_skill_ref": {
+    "id": "common_factor_15",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-071",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "6ab + 15cd + 21mn",
+      "expected_answer": "3(2ab + 5cd + 7mn)",
+      "accepted_examples": [
+        "(2ab + 5cd + 7mn) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-072",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "10xy + 25pq + 35rs",
+      "expected_answer": "5(2xy + 5pq + 7rs)",
+      "accepted_examples": [
+        "(2xy + 5pq + 7rs) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-073",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "uv · 14 + 28kl + 42ac",
+      "expected_answer": "14(uv + 2kl + 3ac)",
+      "accepted_examples": [
+        "(uv + 2kl + 3ac) · 14"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-074",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "16bd + mn · 24 + 40 · pq",
+      "expected_answer": "8(2bd + 3mn + 5pq)",
+      "accepted_examples": [
+        "(2bd + 3mn + 5pq) · 8"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-075",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "xy · 18 + 30 · ab + cd · 48",
+      "expected_answer": "6(3xy + 5ab + 8cd)",
+      "accepted_examples": [
+        "(3xy + 5ab + 8cd) · 6"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

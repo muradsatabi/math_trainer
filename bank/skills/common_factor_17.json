@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "micro_skill_id": "common_factor_17",
+  "revision": 1,
+  "title": "Вынести числовой общий множитель из суммы трёх слагаемых, одно из которых без букв",
+  "topic_id": "factoring_out_common_factor",
+  "answer_policy": {
+    "requires_mathematical_equivalence": true,
+    "required_action": "factor_out_common_factor",
+    "answer_examples_are_exhaustive": false,
+    "requires_greatest_factor": false,
+    "checker_status": "partial_source_examples",
+    "notes": [
+      "Допустимые ответы не исчерпывают все варианты. Наибольший множитель не требуется."
+    ]
+  }
+}

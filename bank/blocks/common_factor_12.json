@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_12",
+  "title": "12 — Три слагаемых с разными коэффициентами в смешанной записи",
+  "skill": "Найти общий числовой множитель трёх разных коэффициентов в знакомых формах записи",
+  "micro_skill_ref": {
+    "id": "common_factor_12",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-056",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "6a + 10b + 14c",
+      "expected_answer": "2(3a + 5b + 7c)",
+      "accepted_examples": [
+        "(3a + 5b + 7c) · 2"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-057",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "9x − 12y + 15z",
+      "expected_answer": "3(3x − 4y + 5z)",
+      "accepted_examples": [
+        "(3x − 4y + 5z) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-058",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "8m + 20 − n · 12",
+      "expected_answer": "4(2m + 5 − 3n)",
+      "accepted_examples": [
+        "2(4m + 10 − 6n)"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-059",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 15 − 10q + 25",
+      "expected_answer": "5(3p − 2q + 5)",
+      "accepted_examples": [
+        "(3p − 2q + 5) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-060",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "21 + b · 14 − 28a",
+      "expected_answer": "7(3 + 2b − 4a)",
+      "accepted_examples": [
+        "(3 + 2b − 4a) · 7"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

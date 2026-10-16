@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_21",
+  "title": "21 — Общая буква, два слагаемых, единица в скобках",
+  "skill": "Вынести одну общую букву из двух слагаемых, сохранив 1 или −1 от слагаемого без другой буквы",
+  "micro_skill_ref": {
+    "id": "common_factor_21",
+    "revision": 1
+  },
+  "source_section_id": "literal_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-101",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "ab + a",
+      "expected_answer": "a(b + 1)",
+      "accepted_examples": [
+        "(b + 1) · a"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-102",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "xy − x",
+      "expected_answer": "x(y − 1)",
+      "accepted_examples": [
+        "(y − 1) · x"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-103",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "m + pm",
+      "expected_answer": "m(1 + p)",
+      "accepted_examples": [
+        "(1 + p) · m"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-104",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "qp − p",
+      "expected_answer": "p(q − 1)",
+      "accepted_examples": [
+        "(q − 1) · p"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-105",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "u − vu",
+      "expected_answer": "u(1 − v)",
+      "accepted_examples": [
+        "(1 − v) · u"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

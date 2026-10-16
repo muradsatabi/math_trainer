@@ -189,7 +189,7 @@ class _ConstructorScreenState extends State<ConstructorScreen> {
                           }
                         },
                         style: TextStyle(
-                          fontFamily: 'Cambria',
+                          fontFamily: 'Caladea',
                           fontSize: compact ? 30 : 32,
                           height: 1.2,
                           color: c.ink,

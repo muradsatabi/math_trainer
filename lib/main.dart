@@ -7,9 +7,14 @@ import 'demo_screens.dart';
 import 'constructor_screen.dart';
 import 'completion_screens.dart';
 import 'practice_record.dart';
+import 'bank_trainer.dart';
 
 void main() => runApp(
-  MathTrainerApp(home: demoScreen(Uri.base.queryParameters['screen'])),
+  MathTrainerApp(
+    home: Uri.base.queryParameters.containsKey('screen')
+        ? demoScreen(Uri.base.queryParameters['screen'])
+        : const BankTrainer(),
+  ),
 );
 
 Widget demoScreen(String? name) => switch (name) {
@@ -34,7 +39,7 @@ class MathTrainerApp extends StatelessWidget {
 
   ThemeData _theme(Brightness brightness) => ThemeData(
     brightness: brightness,
-    fontFamily: 'Segoe UI',
+    fontFamily: 'Carlito',
     colorScheme: ColorScheme.fromSeed(
       seedColor: brightness == Brightness.dark
           ? const Color(0xff3c70e6)
@@ -201,7 +206,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
       Color? color,
       FontWeight weight = FontWeight.w400,
     }) => TextStyle(
-      fontFamily: 'Segoe UI',
+      fontFamily: 'Carlito',
       fontSize: size,
       height: h,
       color: color ?? ink,
@@ -712,7 +717,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
 TextSpan _formulaSpan(String value, double size, Color color, double height) =>
     TextSpan(
       style: TextStyle(
-        fontFamily: 'Cambria',
+        fontFamily: 'Caladea',
         fontSize: size,
         height: height,
         color: color,

@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_09",
+  "title": "9 — Разные коэффициенты и одно слагаемое без буквы",
+  "skill": "Вынести общий множитель разных коэффициентов из выражения с числовым слагаемым",
+  "micro_skill_ref": {
+    "id": "common_factor_09",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-041",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "10a + 14",
+      "expected_answer": "2(5a + 7)",
+      "accepted_examples": [
+        "(5a + 7) · 2"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-042",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "12x + 15",
+      "expected_answer": "3(4x + 5)",
+      "accepted_examples": [
+        "(4x + 5) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-043",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "16 + 24m",
+      "expected_answer": "8(2 + 3m)",
+      "accepted_examples": [
+        "(2 + 3m) · 8"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-044",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 10 + 25",
+      "expected_answer": "5(2p + 5)",
+      "accepted_examples": [
+        "(2p + 5) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-045",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "21 + b · 35",
+      "expected_answer": "7(3 + 5b)",
+      "accepted_examples": [
+        "(3 + 5b) · 7"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

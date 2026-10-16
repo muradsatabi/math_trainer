@@ -81,9 +81,36 @@ class ScreenColors {
   Color get blue => Color(dark ? 0xff3c70e6 : 0xff285bd8);
   Color get soft => Color(dark ? 0xff1e2c43 : 0xfff7f9fd);
   Color get help => Color(dark ? 0xff253d60 : 0xffeef4ff);
-  Color successFill(int percent) => percent >= 85
-      ? Color(dark ? 0xff68c98b : 0xff28934c)
-      : Color(dark ? 0xffd6da72 : 0xffb5b644);
+  Color successFill(int percent) {
+    const light = [
+      0xffe53935,
+      0xffe65332,
+      0xffe86d2e,
+      0xffdf8825,
+      0xffc49e24,
+      0xffa0a52b,
+      0xff7b9f32,
+      0xff51943b,
+      0xff2c8242,
+      0xff17643c,
+    ];
+    const night = [
+      0xffff5c57,
+      0xfffc7652,
+      0xfff7924c,
+      0xffedac49,
+      0xffd6bf4d,
+      0xffb7c854,
+      0xff92c65e,
+      0xff6dba68,
+      0xff4ba661,
+      0xff29854a,
+    ];
+    return Color(
+      (dark ? night : light)[(percent.clamp(0, 100) ~/ 10).clamp(0, 9)],
+    );
+  }
+
   Color get successTrack => Color(dark ? 0xff475773 : 0xffe4e9ef);
 }
 
@@ -93,7 +120,7 @@ TextStyle screenText(
   double height = 1.4,
   bool heading = false,
 }) => TextStyle(
-  fontFamily: 'Segoe UI',
+  fontFamily: 'Carlito',
   fontSize: size,
   height: height,
   color: color,
@@ -101,10 +128,26 @@ TextStyle screenText(
 );
 
 class TopicsScreen extends StatelessWidget {
-  const TopicsScreen({super.key, this.successes = const [86, 65, null, null]});
+  const TopicsScreen({
+    super.key,
+    this.successes = const [86, 65, null, null],
+    this.titles = const [
+      'Вынесение общего\nмножителя за скобки',
+      'Умножение числа\nна скобку',
+      'Умножение скобок',
+      'Свойства степеней',
+    ],
+    this.onTopicSelected,
+    this.completedStates,
+  });
   final List<int?> successes;
+  final List<String> titles;
+  final ValueChanged<int>? onTopicSelected;
+  final List<bool>? completedStates;
   @override
   Widget build(BuildContext context) {
+    assert(successes.length == titles.length);
+    assert(completedStates == null || completedStates!.length == titles.length);
     final c = ScreenColors(context);
     return Scaffold(
       body: LayoutBuilder(
@@ -114,13 +157,9 @@ class TopicsScreen extends StatelessWidget {
           final low = bounds.maxHeight <= 680;
           final side = wide ? 56.0 : 40.0;
           final gap = wide ? 32.0 : 24.0;
-          final width = (bounds.maxWidth - side * 2 - gap) / 2;
-          const titles = [
-            'Вынесение общего\nмножителя за скобки',
-            'Умножение числа\nна скобку',
-            'Умножение скобок',
-            'Свойства степеней',
-          ];
+          final width = bounds.maxWidth < 1024
+              ? bounds.maxWidth - side * 2
+              : (bounds.maxWidth - side * 2 - gap) / 2;
           return Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -200,13 +239,17 @@ class TopicsScreen extends StatelessWidget {
                         spacing: gap,
                         runSpacing: wide ? 24 : 16,
                         children: [
-                          for (var i = 0; i < 4; i++)
+                          for (var i = 0; i < titles.length; i++)
                             SizedBox(
                               width: width,
                               height: wide ? 166 : 144,
                               child: OutlinedButton(
                                 key: ValueKey('topic-$i'),
                                 onPressed: () {
+                                  if (onTopicSelected != null) {
+                                    onTopicSelected!(i);
+                                    return;
+                                  }
                                   if (i == 0) {
                                     Navigator.of(context).push(
                                       MaterialPageRoute<void>(
@@ -250,7 +293,10 @@ class TopicsScreen extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    TopicStateBadge(percent: successes[i]),
+                                    TopicStateBadge(
+                                      percent: successes[i],
+                                      completed: completedStates?[i],
+                                    ),
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Text(
@@ -288,16 +334,18 @@ class TopicsScreen extends StatelessWidget {
 }
 
 class TopicStateBadge extends StatelessWidget {
-  const TopicStateBadge({super.key, required this.percent});
+  const TopicStateBadge({super.key, required this.percent, this.completed});
   final int? percent;
+  final bool? completed;
   @override
   Widget build(BuildContext context) {
     final c = ScreenColors(context);
+    final achieved = completed ?? (percent != null && percent! >= 85);
     final fill = percent == null ? null : c.successFill(percent!);
     return Semantics(
       label: percent == null
           ? 'Не начато'
-          : percent! >= 85
+          : achieved
           ? 'Целевая успешность достигнута'
           : 'В процессе',
       child: Container(
@@ -311,7 +359,7 @@ class TopicStateBadge extends StatelessWidget {
         child: percent == null
             ? null
             : Icon(
-                percent! >= 85 ? Icons.check_rounded : Icons.schedule_rounded,
+                achieved ? Icons.check_rounded : Icons.schedule_rounded,
                 color: fill,
                 size: 26,
               ),
@@ -482,12 +530,18 @@ class DemoPage extends StatelessWidget {
     this.showSuccess = false,
     this.visibleScrollbar = false,
     this.footerBuilder,
+    this.successPercent = 0,
+    this.onTopics,
+    this.scrollKey,
   });
   final DemoBodyBuilder bodyBuilder;
   final String label, topic;
   final bool showSuccess;
   final bool visibleScrollbar;
   final DemoBodyBuilder? footerBuilder;
+  final double successPercent;
+  final VoidCallback? onTopics;
+  final Object? scrollKey;
   @override
   Widget build(BuildContext context) {
     final c = ScreenColors(context);
@@ -525,8 +579,8 @@ class DemoPage extends StatelessWidget {
           final compact = bounds.maxHeight <= 840;
           final low = bounds.maxHeight <= 680;
           Widget scrollable(Widget child) => visibleScrollbar
-              ? _VisiblePageScroll(child: child)
-              : SingleChildScrollView(child: child);
+              ? _VisiblePageScroll(key: ValueKey(scrollKey), child: child)
+              : SingleChildScrollView(key: ValueKey(scrollKey), child: child);
           return scrollable(
             ConstrainedBox(
               constraints: BoxConstraints(minHeight: bounds.maxHeight),
@@ -549,7 +603,7 @@ class DemoPage extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextButton.icon(
-                        onPressed: () => returnToTopics(context),
+                        onPressed: onTopics ?? () => returnToTopics(context),
                         style: TextButton.styleFrom(
                           foregroundColor: c.sub,
                           padding: EdgeInsets.zero,
@@ -629,22 +683,25 @@ class DemoPage extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: Container(
-                                            height: 12,
-                                            decoration: BoxDecoration(
-                                              color: Color(
-                                                c.dark
-                                                    ? 0xff475773
-                                                    : 0xffe4e9ef,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: LinearProgressIndicator(
+                                              value:
+                                                  successPercent.clamp(0, 100) /
+                                                  100,
+                                              minHeight: 12,
+                                              backgroundColor: c.successTrack,
+                                              color: c.successFill(
+                                                successPercent.floor(),
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
                                             ),
                                           ),
                                         ),
                                         const SizedBox(width: 16),
                                         Text(
-                                          '0%',
+                                          '${successPercent.floor()}%',
                                           style: screenText(
                                             compact ? 25 : 30,
                                             c.ink,
@@ -689,7 +746,7 @@ class DemoPage extends StatelessWidget {
 }
 
 class _VisiblePageScroll extends StatefulWidget {
-  const _VisiblePageScroll({required this.child});
+  const _VisiblePageScroll({super.key, required this.child});
   final Widget child;
   @override
   State<_VisiblePageScroll> createState() => _VisiblePageScrollState();

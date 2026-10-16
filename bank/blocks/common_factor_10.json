@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_10",
+  "title": "10 — Разные коэффициенты и вычитание",
+  "skill": "Вынести общий множитель разных коэффициентов и сохранить минус",
+  "micro_skill_ref": {
+    "id": "common_factor_10",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-046",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "8a − 6b",
+      "expected_answer": "2(4a − 3b)",
+      "accepted_examples": [
+        "(4a − 3b) · 2"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-047",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "9x − 12y",
+      "expected_answer": "3(3x − 4y)",
+      "accepted_examples": [
+        "(3x − 4y) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-048",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "20m − 12n",
+      "expected_answer": "4(5m − 3n)",
+      "accepted_examples": [
+        "(5m − 3n) · 4"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-049",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 15 − 20q",
+      "expected_answer": "5(3p − 4q)",
+      "accepted_examples": [
+        "(3p − 4q) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-050",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "35b − a · 14",
+      "expected_answer": "7(5b − 2a)",
+      "accepted_examples": [
+        "(5b − 2a) · 7"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

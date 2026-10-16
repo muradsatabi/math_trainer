@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_16",
+  "title": "16 — Три слагаемых с двумя буквами, смешанные знаки",
+  "skill": "Вынести числовой общий множитель из трёх слагаемых с двумя буквами при сложении и вычитании",
+  "micro_skill_ref": {
+    "id": "common_factor_16",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-076",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "12ab − 20cd + 28mn",
+      "expected_answer": "4(3ab − 5cd + 7mn)",
+      "accepted_examples": [
+        "(3ab − 5cd + 7mn) · 4"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-077",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "21xy + 35pq − 49rs",
+      "expected_answer": "7(3xy + 5pq − 7rs)",
+      "accepted_examples": [
+        "(3xy + 5pq − 7rs) · 7"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-078",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "uv · 15 − 24kl − 33ac",
+      "expected_answer": "3(5uv − 8kl − 11ac)",
+      "accepted_examples": [
+        "(5uv − 8kl − 11ac) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-079",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "20bd − mn · 30 + 45 · pq",
+      "expected_answer": "5(4bd − 6mn + 9pq)",
+      "accepted_examples": [
+        "(4bd − 6mn + 9pq) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-080",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "xy · 24 + 40 · ab − cd · 56",
+      "expected_answer": "8(3xy + 5ab − 7cd)",
+      "accepted_examples": [
+        "(3xy + 5ab − 7cd) · 8"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

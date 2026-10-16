@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_11",
+  "title": "11 — Разные коэффициенты и вычитание без буквы в одном слагаемом",
+  "skill": "Вынести общий множитель при вычитании с числовым слагаемым",
+  "micro_skill_ref": {
+    "id": "common_factor_11",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-051",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "14a − 8",
+      "expected_answer": "2(7a − 4)",
+      "accepted_examples": [
+        "(7a − 4) · 2"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-052",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "21x − 12",
+      "expected_answer": "3(7x − 4)",
+      "accepted_examples": [
+        "(7x − 4) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-053",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "20 − 16m",
+      "expected_answer": "4(5 − 4m)",
+      "accepted_examples": [
+        "2(10 − 8m)"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-054",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 25 − 15",
+      "expected_answer": "5(5p − 3)",
+      "accepted_examples": [
+        "(5p − 3) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-055",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "28 − b · 35",
+      "expected_answer": "7(4 − 5b)",
+      "accepted_examples": [
+        "(4 − 5b) · 7"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

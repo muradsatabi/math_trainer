@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_03",
+  "title": "3 — Разные позиции множителя",
+  "skill": "Узнать множитель независимо от его позиции",
+  "micro_skill_ref": {
+    "id": "common_factor_03",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-011",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "a · 7 + 7 · b",
+      "expected_answer": "7(a + b)",
+      "accepted_examples": [
+        "7(b + a)"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-012",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "5 · x − y · 5",
+      "expected_answer": "5(x − y)",
+      "accepted_examples": [
+        "(x − y) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-013",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "m · 3 + n · 3",
+      "expected_answer": "3(m + n)",
+      "accepted_examples": [
+        "(m + n) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-014",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 9 − 9 · q",
+      "expected_answer": "9(p − q)",
+      "accepted_examples": [
+        "(p − q) · 9"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-015",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "4 · c + d · 4",
+      "expected_answer": "4(c + d)",
+      "accepted_examples": [
+        "(c + d) · 4"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "topic_id": "factoring_out_common_factor",
+  "title": "Вынесение общего множителя за скобки",
+  "blocks": [
+    "bank/blocks/common_factor_01.json",
+    "bank/blocks/common_factor_02.json",
+    "bank/blocks/common_factor_03.json",
+    "bank/blocks/common_factor_04.json",
+    "bank/blocks/common_factor_05.json",
+    "bank/blocks/common_factor_06.json",
+    "bank/blocks/common_factor_07.json",
+    "bank/blocks/common_factor_08.json",
+    "bank/blocks/common_factor_09.json",
+    "bank/blocks/common_factor_10.json",
+    "bank/blocks/common_factor_11.json",
+    "bank/blocks/common_factor_12.json",
+    "bank/blocks/common_factor_13.json",
+    "bank/blocks/common_factor_14.json",
+    "bank/blocks/common_factor_15.json",
+    "bank/blocks/common_factor_16.json",
+    "bank/blocks/common_factor_17.json",
+    "bank/blocks/common_factor_18.json",
+    "bank/blocks/common_factor_19.json",
+    "bank/blocks/common_factor_20.json",
+    "bank/blocks/common_factor_21.json",
+    "bank/blocks/common_factor_22.json"
+  ],
+  "practice": {
+    "minimum_answers": 22,
+    "success_window": 22,
+    "pass_percent": 85,
+    "extra_tasks_per_error": 2
+  },
+  "source_snapshot": "bank/sources/common_factor_v8.json",
+  "source_snapshot_sha256": "450bba71565684e9f608ed410b0b4cca8f5262c37618c181563ee49450147c21",
+  "publication_status": "local_unpublished"
+}

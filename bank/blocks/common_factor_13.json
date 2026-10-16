@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_13",
+  "title": "13 — По две буквы в слагаемых, общий множитель только числовой",
+  "skill": "Найти общий числовой множитель в сумме двух слагаемых с двумя буквами в каждом",
+  "micro_skill_ref": {
+    "id": "common_factor_13",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-061",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "6ab + 15cd",
+      "expected_answer": "3(2ab + 5cd)",
+      "accepted_examples": [
+        "(2ab + 5cd) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-062",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "14xy + 8mn",
+      "expected_answer": "2(7xy + 4mn)",
+      "accepted_examples": [
+        "(7xy + 4mn) · 2"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-063",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "20pq + 12rs",
+      "expected_answer": "4(5pq + 3rs)",
+      "accepted_examples": [
+        "2(10pq + 6rs)"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-064",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "uv · 10 + 25kl",
+      "expected_answer": "5(2uv + 5kl)",
+      "accepted_examples": [
+        "(2uv + 5kl) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-065",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "21ac + bd · 35",
+      "expected_answer": "7(3ac + 5bd)",
+      "accepted_examples": [
+        "(3ac + 5bd) · 7"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

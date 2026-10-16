@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_19",
+  "title": "19 — Общая буква, два слагаемых",
+  "skill": "Вынести одну общую букву из двух слагаемых при сложении и вычитании",
+  "micro_skill_ref": {
+    "id": "common_factor_19",
+    "revision": 1
+  },
+  "source_section_id": "literal_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-091",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "ab + ac",
+      "expected_answer": "a(b + c)",
+      "accepted_examples": [
+        "(b + c) · a"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-092",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "xy − xz",
+      "expected_answer": "x(y − z)",
+      "accepted_examples": [
+        "(y − z) · x"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-093",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "mn + pm",
+      "expected_answer": "m(n + p)",
+      "accepted_examples": [
+        "(n + p) · m"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-094",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "qp − pr",
+      "expected_answer": "p(q − r)",
+      "accepted_examples": [
+        "(q − r) · p"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-095",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "vu − wu",
+      "expected_answer": "u(v − w)",
+      "accepted_examples": [
+        "(v − w) · u"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

@@ -56,6 +56,12 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - bank/manifest.json
+    - bank/blocks/
+    - bank/skills/
+    - assets/fonts/carlito-OFL.txt
+    - assets/fonts/caladea-OFL.txt
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -88,13 +94,13 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-  # Local Windows fonts matching the V3 desktop reference.
+  # Open fonts distributed under the SIL Open Font License.
   fonts:
-    - family: Segoe UI
+    - family: Carlito
       fonts:
-        - asset: assets/fonts/segoeui.ttf
-    - family: Cambria
+        - asset: assets/fonts/Carlito-Regular.ttf
+    - family: Caladea
       fonts:
-        - asset: assets/fonts/cambria.ttc
-        - asset: assets/fonts/cambriai.ttf
+        - asset: assets/fonts/Caladea-Regular.ttf
+        - asset: assets/fonts/Caladea-Italic.ttf
           style: italic

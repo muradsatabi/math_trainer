@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_07",
+  "title": "7 — Одно слагаемое без буквы",
+  "skill": "Сохранить единицу после вынесения множителя",
+  "micro_skill_ref": {
+    "id": "common_factor_07",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-031",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "5x + 5",
+      "expected_answer": "5(x + 1)",
+      "accepted_examples": [
+        "(x + 1) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-032",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "8 + 8c",
+      "expected_answer": "8(1 + c)",
+      "accepted_examples": [
+        "(1 + c) · 8"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-033",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "3 + a · 3",
+      "expected_answer": "3(1 + a)",
+      "accepted_examples": [
+        "(1 + a) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-034",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "7 + m · 7",
+      "expected_answer": "7(1 + m)",
+      "accepted_examples": [
+        "(1 + m) · 7"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-035",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "p · 6 + 6",
+      "expected_answer": "6(p + 1)",
+      "accepted_examples": [
+        "(p + 1) · 6"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}

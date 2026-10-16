@@ -69,7 +69,7 @@ class _ExplanationPanelState extends State<ExplanationPanel> {
     final mathSize = wide ? 30.0 : 23.0;
     TextStyle style(double size, double height, {bool bold = false}) =>
         TextStyle(
-          fontFamily: 'Segoe UI',
+          fontFamily: 'Carlito',
           fontSize: size,
           height: height,
           color: ink,
@@ -84,7 +84,7 @@ class _ExplanationPanelState extends State<ExplanationPanel> {
       child: Text.rich(
         TextSpan(
           style: TextStyle(
-            fontFamily: 'Cambria',
+            fontFamily: 'Caladea',
             fontSize: mathSize,
             height: wide ? 1.45 : 1.4,
             color: ink,

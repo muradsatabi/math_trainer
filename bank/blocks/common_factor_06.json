@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "block_id": "common_factor_06",
+  "title": "6 — Три слагаемых и разные позиции множителя",
+  "skill": "Узнать множитель в разных позициях во всех трёх слагаемых",
+  "micro_skill_ref": {
+    "id": "common_factor_06",
+    "revision": 1
+  },
+  "source_section_id": "numeric_common_factor",
+  "source": {
+    "library_file_id": "libfile_2782f89e15c08191ab39553f3ae11b96",
+    "file_id": "file_00000000e548821083d24f06c7736a58",
+    "version": 8,
+    "sha256": "c2dc45578a280fb35b2d358201cd0cb10ae9b9f7e4594a6dcc1a35a801b6c967"
+  },
+  "tasks": [
+    {
+      "task_id": "ВМ-026",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "a · 8 + 8 · b + c · 8",
+      "expected_answer": "8(a + b + c)",
+      "accepted_examples": [
+        "(a + b + c) · 8"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-027",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "3 · x − y · 3 + 3 · z",
+      "expected_answer": "3(x − y + z)",
+      "accepted_examples": [
+        "(x − y + z) · 3"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-028",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "m · 6 + n · 6 + 6 · k",
+      "expected_answer": "6(m + n + k)",
+      "accepted_examples": [
+        "(m + n + k) · 6"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-029",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "5 · p + q · 5 − 5 · r",
+      "expected_answer": "5(p + q − r)",
+      "accepted_examples": [
+        "(p + q − r) · 5"
+      ],
+      "methodical_status": "approved"
+    },
+    {
+      "task_id": "ВМ-030",
+      "revision": 1,
+      "instruction": "Вынеси общий множитель за скобки",
+      "expression": "u · 2 − 2 · v + w · 2",
+      "expected_answer": "2(u − v + w)",
+      "accepted_examples": [
+        "(u − v + w) · 2"
+      ],
+      "methodical_status": "approved"
+    }
+  ]
+}
