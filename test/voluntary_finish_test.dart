@@ -67,7 +67,7 @@ void main() {
           // Continue explicitly: eligibility must not automatically open results.
           await tester.tap(find.text('Дальше'));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 10'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-10')), findsOneWidget);
           expect(
             tester
                 .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
@@ -81,7 +81,7 @@ void main() {
           expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
           await tester.tap(find.byKey(const ValueKey('topic-0')));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 10'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-10')), findsOneWidget);
           await tester.enterText(
             find.byKey(const ValueKey('bank-answer')),
             '2(a',
@@ -102,7 +102,7 @@ void main() {
           await tester.tap(find.text('Назад к решению'));
           await tester.pumpAndSettle();
           expect(find.byType(AlertDialog), findsNothing);
-          expect(find.text('Задание 1'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-1')), findsOneWidget);
           expect(find.text('Предыдущее задание'), findsNothing);
           expect(
             tester
@@ -129,7 +129,7 @@ void main() {
             await tester.tap(find.text('Дальше'));
             await tester.pumpAndSettle();
           }
-          expect(find.text('Задание 9'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-9')), findsOneWidget);
           expect(
             tester
                 .widget<TextField>(find.byKey(const ValueKey('bank-answer')))
@@ -140,7 +140,7 @@ void main() {
           await tester.ensureVisible(find.text('Продолжить практику'));
           await tester.tap(find.text('Продолжить практику'));
           await tester.pumpAndSettle();
-          expect(find.text('Задание 10'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-10')), findsOneWidget);
           final field = tester.widget<TextField>(
             find.byKey(const ValueKey('bank-answer')),
           );

@@ -47,7 +47,7 @@ void main() {
         await tap(find.byKey(const ValueKey('bank-choice-0')));
         await tap(find.text('Предыдущее задание'));
         expect(find.byType(AlertDialog), findsNothing);
-        expect(find.text('Задание 2 · дополнительное'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);
         expect(find.text('Абсолютно верно!'), findsOneWidget);
         expect(find.text(second.expression), findsOneWidget);
         for (var i = 0; i < 4; i++) {
@@ -59,15 +59,15 @@ void main() {
           );
         }
         await tap(find.text('Предыдущее задание'));
-        expect(find.text('Задание 1'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-1')), findsOneWidget);
         expect(find.text('Предыдущее задание'), findsNothing);
         expect(find.text('Пока не получилось!'), findsOneWidget);
         expect(find.text('Твой ответ: ${firstChoices[wrong]}'), findsOneWidget);
         expect(find.text('10%'), findsOneWidget);
         await tap(find.text('Дальше'));
-        expect(find.text('Задание 2 · дополнительное'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);
         await tap(find.text('Дальше'));
-        expect(find.text('Задание 3 · дополнительное'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-3')), findsOneWidget);
         expect(find.text('Твой ответ: ${firstChoices[wrong]}'), findsNothing);
         final choice = tester.widget<InkWell>(
           find.byKey(const ValueKey('bank-choice-0')),

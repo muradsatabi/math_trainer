@@ -526,6 +526,7 @@ class DemoPage extends StatelessWidget {
     super.key,
     required this.bodyBuilder,
     this.label = 'Практика',
+    this.showLabel = true,
     this.topic = fullTopic,
     this.showSuccess = false,
     this.visibleScrollbar = false,
@@ -536,6 +537,7 @@ class DemoPage extends StatelessWidget {
   });
   final DemoBodyBuilder bodyBuilder;
   final String label, topic;
+  final bool showLabel;
   final bool showSuccess;
   final bool visibleScrollbar;
   final DemoBodyBuilder? footerBuilder;
@@ -636,18 +638,20 @@ class DemoPage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                label,
-                                style: screenText(
-                                  low
-                                      ? 13
-                                      : wide
-                                      ? 17
-                                      : 14,
-                                  c.sub,
+                              if (showLabel) ...[
+                                Text(
+                                  label,
+                                  style: screenText(
+                                    low
+                                        ? 13
+                                        : wide
+                                        ? 17
+                                        : 14,
+                                    c.sub,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: compact ? 4 : 8),
+                                SizedBox(height: compact ? 4 : 8),
+                              ],
                               Text(
                                 topic,
                                 style: screenText(

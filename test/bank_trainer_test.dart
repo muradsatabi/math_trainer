@@ -124,7 +124,7 @@ void main() {
         await tester.tap(find.text('Вернуться к текущему'));
         await tester.pumpAndSettle();
         expect(controller.value, draft);
-        expect(find.text('Задание 2'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);
         expect(find.text('10%'), findsOneWidget);
         await tapVisible(find.text('К темам'));
         expect(find.byIcon(Icons.schedule_rounded), findsOneWidget);
@@ -132,10 +132,10 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('topic-0')));
         await tester.pumpAndSettle();
         expect(controller.value, draft);
-        expect(find.text('Задание 2'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);
         await tapVisible(find.byKey(const ValueKey('bank-clear')));
         expect(controller.text, isEmpty);
-        expect(find.text('Задание 2'), findsOneWidget);
+        expect(find.byKey(const ValueKey('bank-task-2')), findsOneWidget);
         expect(tester.takeException(), isNull);
       },
     );
@@ -178,7 +178,7 @@ void main() {
             find.textContaining('не засчитана как ошибка'),
             findsOneWidget,
           );
-          expect(find.text('Задание 1'), findsOneWidget);
+          expect(find.byKey(const ValueKey('bank-task-1')), findsOneWidget);
           await tester.enterText(
             find.byKey(const ValueKey('bank-answer')),
             '0',

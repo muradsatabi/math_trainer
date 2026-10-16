@@ -415,6 +415,9 @@ class _BankTrainerState extends State<BankTrainer> {
       wide: wide,
       narrowRightFirst: _checked || _offerFinish,
       left: Container(
+        key: ValueKey(
+          'bank-task-${_history ? historyIndex! + 1 : s.attempts.length + (_checked ? 0 : 1)}',
+        ),
         padding: EdgeInsets.only(right: wide ? 42 : 30),
         decoration: BoxDecoration(
           border: Border(right: BorderSide(color: c.line)),
@@ -451,8 +454,6 @@ class _BankTrainerState extends State<BankTrainer> {
               ),
               const SizedBox(height: 8),
             ],
-            Text(_block.title, style: screenText(16, c.sub)),
-            SizedBox(height: compact ? 8 : 16),
             _text(task.instruction, c, size: compact ? 19 : 23),
             SizedBox(height: compact ? 8 : 18),
             DemoMath(task.expression, size: compact ? 36 : 54, height: 1.2),
@@ -571,12 +572,6 @@ class _BankTrainerState extends State<BankTrainer> {
               const SizedBox(height: 12),
               _text(message, c, size: 16),
             ],
-            const SizedBox(height: 20),
-            Text(
-              'Задание ${_history ? historyIndex! + 1 : s.attempts.length + (_checked ? 0 : 1)}'
-              '${(_record?.isExtra ?? s.currentIsExtra) ? ' · дополнительное' : ''}',
-              style: screenText(16, c.sub),
-            ),
             if (!_history && s.pendingExtraTasks > 0)
               Text(
                 'Дополнительных заданий осталось: ${s.pendingExtraTasks}',
@@ -764,6 +759,7 @@ class _BankTrainerState extends State<BankTrainer> {
         );
       }
       return DemoPage(
+        showLabel: page != 'practice',
         label: page == 'results'
             ? 'Итоги'
             : page == 'review'
