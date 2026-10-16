@@ -105,8 +105,19 @@ void main() {
             answer: correct ? reference.currentTask.expectedAnswer : '0',
             correct: correct,
           );
-          expect(tester.widget<TextField>(field).readOnly, isTrue);
-          await tester.tap(find.text('Дальше'));
+          if (reference.needsDetailedExplanation) {
+            expect(
+              find.byKey(const ValueKey('bank-required-explanation')),
+              findsOneWidget,
+            );
+            await tester.pump(const Duration(seconds: 10));
+            await tester.tap(
+              find.byKey(const ValueKey('bank-explanation-continue')),
+            );
+          } else {
+            expect(tester.widget<TextField>(field).readOnly, isTrue);
+            await tester.tap(find.text('Дальше'));
+          }
           await tester.pumpAndSettle();
           reference.advance();
         }

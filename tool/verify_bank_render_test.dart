@@ -255,6 +255,56 @@ void main() {
       expect(resultsAction.top, greaterThanOrEqualTo(historyFooter.top));
       expect(find.textContaining('Твой ответ:'), findsNothing);
       await save('history-input');
+      // A fresh real-bank practice reaches the mandatory screen after 3 errors.
+      await tester.pumpWidget(
+        MathTrainerApp(
+          themeMode: theme,
+          home: RepaintBoundary(
+            key: capture,
+            child: BankTrainer(
+              key: UniqueKey(),
+              readText: (p) async => File(p).readAsStringSync(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('topic-0')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Начать практику'));
+      await tester.pumpAndSettle();
+      for (var index = 0; index < 3; index++) {
+        final task = bank.blocks.first.tasks[index];
+        final options = answerChoices(task);
+        final wrong = find.byKey(
+          ValueKey(
+            'bank-choice-${options.indexWhere((a) => a != task.expectedAnswer)}',
+          ),
+        );
+        await tester.ensureVisible(wrong);
+        await tester.tap(wrong);
+        await tester.pump();
+        await tester.tap(find.byKey(const ValueKey('bank-primary')));
+        await tester.pumpAndSettle();
+        if (index < 2) {
+          await tester.tap(find.text('Дальше'));
+          await tester.pumpAndSettle();
+        }
+      }
+      final continuation = tester.getRect(
+        find.byKey(const ValueKey('bank-explanation-continue')),
+      );
+      expect(viewport.contains(continuation.topLeft), isTrue);
+      expect(viewport.contains(continuation.bottomRight), isTrue);
+      expect(
+        find.byKey(const ValueKey('bank-required-explanation')),
+        findsOneWidget,
+      );
+      await save('required-explanation');
+      await tester.pump(const Duration(seconds: 10));
+      await tester.tap(find.byKey(const ValueKey('bank-explanation-continue')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('bank-task-4')), findsOneWidget);
     });
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'bank/factor_answer_checker.dart';
 import 'bank/task_bank.dart';
+import 'practice/required_explanation_screen.dart';
 import 'completion_screens.dart' show DemoColumns, DemoMath;
 import 'demo_screens.dart';
 import 'practice/practice_session.dart';
@@ -374,6 +375,9 @@ class _BankTrainerState extends State<BankTrainer> {
       } else {
         s.submit(answer: entry.text, correct: verdict == AnswerVerdict.correct);
         showAnswer = s.needsDetailedExplanation;
+        if (verdict == AnswerVerdict.incorrect && s.needsDetailedExplanation) {
+          page = 'explanation';
+        }
       }
     });
   }
@@ -800,6 +804,19 @@ class _BankTrainerState extends State<BankTrainer> {
                 ? 'results'
                 : 'practice';
           }),
+        );
+      }
+      if (page == 'explanation') {
+        return RequiredExplanationScreen(
+          topic: bank.title,
+          task: s!.currentTask,
+          skill: s.currentBlock.skill,
+          successPercent: s.successPercent,
+          onTopics: () => setState(() => page = 'topics'),
+          onContinue: () {
+            setState(() => page = 'practice');
+            _next();
+          },
         );
       }
       return DemoPage(

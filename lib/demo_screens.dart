@@ -534,6 +534,7 @@ class DemoPage extends StatelessWidget {
     this.aboveFooterBuilder,
     this.successPercent = 0,
     this.onTopics,
+    this.topicsEnabled = true,
     this.scrollKey,
   });
   final DemoBodyBuilder bodyBuilder;
@@ -545,6 +546,7 @@ class DemoPage extends StatelessWidget {
   final DemoBodyBuilder? aboveFooterBuilder;
   final double successPercent;
   final VoidCallback? onTopics;
+  final bool topicsEnabled;
   final Object? scrollKey;
   @override
   Widget build(BuildContext context) {
@@ -639,8 +641,9 @@ class DemoPage extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: TextButton.icon(
-                              onPressed:
-                                  onTopics ?? () => returnToTopics(context),
+                              onPressed: topicsEnabled
+                                  ? onTopics ?? () => returnToTopics(context)
+                                  : null,
                               style: TextButton.styleFrom(
                                 foregroundColor: c.sub,
                                 padding: EdgeInsets.zero,
