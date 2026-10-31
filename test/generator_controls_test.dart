@@ -54,9 +54,33 @@ void main() {
         )
         .controller!;
     expect(controller.text, '2');
+    // Move the second row back above the first using a real drag gesture.
+    final dragged = find.byKey(
+      const ValueKey('drag-numeric_common_factor_tpl_001'),
+    );
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('drag-numeric_common_factor_tpl_002')),
+    );
+    await tester.pumpAndSettle();
+    final target = tester.getRect(
+      find.byKey(const ValueKey('drag-numeric_common_factor_tpl_002')),
+    );
+    final gesture = await tester.startGesture(
+      Offset(
+        tester.getRect(dragged).left + 9,
+        tester.getRect(dragged).center.dy,
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 100));
+    await gesture.moveBy(const Offset(0, -20));
+    await tester.pump(const Duration(milliseconds: 100));
+    await gesture.moveTo(Offset(target.center.dx, target.center.dy - 15));
+    await tester.pump(const Duration(milliseconds: 500));
+    await gesture.up();
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('generate-pdf')));
     await tester.pumpAndSettle();
-    expect(firstTemplate, 'numeric_common_factor_tpl_002');
+    expect(firstTemplate, 'numeric_common_factor_tpl_001');
     expect(taskCount, 32);
     expect(tester.takeException(), isNull);
   });

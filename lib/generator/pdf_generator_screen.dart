@@ -107,6 +107,8 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
   }
 
   bool busy = false;
+  bool landscape = true;
+  bool includeAnswers = false;
   String? error;
   String? success;
 
@@ -164,6 +166,8 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
       exercises: tasks,
       textFont: fonts[0],
       mathFont: fonts[1],
+      landscape: landscape,
+      includeAnswers: includeAnswers,
     );
   }
 
@@ -386,7 +390,7 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                               ),
                             const SizedBox(height: 12),
                             const Text(
-                              'Стрелки меняют порядок шаблонов. Этот порядок используется в PDF в режиме «Группами по шаблонам».',
+                              'Перетаскивайте строку шаблона или используйте стрелки. Этот порядок используется в PDF в режиме «Группами по шаблонам».',
                             ),
                             const SizedBox(height: 12),
                             if (visible.isEmpty)
@@ -400,15 +404,68 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                               Padding(
                                 key: ValueKey('row-${visible[i].id}'),
                                 padding: const EdgeInsets.only(bottom: 8),
-                                child: _templateRow(
-                                  visible[i],
-                                  colors,
-                                  moveUp: i == 0 || busy
-                                      ? null
-                                      : () => _move(visible, i, -1),
-                                  moveDown: i == visible.length - 1 || busy
-                                      ? null
-                                      : () => _move(visible, i, 1),
+                                child: DragTarget<String>(
+                                  onWillAcceptWithDetails: (d) =>
+                                      !busy && d.data != visible[i].id,
+                                  onAcceptWithDetails: (d) => setState(() {
+                                    final from = templateOrder.indexOf(d.data);
+                                    final to = templateOrder.indexOf(
+                                      visible[i].id,
+                                    );
+                                    if (from < 0 || to < 0) return;
+                                    templateOrder.insert(
+                                      to,
+                                      templateOrder.removeAt(from),
+                                    );
+                                    success = null;
+                                  }),
+                                  builder: (context, candidates, rejected) =>
+                                      Draggable<String>(
+                                        key: ValueKey('drag-${visible[i].id}'),
+                                        data: visible[i].id,
+                                        maxSimultaneousDrags: busy ? 0 : 1,
+                                        feedback: Material(
+                                          elevation: 8,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: SizedBox(
+                                            width: 280,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Text(visible[i].title),
+                                            ),
+                                          ),
+                                        ),
+                                        childWhenDragging: Opacity(
+                                          opacity: .3,
+                                          child: Text(visible[i].title),
+                                        ),
+                                        child: DecoratedBox(
+                                          decoration: BoxDecoration(
+                                            border: candidates.isEmpty
+                                                ? null
+                                                : Border.all(
+                                                    color: colors.primary,
+                                                    width: 2,
+                                                  ),
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
+                                          ),
+                                          child: _templateRow(
+                                            visible[i],
+                                            colors,
+                                            moveUp: i == 0 || busy
+                                                ? null
+                                                : () => _move(visible, i, -1),
+                                            moveDown:
+                                                i == visible.length - 1 || busy
+                                                ? null
+                                                : () => _move(visible, i, 1),
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
                             ExpansionTile(
@@ -455,9 +512,46 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                   : (v) => setState(() => order = v!),
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'A4, альбомный лист в клетку. Только задания — без ответов и подсказок.',
+                            DropdownButtonFormField<bool>(
+                              key: const ValueKey('pdf-orientation'),
+                              initialValue: landscape,
+                              decoration: const InputDecoration(
+                                labelText: 'Ориентация PDF',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: true,
+                                  child: Text('Альбомная'),
+                                ),
+                                DropdownMenuItem(
+                                  value: false,
+                                  child: Text('Книжная'),
+                                ),
+                              ],
+                              onChanged: busy
+                                  ? null
+                                  : (value) => setState(() {
+                                      landscape = value!;
+                                      success = null;
+                                    }),
                             ),
+                            CheckboxListTile(
+                              key: const ValueKey('include-answers'),
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Добавить ответы'),
+                              subtitle: const Text(
+                                'Отдельными страницами в конце PDF',
+                              ),
+                              value: includeAnswers,
+                              onChanged: busy
+                                  ? null
+                                  : (value) => setState(() {
+                                      includeAnswers = value!;
+                                      success = null;
+                                    }),
+                            ),
+                            const Text('A4, лист в клетку.'),
                           ],
                         ),
                       ),
@@ -559,6 +653,7 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
       padding: const EdgeInsets.fromLTRB(4, 10, 12, 10),
       child: Row(
         children: [
+          const Icon(Icons.drag_indicator, size: 18),
           Checkbox(
             key: ValueKey('select-${t.id}'),
             value: checked,

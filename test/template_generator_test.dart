@@ -155,4 +155,25 @@ void main() {
       expect(tasks.length, 36);
     },
   );
+  test('portrait and landscape support answer pages in the same PDF', () async {
+    final tasks = TemplateTaskGenerator(seed: 12)
+        .generate(templates: options, quantities: {options.first.id: 21});
+    for (final landscape in [false, true]) {
+      final bytes = await buildWorksheetPdf(
+        exercises: tasks,
+        textFont: ByteData.sublistView(
+          File('assets/fonts/Carlito-Regular.ttf').readAsBytesSync(),
+        ),
+        mathFont: ByteData.sublistView(
+          File('assets/fonts/Caladea-Regular.ttf').readAsBytesSync(),
+        ),
+        landscape: landscape,
+        includeAnswers: true,
+      );
+      File(
+        '.dart_tool/worksheet-${landscape ? 'landscape' : 'portrait'}-answers.pdf',
+      ).writeAsBytesSync(bytes);
+      expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
+    }
+  });
 }
