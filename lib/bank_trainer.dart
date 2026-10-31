@@ -1,3 +1,5 @@
+import 'generator/pdf_generator_screen.dart';
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -329,6 +331,33 @@ class _BankTrainerState extends State<BankTrainer> {
 
   void _previous() {
     if (_previousIndex >= 0) _openTask(_previousIndex);
+  }
+
+  bool _openingGenerator = false;
+  Future<void> _openPdfGenerator() async {
+    if (_openingGenerator) return;
+    _openingGenerator = true;
+    try {
+      final text = await (widget.readText ?? rootBundle.loadString)(
+        'bank/templates/common_factor.json',
+      );
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => PdfGeneratorScreen(catalogText: text),
+        ),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Не удалось загрузить шаблоны. Попробуйте ещё раз.'),
+          ),
+        );
+      }
+    } finally {
+      _openingGenerator = false;
+    }
   }
 
   Future<TaskBank> _load() async {
@@ -797,6 +826,7 @@ class _BankTrainerState extends State<BankTrainer> {
           titles: [bank.title.replaceFirst('общего ', 'общего\n')],
           successes: [s?.successPercent.floor()],
           completedStates: [s?.canFinish ?? false],
+          onGeneratePdf: (_) => _openPdfGenerator(),
           onTopicSelected: (_) => setState(() {
             page = s == null
                 ? 'start'

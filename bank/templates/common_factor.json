@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "source": "Methodical template registries, confirmed 2026-10-30; generation requested 2026-10-31",
+  "templates": [
+    {
+      "id": "numeric_common_factor_tpl_001",
+      "title": "Одинаковые коэффициенты",
+      "family": "numeric",
+      "features": [],
+      "example": "2a + 2b → 2(a + b)",
+      "status": "active",
+      "parents": []
+    },
+    {
+      "id": "numeric_common_factor_tpl_002",
+      "title": "Вычитание",
+      "family": "numeric",
+      "features": [
+        "subtraction"
+      ],
+      "example": "2a − 2b → 2(a − b)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_003",
+      "title": "Позиция множителя",
+      "family": "numeric",
+      "features": [
+        "position"
+      ],
+      "example": "a · 2 + 2 · b → 2(a + b)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_004",
+      "title": "Три слагаемых",
+      "family": "numeric",
+      "features": [
+        "three_terms"
+      ],
+      "example": "2a + 2b + 2c → 2(a + b + c)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_005",
+      "title": "Слагаемое без буквы",
+      "family": "numeric",
+      "features": [
+        "unit"
+      ],
+      "example": "2a + 2 → 2(a + 1)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_006",
+      "title": "Разные коэффициенты",
+      "family": "numeric",
+      "features": [
+        "different"
+      ],
+      "example": "2a + 4b → 2(a + 2b)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_007",
+      "title": "Две буквы в слагаемом",
+      "family": "numeric",
+      "features": [
+        "two_letters"
+      ],
+      "example": "2ab + 2cd → 2(ab + cd)",
+      "status": "active",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_008",
+      "title": "Степени букв",
+      "family": "numeric",
+      "features": [
+        "powers"
+      ],
+      "example": "2a² + 2b² → 2(a² + b²)",
+      "status": "deferred",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_009",
+      "title": "Отрицательный множитель",
+      "family": "numeric",
+      "features": [
+        "negative"
+      ],
+      "example": "(−2)a + (−2)b → −2(a + b)",
+      "status": "deferred",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_010",
+      "title": "Обыкновенная дробь",
+      "family": "numeric",
+      "features": [
+        "fraction"
+      ],
+      "example": "(1/2)a + (1/2)b → (1/2)(a + b)",
+      "status": "deferred",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_011",
+      "title": "Десятичная дробь",
+      "family": "numeric",
+      "features": [
+        "decimal"
+      ],
+      "example": "0,1a + 0,1b → 0,1(a + b)",
+      "status": "deferred",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "numeric_common_factor_tpl_012",
+      "title": "Скобка в слагаемом",
+      "family": "numeric",
+      "features": [
+        "bracket"
+      ],
+      "example": "2(a + b) + 2c → 2((a + b) + c)",
+      "status": "deferred",
+      "parents": [
+        "numeric_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_001",
+      "title": "Общая буква",
+      "family": "literal",
+      "features": [],
+      "example": "ab + ac → a(b + c)",
+      "status": "active",
+      "parents": []
+    },
+    {
+      "id": "literal_common_factor_tpl_002",
+      "title": "Вычитание",
+      "family": "literal",
+      "features": [
+        "subtraction"
+      ],
+      "example": "ab − ac → a(b − c)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_003",
+      "title": "Позиция общей буквы",
+      "family": "literal",
+      "features": [
+        "position"
+      ],
+      "example": "ba + ac → a(b + c)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_004",
+      "title": "Три слагаемых",
+      "family": "literal",
+      "features": [
+        "three_terms"
+      ],
+      "example": "ab + ac + ad → a(b + c + d)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_005",
+      "title": "Остаток — единица",
+      "family": "literal",
+      "features": [
+        "unit"
+      ],
+      "example": "ab + a → a(b + 1)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_006",
+      "title": "Две оставшиеся буквы",
+      "family": "literal",
+      "features": [
+        "two_letters"
+      ],
+      "example": "abc + ade → a(bc + de)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_007",
+      "title": "Степени оставшихся букв",
+      "family": "literal",
+      "features": [
+        "powers"
+      ],
+      "example": "ab² + ac² → a(b² + c²)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_008",
+      "title": "Общая буква из степени",
+      "family": "literal",
+      "features": [
+        "factor_power"
+      ],
+      "example": "a²b + ac → a(ab + c)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    },
+    {
+      "id": "literal_common_factor_tpl_009",
+      "title": "Скобка в слагаемом",
+      "family": "literal",
+      "features": [
+        "bracket"
+      ],
+      "example": "a(b + c) + ad → a((b + c) + d)",
+      "status": "active",
+      "parents": [
+        "literal_common_factor_tpl_001"
+      ]
+    }
+  ]
+}
