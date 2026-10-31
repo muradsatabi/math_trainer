@@ -30,7 +30,7 @@ void main() {
         final card = find.byKey(const ValueKey('topic-0'));
         expect(
           tester.getRect(pdf).center.dx,
-          lessThan(tester.getRect(card).center.dx),
+          greaterThan(tester.getRect(card).center.dx),
         );
         await tester.tap(pdf);
         await tester.pumpAndSettle();

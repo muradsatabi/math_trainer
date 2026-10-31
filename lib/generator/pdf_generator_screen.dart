@@ -27,7 +27,85 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
   final families = <String>{'numeric', 'literal'};
   final selected = <String>{};
   final quantities = <String, int>{};
+  final templateOrder = <String>[];
+  final quantityControllers = <String, TextEditingController>{};
+  final commonQuantity = TextEditingController(text: '10');
   TaskOrder order = TaskOrder.grouped;
+
+  @override
+  void dispose() {
+    commonQuantity.dispose();
+    for (final controller in quantityControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _move(List<ExerciseTemplate> visible, int index, int delta) {
+    setState(() {
+      final a = templateOrder.indexOf(visible[index].id);
+      final b = templateOrder.indexOf(visible[index + delta].id);
+      final id = templateOrder[a];
+      templateOrder[a] = templateOrder[b];
+      templateOrder[b] = id;
+      success = null;
+    });
+  }
+
+  Widget _quantityInput(
+    String id,
+    TextEditingController controller,
+    bool enabled,
+    ValueChanged<int> onChanged,
+  ) {
+    final value = int.tryParse(controller.text) ?? 0;
+    void step(int delta) {
+      final next = (value + delta).clamp(1, 100);
+      controller.text = '$next';
+      onChanged(next);
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          key: ValueKey('minus-$id'),
+          tooltip: 'Уменьшить количество',
+          onPressed: enabled && value > 1 ? () => step(-1) : null,
+          visualDensity: VisualDensity.compact,
+          icon: const Icon(Icons.remove, size: 20),
+        ),
+        SizedBox(
+          width: 64,
+          child: TextFormField(
+            key: ValueKey('quantity-$id'),
+            controller: controller,
+            enabled: enabled,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(3),
+            ],
+            decoration: const InputDecoration(
+              labelText: 'Штук',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+            ),
+            onChanged: (text) => onChanged(int.tryParse(text) ?? 0),
+          ),
+        ),
+        IconButton(
+          key: ValueKey('plus-$id'),
+          tooltip: 'Увеличить количество',
+          onPressed: enabled && value < 100 ? () => step(1) : null,
+          visualDensity: VisualDensity.compact,
+          icon: const Icon(Icons.add, size: 20),
+        ),
+      ],
+    );
+  }
+
   bool busy = false;
   String? error;
   String? success;
@@ -38,6 +116,7 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
           await rootBundle.loadString('bank/templates/common_factor.json'),
     );
     selected.addAll(templates.where((t) => t.active).map((t) => t.id));
+    templateOrder.addAll(generationOptions(templates).map((t) => t.id));
     return templates;
   }
 
@@ -120,6 +199,12 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                 (t) => levels.contains(t.level) && families.contains(t.family),
               )
               .toList();
+          visible.sort(
+            (a, b) => templateOrder
+                .indexOf(a.id)
+                .compareTo(templateOrder.indexOf(b.id)),
+          );
+          final commonValue = int.tryParse(commonQuantity.text) ?? 0;
           final counts = {
             for (final t in visible)
               if (selected.contains(t.id)) t.id: quantities[t.id] ?? 10,
@@ -258,6 +343,52 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Одинаковое количество для выбранных шаблонов',
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 12,
+                              runSpacing: 8,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                _quantityInput(
+                                  'all',
+                                  commonQuantity,
+                                  !busy,
+                                  (_) => setState(() {}),
+                                ),
+                                OutlinedButton(
+                                  key: const ValueKey('apply-quantity-all'),
+                                  onPressed:
+                                      busy ||
+                                          counts.isEmpty ||
+                                          commonValue < 1 ||
+                                          commonValue > 100
+                                      ? null
+                                      : () => setState(() {
+                                          for (final id in counts.keys) {
+                                            quantities[id] = commonValue;
+                                            quantityControllers[id]?.text =
+                                                '$commonValue';
+                                          }
+                                          success = null;
+                                        }),
+                                  child: const Text('Применить к выбранным'),
+                                ),
+                              ],
+                            ),
+                            if (commonValue < 1 || commonValue > 100)
+                              Text(
+                                'Введите число от 1 до 100.',
+                                style: TextStyle(color: colors.error),
+                              ),
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Стрелки меняют порядок шаблонов. Этот порядок используется в PDF в режиме «Группами по шаблонам».',
+                            ),
+                            const SizedBox(height: 12),
                             if (visible.isEmpty)
                               const Padding(
                                 padding: EdgeInsets.all(16),
@@ -265,10 +396,20 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                   'Выберите хотя бы одну тему и один уровень.',
                                 ),
                               ),
-                            for (final t in visible)
+                            for (var i = 0; i < visible.length; i++)
                               Padding(
+                                key: ValueKey('row-${visible[i].id}'),
                                 padding: const EdgeInsets.only(bottom: 8),
-                                child: _templateRow(t, colors),
+                                child: _templateRow(
+                                  visible[i],
+                                  colors,
+                                  moveUp: i == 0 || busy
+                                      ? null
+                                      : () => _move(visible, i, -1),
+                                  moveDown: i == visible.length - 1 || busy
+                                      ? null
+                                      : () => _move(visible, i, 1),
+                                ),
                               ),
                             ExpansionTile(
                               title: const Text('Отложенные шаблоны'),
@@ -400,7 +541,12 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
     );
   }
 
-  Widget _templateRow(ExerciseTemplate t, ColorScheme colors) {
+  Widget _templateRow(
+    ExerciseTemplate t,
+    ColorScheme colors, {
+    VoidCallback? moveUp,
+    VoidCallback? moveDown,
+  }) {
     final checked = selected.contains(t.id);
     return Container(
       decoration: BoxDecoration(
@@ -426,6 +572,29 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                     }
                   }),
           ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                key: ValueKey('move-up-${t.id}'),
+                tooltip: 'Поднять шаблон',
+                onPressed: moveUp,
+                visualDensity: VisualDensity.compact,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.keyboard_arrow_up, size: 22),
+              ),
+              IconButton(
+                key: ValueKey('move-down-${t.id}'),
+                tooltip: 'Опустить шаблон',
+                onPressed: moveDown,
+                visualDensity: VisualDensity.compact,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.keyboard_arrow_down, size: 22),
+              ),
+            ],
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -450,30 +619,17 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
             ),
           ),
           const SizedBox(width: 10),
-          SizedBox(
-            width: 70,
-            child: TextFormField(
-              key: ValueKey('quantity-${t.id}'),
-              initialValue: '${quantities[t.id] ?? 10}',
-              enabled: checked && !busy,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(3),
-              ],
-              decoration: const InputDecoration(
-                labelText: 'Штук',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 12,
-                ),
-              ),
-              onChanged: (v) => setState(() {
-                quantities[t.id] = int.tryParse(v) ?? 0;
-                success = null;
-              }),
+          _quantityInput(
+            t.id,
+            quantityControllers.putIfAbsent(
+              t.id,
+              () => TextEditingController(text: '${quantities[t.id] ?? 10}'),
             ),
+            checked && !busy,
+            (value) => setState(() {
+              quantities[t.id] = value;
+              success = null;
+            }),
           ),
         ],
       ),

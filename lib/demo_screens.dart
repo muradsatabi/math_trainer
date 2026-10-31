@@ -253,168 +253,158 @@ class TopicsScreen extends StatelessWidget {
                                   : wide
                                   ? 166
                                   : 144,
-                              child: Stack(
-                                fit: StackFit.expand,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  OutlinedButton(
-                                    key: ValueKey('topic-$i'),
-                                    onPressed: () {
-                                      if (onTopicSelected != null) {
-                                        onTopicSelected!(i);
-                                        return;
-                                      }
-                                      if (i == 0) {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute<void>(
-                                            builder: (_) => const StartScreen(),
-                                          ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Демонстрация заданий доступна для первой темы.',
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      key: ValueKey('topic-$i'),
+                                      onPressed: () {
+                                        if (onTopicSelected != null) {
+                                          onTopicSelected!(i);
+                                          return;
+                                        }
+                                        if (i == 0) {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute<void>(
+                                              builder: (_) =>
+                                                  const StartScreen(),
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Демонстрация заданий доступна для первой темы.',
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                      }
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor: Color(
-                                        c.dark ? 0xff25354d : 0xffffffff,
-                                      ),
-                                      side: BorderSide(
-                                        color: Color(
-                                          c.dark ? 0xff40536f : 0xffd6e0ef,
+                                              );
+                                        }
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        backgroundColor: Color(
+                                          c.dark ? 0xff25354d : 0xffffffff,
+                                        ),
+                                        side: BorderSide(
+                                          color: Color(
+                                            c.dark ? 0xff40536f : 0xffd6e0ef,
+                                          ),
+                                        ),
+                                        minimumSize: Size(
+                                          0,
+                                          wide
+                                              ? 160
+                                              : low
+                                              ? 100
+                                              : compact
+                                              ? 112
+                                              : 128,
+                                        ),
+                                        padding: EdgeInsets.all(wide ? 30 : 24),
+                                        visualDensity: VisualDensity.standard,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                         ),
                                       ),
-                                      minimumSize: Size(
-                                        0,
-                                        wide
-                                            ? 160
-                                            : low
-                                            ? 100
-                                            : compact
-                                            ? 112
-                                            : 128,
-                                      ),
-                                      padding: onGeneratePdf == null
-                                          ? EdgeInsets.all(wide ? 30 : 24)
-                                          : EdgeInsets.fromLTRB(
-                                              width < 450 ? 88 : 112,
-                                              20,
-                                              24,
-                                              20,
-                                            ),
-                                      visualDensity: VisualDensity.standard,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                    child: onGeneratePdf != null && width < 600
-                                        ? Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                titles[i],
-                                                style: screenText(
-                                                  20,
-                                                  c.ink,
-                                                  heading: true,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12),
-                                              Row(
-                                                children: [
-                                                  TopicStateBadge(
-                                                    percent: successes[i],
-                                                    completed:
-                                                        completedStates?[i],
-                                                  ),
-                                                  const Spacer(),
-                                                  TopicSuccess(
-                                                    percent: successes[i],
-                                                    wide: false,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              TopicStateBadge(
-                                                percent: successes[i],
-                                                completed: completedStates?[i],
-                                              ),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: Text(
+                                      child:
+                                          onGeneratePdf != null && width < 600
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   titles[i],
                                                   style: screenText(
-                                                    wide ? 24 : 20,
+                                                    20,
                                                     c.ink,
                                                     heading: true,
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(width: 20),
-                                              TopicSuccess(
-                                                percent: successes[i],
-                                                wide: wide,
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                  if (onGeneratePdf != null)
-                                    Positioned(
-                                      left: 1,
-                                      top: 1,
-                                      bottom: 1,
-                                      width: width < 450 ? 66 : 86,
-                                      child: Tooltip(
-                                        message: 'Сгенерировать задания в PDF',
-                                        child: TextButton(
-                                          key: ValueKey('pdf-topic-$i'),
-                                          onPressed: () => onGeneratePdf!(i),
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: c.blue,
-                                            backgroundColor: c.dark
-                                                ? const Color(0xff253d60)
-                                                : const Color(0xffeef4ff),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                            ),
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.horizontal(
-                                                    left: Radius.circular(15),
-                                                  ),
-                                            ),
-                                          ),
-                                          child: const Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.picture_as_pdf_outlined,
-                                                size: 30,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'PDF',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
+                                                const SizedBox(height: 12),
+                                                Row(
+                                                  children: [
+                                                    TopicStateBadge(
+                                                      percent: successes[i],
+                                                      completed:
+                                                          completedStates?[i],
+                                                    ),
+                                                    const Spacer(),
+                                                    TopicSuccess(
+                                                      percent: successes[i],
+                                                      wide: false,
+                                                    ),
+                                                  ],
                                                 ),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                TopicStateBadge(
+                                                  percent: successes[i],
+                                                  completed:
+                                                      completedStates?[i],
+                                                ),
+                                                const SizedBox(width: 16),
+                                                Expanded(
+                                                  child: Text(
+                                                    titles[i],
+                                                    style: screenText(
+                                                      wide ? 24 : 20,
+                                                      c.ink,
+                                                      heading: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 20),
+                                                TopicSuccess(
+                                                  percent: successes[i],
+                                                  wide: wide,
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                  if (onGeneratePdf != null) ...[
+                                    const SizedBox(width: 12),
+                                    SizedBox(
+                                      width: 56,
+                                      child: Center(
+                                        child: SizedBox(
+                                          height: 56,
+                                          child: OutlinedButton(
+                                            key: ValueKey('pdf-topic-$i'),
+                                            onPressed: () => onGeneratePdf!(i),
+                                            style: OutlinedButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              backgroundColor: Color(
+                                                c.dark
+                                                    ? 0xff25354d
+                                                    : 0xffffffff,
                                               ),
-                                            ],
+                                              foregroundColor: c.blue,
+                                              side: BorderSide(color: c.line),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                            child: const Tooltip(
+                                              message: 'Скачать задания в PDF',
+                                              child: Icon(
+                                                Icons.picture_as_pdf_outlined,
+                                                size: 28,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
+                                  ],
                                 ],
                               ),
                             ),
