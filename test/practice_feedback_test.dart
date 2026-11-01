@@ -1,8 +1,8 @@
-import 'dart:io';
+import 'support/practice_fixture.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/demo_screens.dart';
 import 'package:math_trainer/main.dart';
 import 'package:math_trainer/practice/answer_keyboard.dart';
@@ -60,9 +60,9 @@ void main() {
   testWidgets(
     'all bank answers have digits immediately; letters allow mistakes',
     (tester) async {
-      final bank = await TaskBank.load(
-        'bank/manifest.json',
-        (p) async => File(p).readAsStringSync(),
+      final bank = await fixtureBank(
+        'fixture/config.json',
+        (p) async => await fixtureText(p),
       );
       for (final task in bank.blocks.expand((b) => b.tasks)) {
         final letters = RegExp('[a-zA-Z]')

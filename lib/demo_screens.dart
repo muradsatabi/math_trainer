@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'main.dart' show PracticeScreen;
 import 'constructor_screen.dart';
 
+part 'viewport_topics.dart';
+
 const fullTopic = 'Вынесение общего множителя за скобки';
 
 void returnToTopics(BuildContext context) {
@@ -138,16 +140,46 @@ class TopicsScreen extends StatelessWidget {
       'Свойства степеней',
     ],
     this.onTopicSelected,
+    this.onGeneratePdf,
     this.completedStates,
+    this.enabledStates,
+    this.subtitles,
+    this.onResetHistory,
   });
   final List<int?> successes;
   final List<String> titles;
   final ValueChanged<int>? onTopicSelected;
+  final ValueChanged<int>? onGeneratePdf;
   final List<bool>? completedStates;
+  final List<bool>? enabledStates;
+  final List<String>? subtitles;
+  final VoidCallback? onResetHistory;
   @override
   Widget build(BuildContext context) {
     assert(successes.length == titles.length);
     assert(completedStates == null || completedStates!.length == titles.length);
+    assert(enabledStates == null || enabledStates!.length == titles.length);
+    assert(subtitles == null || subtitles!.length == titles.length);
+    if (onGeneratePdf != null) {
+      return _ViewportTopics(
+        titles: titles,
+        successes: successes,
+        completedStates: completedStates,
+        enabledStates: enabledStates,
+        subtitles: subtitles,
+        onResetHistory: onResetHistory,
+        onOpen: (index) {
+          if (onTopicSelected != null) {
+            onTopicSelected!(index);
+          } else if (index == 0) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const StartScreen()),
+            );
+          }
+        },
+        onPdf: onGeneratePdf!,
+      );
+    }
     final c = ScreenColors(context);
     return Scaffold(
       body: LayoutBuilder(
@@ -155,7 +187,11 @@ class TopicsScreen extends StatelessWidget {
           final wide = bounds.maxWidth >= 1280;
           final compact = bounds.maxHeight <= 840;
           final low = bounds.maxHeight <= 680;
-          final side = wide ? 56.0 : 40.0;
+          final side = onGeneratePdf != null && bounds.maxWidth < 600
+              ? 16.0
+              : wide
+              ? 56.0
+              : 40.0;
           final gap = wide ? 32.0 : 24.0;
           final width = bounds.maxWidth < 1024
               ? bounds.maxWidth - side * 2
@@ -240,83 +276,197 @@ class TopicsScreen extends StatelessWidget {
                         runSpacing: wide ? 24 : 16,
                         children: [
                           for (var i = 0; i < titles.length; i++)
-                            SizedBox(
-                              width: width,
-                              height: wide ? 166 : 144,
-                              child: OutlinedButton(
-                                key: ValueKey('topic-$i'),
-                                onPressed: () {
-                                  if (onTopicSelected != null) {
-                                    onTopicSelected!(i);
-                                    return;
-                                  }
-                                  if (i == 0) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute<void>(
-                                        builder: (_) => const StartScreen(),
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Демонстрация заданий доступна для первой темы.',
+                            if (onGeneratePdf != null)
+                              SizedBox(
+                                width: width,
+                                child: _TopicCardWithPdf(
+                                  index: i,
+                                  title: titles[i],
+                                  percent: successes[i],
+                                  completed: completedStates?[i],
+                                  wide: wide,
+                                  onOpen: () {
+                                    if (onTopicSelected != null) {
+                                      onTopicSelected!(i);
+                                    } else if (i == 0) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute<void>(
+                                          builder: (_) => const StartScreen(),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                style: OutlinedButton.styleFrom(
-                                  backgroundColor: Color(
-                                    c.dark ? 0xff25354d : 0xffffffff,
-                                  ),
-                                  side: BorderSide(
-                                    color: Color(
-                                      c.dark ? 0xff40536f : 0xffd6e0ef,
-                                    ),
-                                  ),
-                                  minimumSize: Size(
-                                    0,
-                                    wide
-                                        ? 160
-                                        : low
-                                        ? 100
-                                        : compact
-                                        ? 112
-                                        : 128,
-                                  ),
-                                  padding: EdgeInsets.all(wide ? 30 : 24),
-                                  visualDensity: VisualDensity.standard,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
+                                      );
+                                    }
+                                  },
+                                  onPdf: () => onGeneratePdf!(i),
                                 ),
+                              )
+                            else
+                              SizedBox(
+                                width: width,
+                                height: onGeneratePdf != null && width < 600
+                                    ? 240
+                                    : wide
+                                    ? 166
+                                    : 144,
                                 child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
-                                    TopicStateBadge(
-                                      percent: successes[i],
-                                      completed: completedStates?[i],
-                                    ),
-                                    const SizedBox(width: 16),
                                     Expanded(
-                                      child: Text(
-                                        titles[i],
-                                        style: screenText(
-                                          wide ? 24 : 20,
-                                          c.ink,
-                                          heading: true,
+                                      child: OutlinedButton(
+                                        key: ValueKey('topic-$i'),
+                                        onPressed: () {
+                                          if (onTopicSelected != null) {
+                                            onTopicSelected!(i);
+                                            return;
+                                          }
+                                          if (i == 0) {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute<void>(
+                                                builder: (_) =>
+                                                    const StartScreen(),
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Демонстрация заданий доступна для первой темы.',
+                                                    ),
+                                                  ),
+                                                );
+                                          }
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          backgroundColor: Color(
+                                            c.dark ? 0xff25354d : 0xffffffff,
+                                          ),
+                                          side: BorderSide(
+                                            color: Color(
+                                              c.dark ? 0xff40536f : 0xffd6e0ef,
+                                            ),
+                                          ),
+                                          minimumSize: Size(
+                                            0,
+                                            wide
+                                                ? 160
+                                                : low
+                                                ? 100
+                                                : compact
+                                                ? 112
+                                                : 128,
+                                          ),
+                                          padding: EdgeInsets.all(
+                                            wide ? 30 : 24,
+                                          ),
+                                          visualDensity: VisualDensity.standard,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
                                         ),
+                                        child:
+                                            onGeneratePdf != null && width < 600
+                                            ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    titles[i],
+                                                    style: screenText(
+                                                      20,
+                                                      c.ink,
+                                                      heading: true,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  Row(
+                                                    children: [
+                                                      TopicStateBadge(
+                                                        percent: successes[i],
+                                                        completed:
+                                                            completedStates?[i],
+                                                      ),
+                                                      const Spacer(),
+                                                      TopicSuccess(
+                                                        percent: successes[i],
+                                                        wide: false,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  TopicStateBadge(
+                                                    percent: successes[i],
+                                                    completed:
+                                                        completedStates?[i],
+                                                  ),
+                                                  const SizedBox(width: 16),
+                                                  Expanded(
+                                                    child: Text(
+                                                      titles[i],
+                                                      style: screenText(
+                                                        wide ? 24 : 20,
+                                                        c.ink,
+                                                        heading: true,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 20),
+                                                  TopicSuccess(
+                                                    percent: successes[i],
+                                                    wide: wide,
+                                                  ),
+                                                ],
+                                              ),
                                       ),
                                     ),
-                                    const SizedBox(width: 20),
-                                    TopicSuccess(
-                                      percent: successes[i],
-                                      wide: wide,
-                                    ),
+                                    if (onGeneratePdf != null) ...[
+                                      const SizedBox(width: 12),
+                                      SizedBox(
+                                        width: 56,
+                                        child: Center(
+                                          child: SizedBox(
+                                            height: 56,
+                                            child: OutlinedButton(
+                                              key: ValueKey('pdf-topic-$i'),
+                                              onPressed: () =>
+                                                  onGeneratePdf!(i),
+                                              style: OutlinedButton.styleFrom(
+                                                padding: EdgeInsets.zero,
+                                                backgroundColor: Color(
+                                                  c.dark
+                                                      ? 0xff25354d
+                                                      : 0xffffffff,
+                                                ),
+                                                foregroundColor: c.blue,
+                                                side: BorderSide(color: c.line),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              child: const Tooltip(
+                                                message:
+                                                    'Скачать задания в PDF',
+                                                child: Icon(
+                                                  Icons.picture_as_pdf_outlined,
+                                                  size: 28,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ],
                                 ),
                               ),
-                            ),
                         ],
                       ),
                       const SizedBox(height: 30),
@@ -333,17 +483,190 @@ class TopicsScreen extends StatelessWidget {
   }
 }
 
-class TopicStateBadge extends StatelessWidget {
-  const TopicStateBadge({super.key, required this.percent, this.completed});
+/// Trial card: title above one aligned state / progress / PDF row.
+class _TopicCardWithPdf extends StatelessWidget {
+  const _TopicCardWithPdf({
+    required this.index,
+    required this.title,
+    required this.percent,
+    required this.completed,
+    required this.wide,
+    required this.onOpen,
+    required this.onPdf,
+    this.titleSize,
+    this.contentPadding,
+    this.titleHeight,
+    this.enabled = true,
+    this.subtitle,
+  });
+  final double? titleSize, contentPadding, titleHeight;
+  final bool enabled;
+  final String? subtitle;
+  final int index;
+  final String title;
   final int? percent;
   final bool? completed;
+  final bool wide;
+  final VoidCallback onOpen, onPdf;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = ScreenColors(context);
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+      side: BorderSide(
+        color: c.dark ? const Color(0xff40536f) : const Color(0xffd6e0ef),
+      ),
+    );
+    return Material(
+      color: c.dark ? const Color(0xff25354d) : Colors.white,
+      shape: shape,
+      child: InkWell(
+        key: ValueKey('topic-$index'),
+        customBorder: shape,
+        onTap: enabled ? onOpen : null,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: wide ? 180 : 168),
+          child: Padding(
+            padding: EdgeInsets.all(contentPadding ?? (wide ? 24 : 20)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: titleHeight,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (subtitle != null) ...[
+                          Text(subtitle!, style: screenText(12, c.sub)),
+                          const SizedBox(height: 8),
+                        ],
+                        Text(
+                          title,
+                          key: ValueKey('topic-title-$index'),
+                          style: screenText(
+                            titleSize ?? (wide ? 24 : 20),
+                            enabled ? c.ink : c.sub,
+                            heading: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  key: ValueKey('topic-controls-$index'),
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TopicStateBadge(
+                      key: ValueKey('topic-state-$index'),
+                      percent: percent,
+                      completed: completed,
+                      locked: !enabled,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        key: ValueKey('topic-progress-$index'),
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text('Успешность', style: screenText(12, c.sub)),
+                          const SizedBox(height: 6),
+                          SizedBox(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: LinearProgressIndicator(
+                                      value: (percent ?? 0) / 100,
+                                      minHeight: 8,
+                                      backgroundColor: c.successTrack,
+                                      color: c.successFill(percent ?? 0),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  '${percent ?? 0}%',
+                                  key: ValueKey('topic-percent-$index'),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  textAlign: TextAlign.right,
+                                  style: screenText(18, c.ink, heading: true),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Tooltip(
+                      message: enabled
+                          ? 'Скачать задания в PDF'
+                          : 'PDF пока недоступен',
+                      child: SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: OutlinedButton(
+                          key: ValueKey('pdf-topic-$index'),
+                          onPressed: enabled ? onPdf : null,
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(44, 44),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            foregroundColor: c.blue,
+                            side: BorderSide(color: c.line),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.picture_as_pdf_outlined,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TopicStateBadge extends StatelessWidget {
+  const TopicStateBadge({
+    super.key,
+    required this.percent,
+    this.completed,
+    this.locked = false,
+  });
+  final int? percent;
+  final bool? completed;
+  final bool locked;
   @override
   Widget build(BuildContext context) {
     final c = ScreenColors(context);
     final achieved = completed ?? (percent != null && percent! >= 85);
     final fill = percent == null ? null : c.successFill(percent!);
     return Semantics(
-      label: percent == null
+      label: locked
+          ? 'Тема планируется, пока недоступна'
+          : percent == null
           ? 'Не начато'
           : achieved
           ? 'Целевая успешность достигнута'
@@ -356,7 +679,9 @@ class TopicStateBadge extends StatelessWidget {
           border: Border.all(color: fill ?? c.line),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: percent == null
+        child: locked
+            ? Icon(Icons.lock_outline_rounded, color: c.sub, size: 24)
+            : percent == null
             ? null
             : Icon(
                 achieved ? Icons.check_rounded : Icons.schedule_rounded,
@@ -615,206 +940,224 @@ class DemoPage extends StatelessWidget {
           Widget scrollable(Widget child) => visibleScrollbar
               ? _VisiblePageScroll(key: ValueKey(scrollKey), child: child)
               : SingleChildScrollView(key: ValueKey(scrollKey), child: child);
-          return scrollable(
-            ConstrainedBox(
-              constraints: BoxConstraints(minHeight: bounds.maxHeight),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: wide
-                      ? 56
-                      : bounds.maxWidth < 720
-                      ? 16
-                      : 40,
-                  vertical: low
-                      ? 12
-                      : compact
-                      ? 16
-                      : 32,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 226,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
-                              onPressed: topicsEnabled
-                                  ? onTopics ?? () => returnToTopics(context)
-                                  : null,
-                              style: TextButton.styleFrom(
-                                foregroundColor: c.sub,
-                                padding: EdgeInsets.zero,
-                                minimumSize: Size(
-                                  0,
-                                  low
-                                      ? 24
-                                      : compact
-                                      ? 26
-                                      : 30,
-                                ),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              icon: const Icon(Icons.arrow_back, size: 16),
-                              label: Text(
-                                'К темам',
-                                style: screenText(15, c.sub),
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (compactPracticeHeader) ...[
-                          SizedBox(width: wide ? 44 : 32),
+          final side = wide
+              ? 56.0
+              : bounds.maxWidth < 720
+              ? 16.0
+              : 40.0;
+          final vertical = low
+              ? 12.0
+              : compact
+              ? 16.0
+              : 32.0;
+          return SafeArea(
+            bottom: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  key: const ValueKey('demo-fixed-header'),
+                  padding: EdgeInsets.fromLTRB(side, vertical, side, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
                           Expanded(
-                            flex: 100,
-                            child: InkWell(
-                              onTap: () => showSuccessInfo(context),
-                              child: SuccessLabel(
-                                style: screenText(wide ? 17 : 14, c.sub),
+                            flex: 226,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                onPressed: topicsEnabled
+                                    ? onTopics ?? () => returnToTopics(context)
+                                    : null,
+                                style: TextButton.styleFrom(
+                                  foregroundColor: c.sub,
+                                  padding: EdgeInsets.zero,
+                                  minimumSize: Size(
+                                    0,
+                                    low
+                                        ? 24
+                                        : compact
+                                        ? 26
+                                        : 30,
+                                  ),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                icon: const Icon(Icons.arrow_back, size: 16),
+                                label: Text(
+                                  'К темам',
+                                  style: screenText(15, c.sub),
+                                ),
                               ),
                             ),
                           ),
+                          if (compactPracticeHeader) ...[
+                            SizedBox(width: wide ? 44 : 32),
+                            Expanded(
+                              flex: 100,
+                              child: InkWell(
+                                onTap: () => showSuccessInfo(context),
+                                child: SuccessLabel(
+                                  style: screenText(wide ? 17 : 14, c.sub),
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
-                    ),
-                    SizedBox(
-                      height: low
-                          ? 6
-                          : compact
-                          ? 8
-                          : 12,
-                    ),
-                    Row(
-                      crossAxisAlignment: compactPracticeHeader
-                          ? CrossAxisAlignment.end
-                          : CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 226,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (showLabel) ...[
+                      ),
+                      SizedBox(
+                        height: low
+                            ? 6
+                            : compact
+                            ? 8
+                            : 12,
+                      ),
+                      Row(
+                        crossAxisAlignment: compactPracticeHeader
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 226,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (showLabel) ...[
+                                  Text(
+                                    label,
+                                    style: screenText(
+                                      low
+                                          ? 13
+                                          : wide
+                                          ? 17
+                                          : 14,
+                                      c.sub,
+                                    ),
+                                  ),
+                                  SizedBox(height: compact ? 4 : 8),
+                                ],
                                 Text(
-                                  label,
+                                  topic,
+                                  key: const ValueKey('demo-topic-title'),
                                   style: screenText(
                                     low
-                                        ? 13
+                                        ? 22
+                                        : compact
+                                        ? 25
                                         : wide
-                                        ? 17
-                                        : 14,
-                                    c.sub,
+                                        ? 30
+                                        : 25,
+                                    c.ink,
+                                    heading: true,
                                   ),
                                 ),
-                                SizedBox(height: compact ? 4 : 8),
                               ],
-                              Text(
-                                topic,
-                                key: const ValueKey('demo-topic-title'),
-                                style: screenText(
-                                  low
-                                      ? 22
-                                      : compact
-                                      ? 25
-                                      : wide
-                                      ? 30
-                                      : 25,
-                                  c.ink,
-                                  heading: true,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                        if (showSuccess) ...[
-                          SizedBox(width: wide ? 44 : 32),
-                          Expanded(
-                            flex: 100,
-                            child: InkWell(
-                              onTap: () => showSuccessInfo(context),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (!compactPracticeHeader) ...[
-                                    SuccessLabel(
-                                      style: screenText(wide ? 17 : 14, c.sub),
-                                    ),
-                                    const SizedBox(height: 8),
-                                  ],
-                                  SizedBox(
-                                    width: bounds.maxWidth < 720 ? 140 : 216,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            child: LinearProgressIndicator(
-                                              value:
-                                                  successPercent.clamp(0, 100) /
-                                                  100,
-                                              minHeight: 12,
-                                              backgroundColor: c.successTrack,
-                                              color: c.successFill(
-                                                successPercent.floor(),
+                          if (showSuccess) ...[
+                            SizedBox(width: wide ? 44 : 32),
+                            Expanded(
+                              flex: 100,
+                              child: InkWell(
+                                onTap: () => showSuccessInfo(context),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (!compactPracticeHeader) ...[
+                                      SuccessLabel(
+                                        style: screenText(
+                                          wide ? 17 : 14,
+                                          c.sub,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                    ],
+                                    SizedBox(
+                                      width: bounds.maxWidth < 720 ? 140 : 216,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: LinearProgressIndicator(
+                                                value:
+                                                    successPercent.clamp(
+                                                      0,
+                                                      100,
+                                                    ) /
+                                                    100,
+                                                minHeight: 12,
+                                                backgroundColor: c.successTrack,
+                                                color: c.successFill(
+                                                  successPercent.floor(),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Text(
-                                          '${successPercent.floor()}%',
-                                          key: const ValueKey(
-                                            'demo-success-percent',
+                                          const SizedBox(width: 16),
+                                          Text(
+                                            '${successPercent.floor()}%',
+                                            key: const ValueKey(
+                                              'demo-success-percent',
+                                            ),
+                                            style: screenText(
+                                              compact ? 25 : 30,
+                                              c.ink,
+                                              heading: true,
+                                            ),
                                           ),
-                                          style: screenText(
-                                            compact ? 25 : 30,
-                                            c.ink,
-                                            heading: true,
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
-                      ],
-                    ),
-                    SizedBox(
-                      height: compactPracticeHeader
-                          ? (low
-                                ? 8
-                                : compact
-                                ? 10
-                                : 14)
-                          : low
-                          ? 10
-                          : compact
-                          ? 12
-                          : 20,
-                    ),
-                    Divider(
-                      key: const ValueKey('demo-header-divider'),
-                      height: 1,
-                      color: c.line,
-                    ),
-                    SizedBox(
-                      height: low
-                          ? 12
-                          : compact
-                          ? 16
-                          : 24,
-                    ),
-                    bodyBuilder(context, wide, compact),
-                  ],
+                      ),
+                      SizedBox(
+                        height: compactPracticeHeader
+                            ? (low
+                                  ? 8
+                                  : compact
+                                  ? 10
+                                  : 14)
+                            : low
+                            ? 10
+                            : compact
+                            ? 12
+                            : 20,
+                      ),
+                      Divider(
+                        key: const ValueKey('demo-header-divider'),
+                        height: 1,
+                        color: c.line,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: scrollable(
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        side,
+                        low
+                            ? 12
+                            : compact
+                            ? 16
+                            : 24,
+                        side,
+                        vertical,
+                      ),
+                      child: bodyBuilder(context, wide, compact),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },

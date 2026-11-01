@@ -1,0 +1,41 @@
+name: Validate template publication
+
+on:
+  pull_request:
+    paths:
+      - 'bank/**'
+      - 'lib/**'
+      - 'test/**'
+      - 'tool/template_bank.py'
+      - 'tool/test_template_bank.py'
+      - '.github/workflows/templates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-templates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate catalog and import behavior
+        run: |
+          python3 tool/template_bank.py
+          python3 -m unittest discover -s tool -p 'test_*template_bank.py'
+      - name: Protect published IDs and revisions
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python3 tool/template_bank.py --base-ref "$BASE_SHA"
+      - name: Install the project Flutter version
+        run: |
+          git clone --depth 1 --branch 3.47.6 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter pub get
+      - run: flutter analyze --no-pub
+      - run: flutter test --no-pub
+      - name: Build the production Web bundle
+        run: flutter build web --no-pub --base-href /math_trainer/

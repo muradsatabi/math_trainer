@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'support/practice_fixture.dart';
+
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:math_trainer/bank/task_bank.dart';
@@ -7,10 +8,7 @@ import 'package:math_trainer/bank/factor_answer_checker.dart';
 void main() {
   late TaskBank bank;
   setUpAll(() async {
-    bank = await TaskBank.load(
-      'bank/manifest.json',
-      (p) => File(p).readAsString(),
-    );
+    bank = await fixtureBank('fixture/config.json', (p) => fixtureText(p));
   });
   test(
     'all source answers and alternatives are exact equivalent factorizations',

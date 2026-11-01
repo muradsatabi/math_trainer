@@ -10,6 +10,8 @@ class AnswerKeyboard extends StatefulWidget {
     required this.letters,
     this.requiredDigits = const [],
     this.message,
+    this.powerInput = false,
+    this.powerEnabled = true,
     required this.enabled,
     required this.compact,
     required this.onInsert,
@@ -18,6 +20,7 @@ class AnswerKeyboard extends StatefulWidget {
   final List<String> letters;
   final List<String> requiredDigits;
   final String? message;
+  final bool powerInput, powerEnabled;
   final bool enabled;
   final bool compact;
   final ValueChanged<String> onInsert;
@@ -30,7 +33,12 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
   int digitPage = 0;
   int letterPage = 0;
 
-  Widget _group(String title, List<String> symbols, ScreenColors c) {
+  Widget _group(
+    String title,
+    List<String> symbols,
+    ScreenColors c, {
+    bool showPower = false,
+  }) {
     return Column(
       key: ValueKey('bank-key-group-$title'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,31 +62,67 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
             ],
           ),
         ],
+        if (showPower) ...[
+          SizedBox(height: widget.compact ? 6 : 8),
+          _key('^', c),
+        ],
       ],
     );
   }
 
-  Widget _key(String? symbol, ScreenColors c) => OutlinedButton(
-    key: symbol == null ? null : ValueKey('bank-symbol-$symbol'),
-    onPressed: !widget.enabled || symbol == null
-        ? null
-        : () => widget.onInsert(symbol),
-    style: OutlinedButton.styleFrom(
-      foregroundColor: c.ink,
-      backgroundColor: c.paper,
-      side: BorderSide(color: c.line),
-      visualDensity: VisualDensity.standard,
-      minimumSize: Size(0, widget.compact ? 44 : 54),
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    child: Text(
-      symbol ?? '',
-      style: TextStyle(
-        fontFamily: 'Caladea',
-        fontSize: widget.compact ? 26 : 28,
-        height: 1.2,
+  Widget _key(String? symbol, ScreenColors c) => Semantics(
+    label: symbol == '^' ? 'Степень' : null,
+    toggled: symbol == '^' ? widget.powerInput : null,
+    child: OutlinedButton(
+      key: symbol == null ? null : ValueKey('bank-symbol-$symbol'),
+      onPressed:
+          !widget.enabled ||
+              symbol == null ||
+              (symbol == '^' && !widget.powerEnabled)
+          ? null
+          : () => widget.onInsert(symbol),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: symbol == '^' && widget.powerInput
+            ? Colors.white
+            : c.ink,
+        backgroundColor: symbol == '^' && widget.powerInput ? c.blue : c.paper,
+        side: BorderSide(color: c.line),
+        visualDensity: VisualDensity.standard,
+        minimumSize: Size(0, widget.compact ? 44 : 54),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
+      child: symbol == '^'
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'x',
+                  style: TextStyle(
+                    fontFamily: 'Caladea',
+                    fontSize: widget.compact ? 26 : 28,
+                    height: 1.2,
+                  ),
+                ),
+                Text(
+                  'y',
+                  style: TextStyle(
+                    fontFamily: 'Caladea',
+                    fontSize: widget.compact ? 16 : 18,
+                    height: 1,
+                  ),
+                ),
+              ],
+            )
+          : Text(
+              symbol ?? '',
+              style: TextStyle(
+                fontFamily: 'Caladea',
+                fontSize: widget.compact ? 26 : 28,
+                height: 1.2,
+              ),
+            ),
     ),
   );
 
@@ -133,14 +177,12 @@ class _AnswerKeyboardState extends State<AnswerKeyboard> {
             Expanded(child: _group('Буквы', letters, c)),
             const SizedBox(width: 24),
             Expanded(
-              child: _group('Знаки и скобки', [
-                '+',
-                '−',
-                '×',
-                '÷',
-                '(',
-                ')',
-              ], c),
+              child: _group(
+                'Знаки и скобки',
+                ['+', '−', '×', '÷', '(', ')'],
+                c,
+                showPower: true,
+              ),
             ),
           ],
         ),

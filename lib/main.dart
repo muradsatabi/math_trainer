@@ -7,13 +7,15 @@ import 'demo_screens.dart';
 import 'constructor_screen.dart';
 import 'completion_screens.dart';
 import 'practice_record.dart';
-import 'bank_trainer.dart';
+import 'practice/generated_practice_home.dart';
 
 void main() => runApp(
   MathTrainerApp(
     home: Uri.base.queryParameters.containsKey('screen')
         ? demoScreen(Uri.base.queryParameters['screen'])
-        : const BankTrainer(),
+        : const GeneratedPracticeHome(
+            allowHistoryReset: bool.fromEnvironment('ALLOW_HISTORY_RESET'),
+          ),
   ),
 );
 

@@ -1,4 +1,5 @@
 import 'task_bank.dart';
+import '../practice/power_notation.dart';
 
 enum AnswerVerdict { correct, incorrect, incomplete, unsupported }
 
@@ -28,6 +29,11 @@ AnswerVerdict checkFactorAnswer(BankTask task, String answer) {
     if (!_samePolynomial(entered.value, original.value)) {
       return AnswerVerdict.incorrect;
     }
+    if (task.operation == 'expand') {
+      return entered.unexpanded || !_collectedMonomials(answer)
+          ? AnswerVerdict.incorrect
+          : AnswerVerdict.correct;
+    }
     if (examples.any((e) => _Parser(e).parse().shape == entered.shape)) {
       return AnswerVerdict.correct;
     }
@@ -39,6 +45,46 @@ AnswerVerdict checkFactorAnswer(BankTask task, String answer) {
   } on FormatException {
     return AnswerVerdict.unsupported;
   }
+}
+
+bool _collectedMonomials(String answer) {
+  final text = normalizePowers(answer).replaceAll(RegExp(r'[()\s]'), '');
+  for (final term in text.split(RegExp('[+−-]'))) {
+    final letters = RegExp(r'[a-zA-Z](?:\^\d+)?').allMatches(term).toList();
+    if (letters.map((m) => m[0]![0]).toSet().length != letters.length) {
+      return false;
+    }
+    final coefficients = term.replaceAll(RegExp(r'[a-zA-Z](?:\^\d+)?'), '');
+    if (RegExp(r'\d+').allMatches(coefficients).length > 1) return false;
+  }
+  return true;
+}
+
+/// Canonical expanded integer polynomial for the supported expression subset.
+/// Used by the bracket generator; unsupported syntax never becomes an exercise.
+String expandedPolynomial(String expression) {
+  final polynomial = _Parser(expression).parse().value;
+  final terms = <String>[];
+  for (final entry in polynomial.entries) {
+    final counts = <String, int>{};
+    for (final letter in entry.key.split('')) {
+      counts[letter] = (counts[letter] ?? 0) + 1;
+    }
+    final letters = counts.entries
+        .map((e) => e.value == 1 ? e.key : '${e.key}^${e.value}')
+        .join();
+    final coefficient = entry.value.abs();
+    final body =
+        '${coefficient == 1 && letters.isNotEmpty ? '' : coefficient}$letters';
+    terms.add(
+      '${entry.value < 0
+          ? '− '
+          : terms.isEmpty
+          ? ''
+          : '+ '}$body',
+    );
+  }
+  return displayPowers(terms.isEmpty ? '0' : terms.join(' '));
 }
 
 bool _samePolynomial(Map<String, int> a, Map<String, int> b) =>
@@ -80,19 +126,21 @@ class _Node {
     this.sum = false,
     this.groupedSum = false,
     this.hasFactoredSum = false,
+    this.unexpanded = false,
   });
   final String shape;
   final Map<String, int> value;
   final bool sum;
   final bool groupedSum;
   final bool hasFactoredSum;
+  final bool unexpanded;
 }
 
 class _Incomplete implements Exception {}
 
 class _Parser {
   _Parser(String text)
-    : text = text
+    : text = normalizePowers(text)
           .replaceAll(RegExp(r'\s+'), '')
           .replaceAll('−', '-')
           .replaceAll('·', '*')
@@ -120,18 +168,19 @@ class _Parser {
         '(${node.shape}$op${other.shape})',
         _add(node.value, other.value, op == '+' ? 1 : -1),
         sum: true,
+        unexpanded: node.unexpanded || other.unexpanded,
       );
     }
     return node;
   }
 
   _Node _product() {
-    var node = _atom();
+    var node = _unary();
     while (symbol == '*' ||
         symbol == '(' ||
         RegExp(r'^[0-9a-zA-Z]$').hasMatch(symbol)) {
       if (symbol == '*') position++;
-      final other = _atom();
+      final other = _unary();
       node = _Node(
         '${node.shape}*${other.shape}',
         _multiply(node.value, other.value),
@@ -140,25 +189,70 @@ class _Parser {
             other.hasFactoredSum ||
             (node.groupedSum && !other.sum) ||
             (other.groupedSum && !node.sum),
+        unexpanded:
+            node.unexpanded ||
+            other.unexpanded ||
+            node.groupedSum ||
+            other.groupedSum,
       );
     }
     return node;
   }
 
+  _Node _unary() {
+    if (symbol != '+' && symbol != '-') return _power();
+    final negative = symbol == '-';
+    position++;
+    final node = _unary();
+    return negative
+        ? _Node(
+            '-${node.shape}',
+            node.value.map((key, value) => MapEntry(key, -value)),
+            hasFactoredSum: node.hasFactoredSum,
+            unexpanded: node.unexpanded || node.groupedSum,
+          )
+        : node;
+  }
+
+  _Node _power() {
+    final base = _atom();
+    int exponent;
+    if (symbol == '^') {
+      position++;
+      if (symbol.isEmpty) throw _Incomplete();
+      final start = position;
+      while (RegExp(r'^[0-9]$').hasMatch(symbol)) {
+        position++;
+      }
+      if (position == start || position - start > 2) {
+        throw const FormatException('Unsupported exponent');
+      }
+      exponent = int.parse(text.substring(start, position));
+      if (exponent > 12) throw const FormatException('Exponent too large');
+    } else {
+      return base;
+    }
+    if (exponent == 1) return base;
+    if (base.value.isEmpty && exponent == 0) {
+      throw const FormatException('Zero to zero');
+    }
+    var value = <String, int>{'': 1};
+    for (var i = 0; i < exponent; i++) {
+      value = _multiply(value, base.value);
+    }
+    final constant = value.isEmpty || value.keys.every((k) => k.isEmpty);
+    return _Node(
+      constant
+          ? '${value[''] ?? 0}'
+          : List.filled(exponent, base.shape).join('*'),
+      value,
+      hasFactoredSum: base.hasFactoredSum || (base.groupedSum && exponent > 1),
+      unexpanded: base.unexpanded || (base.groupedSum && exponent > 1),
+    );
+  }
+
   _Node _atom() {
     if (symbol.isEmpty) throw _Incomplete();
-    if (symbol == '+' || symbol == '-') {
-      final negative = symbol == '-';
-      position++;
-      final node = _atom();
-      return negative
-          ? _Node(
-              '-${node.shape}',
-              node.value.map((key, value) => MapEntry(key, -value)),
-              hasFactoredSum: node.hasFactoredSum,
-            )
-          : node;
-    }
     if (symbol == '(') {
       position++;
       final node = _sum();
@@ -170,8 +264,9 @@ class _Parser {
       return _Node(
         '[${node.shape}]',
         node.value,
-        groupedSum: node.sum,
+        groupedSum: node.sum || node.groupedSum,
         hasFactoredSum: node.hasFactoredSum,
+        unexpanded: node.unexpanded,
       );
     }
     if (RegExp(r'^[0-9]$').hasMatch(symbol)) {

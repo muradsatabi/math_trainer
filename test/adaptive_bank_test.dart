@@ -1,8 +1,8 @@
-import 'dart:io';
+import 'support/practice_fixture.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/bank_trainer.dart';
 import 'package:math_trainer/main.dart';
 import 'package:math_trainer/practice/answer_choices.dart';
@@ -18,8 +18,8 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
-        Future<String> read(String p) async => File(p).readAsStringSync();
-        final bank = await TaskBank.load('bank/manifest.json', read);
+        Future<String> read(String p) async => await fixtureText(p);
+        final bank = await fixtureBank('fixture/config.json', read);
         final reference = PracticeSession(
           bank: bank,
           settings: PracticeSettings(
@@ -32,7 +32,7 @@ void main() {
         await tester.pumpWidget(
           MathTrainerApp(
             themeMode: theme,
-            home: BankTrainer(readText: read),
+            home: BankTrainer(loadPractice: () => fixturePractice(read)),
           ),
         );
         await tester.pumpAndSettle();

@@ -1,17 +1,17 @@
-import 'dart:io';
+import 'support/practice_fixture.dart';
+
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:math_trainer/bank/factor_answer_checker.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/practice/answer_choices.dart';
 
 void main() {
   test(
-    'all 110 tasks have one correct and three distinct proven wrong choices',
+    'all 110 synthetic tasks have one correct and three distinct proven wrong choices',
     () async {
-      final bank = await TaskBank.load(
-        'bank/manifest.json',
-        (p) async => File(p).readAsStringSync(),
+      final bank = await fixtureBank(
+        'fixture/config.json',
+        (p) async => await fixtureText(p),
       );
       final correctPositions = <int>{};
       for (final task in bank.blocks.expand((b) => b.tasks)) {

@@ -1,4 +1,20 @@
-import 'dart:convert';
+/// Demonstration feedback saved with a generated exercise, not approved content.
+class DemoAnswerChoice {
+  const DemoAnswerChoice(this.answer, {this.errorId, this.hint});
+  final String answer;
+  final String? errorId, hint;
+  Map<String, dynamic> toJson() => {
+    'answer': answer,
+    if (errorId != null) 'error_id': errorId,
+    if (hint != null) 'hint': hint,
+  };
+  factory DemoAnswerChoice.fromJson(Map<String, dynamic> json) =>
+      DemoAnswerChoice(
+        json['answer'] as String,
+        errorId: json['error_id'] as String?,
+        hint: json['hint'] as String?,
+      );
+}
 
 /// Published content is separate from practice results and UI state.
 class BankTask {
@@ -10,13 +26,20 @@ class BankTask {
     required this.expectedAnswer,
     required List<String> acceptedExamples,
     required this.methodicalStatus,
-  }) : acceptedExamples = List.unmodifiable(acceptedExamples) {
+    this.templateId,
+    this.operation = 'factor',
+    List<DemoAnswerChoice>? demoChoices,
+  }) : demoChoices = demoChoices == null
+           ? null
+           : List.unmodifiable(demoChoices),
+       acceptedExamples = List.unmodifiable(acceptedExamples) {
     if (id.isEmpty ||
         revision < 1 ||
         instruction.isEmpty ||
         expression.isEmpty ||
         expectedAnswer.isEmpty ||
-        methodicalStatus != 'approved') {
+        (methodicalStatus != 'approved' &&
+            !(methodicalStatus == 'generated' && templateId != null))) {
       throw const FormatException('Incomplete or unapproved bank task');
     }
   }
@@ -30,6 +53,23 @@ class BankTask {
   /// Examples are not an exhaustive whitelist of mathematically valid answers.
   final List<String> acceptedExamples;
   final String methodicalStatus;
+  final String? templateId;
+  final String operation;
+  final List<DemoAnswerChoice>? demoChoices;
+
+  Map<String, dynamic> toJson() => {
+    'task_id': id,
+    'revision': revision,
+    'instruction': instruction,
+    'expression': expression,
+    'expected_answer': expectedAnswer,
+    'accepted_examples': acceptedExamples,
+    'methodical_status': methodicalStatus,
+    if (templateId != null) 'template_id': templateId,
+    if (operation != 'factor') 'operation': operation,
+    if (demoChoices != null)
+      'demo_choices_v1': demoChoices!.map((c) => c.toJson()).toList(),
+  };
 
   factory BankTask.fromJson(Map<String, dynamic> json) => BankTask(
     id: json['task_id'] as String,
@@ -39,6 +79,11 @@ class BankTask {
     expectedAnswer: json['expected_answer'] as String,
     acceptedExamples: (json['accepted_examples'] as List).cast<String>(),
     methodicalStatus: json['methodical_status'] as String,
+    templateId: json['template_id'] as String?,
+    operation: json['operation'] as String? ?? 'factor',
+    demoChoices: (json['demo_choices_v1'] as List?)
+        ?.map((v) => DemoAnswerChoice.fromJson(Map<String, dynamic>.from(v)))
+        .toList(),
   );
 }
 
@@ -62,6 +107,15 @@ class BankBlock {
   /// Preserved source value, not a dependency or an approved catalog level.
   final String sourceSectionId;
   final List<BankTask> tasks;
+
+  Map<String, dynamic> toJson() => {
+    'schema_version': 1,
+    'block_id': id,
+    'title': title,
+    'skill': skill,
+    'source_section_id': sourceSectionId,
+    'tasks': tasks.map((t) => t.toJson()).toList(),
+  };
 
   factory BankBlock.fromJson(Map<String, dynamic> json) {
     if (json['schema_version'] != 1) {
@@ -110,33 +164,17 @@ class TaskBank {
   final List<BankBlock> blocks;
   int get taskCount => blocks.fold(0, (sum, block) => sum + block.tasks.length);
 
-  static Future<TaskBank> load(String manifestPath, BankTextReader read) async {
-    final manifest =
-        jsonDecode(await read(manifestPath)) as Map<String, dynamic>;
-    if (manifest['schema_version'] != 1) {
-      throw const FormatException('Unsupported bank manifest schema');
-    }
-    final blocks = <BankBlock>[];
-    for (final path in (manifest['blocks'] as List).cast<String>()) {
-      final blockJson = jsonDecode(await read(path)) as Map<String, dynamic>;
-      final block = BankBlock.fromJson(blockJson);
-      final ref = blockJson['micro_skill_ref'] as Map<String, dynamic>;
-      final skill = jsonDecode(
-        await read('bank/skills/${ref['id']}.json'),
-      ) as Map<String, dynamic>;
-      if (skill['schema_version'] != 1 ||
-          skill['micro_skill_id'] != ref['id'] ||
-          skill['revision'] != ref['revision'] ||
-          skill['title'] != block.skill ||
-          skill['topic_id'] != manifest['topic_id']) {
-        throw FormatException('Invalid micro-skill reference: ${block.id}');
-      }
-      blocks.add(block);
-    }
-    return TaskBank(
-      topicId: manifest['topic_id'] as String,
-      title: manifest['title'] as String,
-      blocks: blocks,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    'topic_id': topicId,
+    'title': title,
+    'blocks': blocks.map((b) => b.toJson()).toList(),
+  };
+
+  factory TaskBank.fromSnapshot(Map<String, dynamic> json) => TaskBank(
+    topicId: json['topic_id'] as String,
+    title: json['title'] as String,
+    blocks: (json['blocks'] as List)
+        .map((b) => BankBlock.fromJson(Map<String, dynamic>.from(b)))
+        .toList(),
+  );
 }

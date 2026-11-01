@@ -1,10 +1,11 @@
+import 'support/practice_fixture.dart';
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/bank_trainer.dart';
 import 'package:math_trainer/main.dart';
 import 'package:math_trainer/practice/answer_choices.dart';
@@ -33,18 +34,18 @@ void main() {
             addTearDown(tester.view.resetPhysicalSize);
             addTearDown(tester.view.resetDevicePixelRatio);
             Future<String> read(String p) async {
-              final source = File(p).readAsStringSync();
-              if (p != 'bank/manifest.json') return source;
+              final source = await fixtureText(p);
+              if (p != 'fixture/config.json') return source;
               final manifest = jsonDecode(source) as Map<String, dynamic>;
               manifest['practice']['input_percent'] = input ? 0 : 100;
               return jsonEncode(manifest);
             }
 
-            final bank = await TaskBank.load('bank/manifest.json', read);
+            final bank = await fixtureBank('fixture/config.json', read);
             await tester.pumpWidget(
               MathTrainerApp(
                 themeMode: theme,
-                home: BankTrainer(readText: read),
+                home: BankTrainer(loadPractice: () => fixturePractice(read)),
               ),
             );
             await tester.pumpAndSettle();
