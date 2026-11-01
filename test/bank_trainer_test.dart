@@ -1,16 +1,16 @@
-import 'dart:io';
+import 'support/practice_fixture.dart';
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/bank_trainer.dart';
 import 'package:math_trainer/main.dart';
 
 // These scenarios specifically exercise the constructor, not format admission.
 Future<String> inputOnlyText(String path) async {
-  final text = File(path).readAsStringSync();
-  if (path != 'bank/manifest.json') return text;
+  final text = await fixtureText(path);
+  if (path != 'fixture/config.json') return text;
   final manifest = jsonDecode(text) as Map<String, dynamic>;
   manifest['practice']['input_percent'] = 0;
   return jsonEncode(manifest);
@@ -26,7 +26,11 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
         await tester.pumpWidget(
-          MathTrainerApp(home: BankTrainer(readText: inputOnlyText)),
+          MathTrainerApp(
+            home: BankTrainer(
+              loadPractice: () => fixturePractice(inputOnlyText),
+            ),
+          ),
         );
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('topic-0')));
@@ -149,20 +153,22 @@ void main() {
   for (final size in [const Size(1366, 768), const Size(1920, 1080)]) {
     for (final theme in [ThemeMode.light, ThemeMode.dark]) {
       testWidgets(
-        'real bank: 22 blocks, error, extra tasks and actual results $size $theme',
+        'synthetic practice: 22 blocks, error, extra tasks and actual results $size $theme',
         (tester) async {
           tester.view.physicalSize = size;
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.resetPhysicalSize);
           addTearDown(tester.view.resetDevicePixelRatio);
-          final bank = await TaskBank.load(
-            'bank/manifest.json',
-            (p) async => File(p).readAsStringSync(),
+          final bank = await fixtureBank(
+            'fixture/config.json',
+            (p) async => await fixtureText(p),
           );
           await tester.pumpWidget(
             MathTrainerApp(
               themeMode: theme,
-              home: BankTrainer(readText: inputOnlyText),
+              home: BankTrainer(
+                loadPractice: () => fixturePractice(inputOnlyText),
+              ),
             ),
           );
           await tester.pumpAndSettle();
@@ -300,7 +306,7 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       Future<String> read(String path) async {
         final text = await inputOnlyText(path);
-        if (path != 'bank/manifest.json') return text;
+        if (path != 'fixture/config.json') return text;
         final manifest = jsonDecode(text) as Map<String, dynamic>;
         manifest['blocks'] = (manifest['blocks'] as List).take(2).toList();
         manifest['practice']['minimum_answers'] = 2;
@@ -308,9 +314,11 @@ void main() {
         return jsonEncode(manifest);
       }
 
-      final bank = await TaskBank.load('bank/manifest.json', read);
+      final bank = await fixtureBank('fixture/config.json', read);
       await tester.pumpWidget(
-        MathTrainerApp(home: BankTrainer(readText: read)),
+        MathTrainerApp(
+          home: BankTrainer(loadPractice: () => fixturePractice(read)),
+        ),
       );
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('topic-0')));
@@ -364,7 +372,7 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       Future<String> read(String path) async {
         final text = await inputOnlyText(path);
-        if (path != 'bank/manifest.json') return text;
+        if (path != 'fixture/config.json') return text;
         final manifest = jsonDecode(text) as Map<String, dynamic>;
         manifest['blocks'] = (manifest['blocks'] as List).take(1).toList();
         manifest['practice']['minimum_answers'] = 1;
@@ -373,7 +381,9 @@ void main() {
       }
 
       await tester.pumpWidget(
-        MathTrainerApp(home: BankTrainer(readText: read)),
+        MathTrainerApp(
+          home: BankTrainer(loadPractice: () => fixturePractice(read)),
+        ),
       );
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('topic-0')));

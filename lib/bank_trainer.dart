@@ -1,6 +1,5 @@
 import 'generator/pdf_generator_screen.dart';
 
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,22 +11,43 @@ import 'completion_screens.dart' show DemoColumns, DemoMath;
 import 'demo_screens.dart';
 import 'practice/practice_session.dart';
 import 'practice/answer_keyboard.dart';
+import 'practice/power_notation.dart';
 import 'practice/answer_choices.dart';
+import 'practice/generated_session.dart';
 import 'answer_form.dart';
 
 /// Real practice entry point. The original V3 demo screens remain previewable.
 class BankTrainer extends StatefulWidget {
-  const BankTrainer({super.key, this.readText});
+  const BankTrainer({
+    super.key,
+    this.readText,
+    this.initialSession,
+    this.initialView,
+    this.onSave,
+    this.onExit,
+    this.loadPractice,
+  });
+  final PracticeSession? initialSession;
+  final Map<String, dynamic>? initialView;
+  final void Function(Map<String, dynamic> view)? onSave;
+  final VoidCallback? onExit;
   final BankTextReader? readText;
+  final Future<PracticeSession> Function()? loadPractice;
   @override
   State<BankTrainer> createState() => _BankTrainerState();
 }
 
 class _SavedPracticeView {
-  const _SavedPracticeView(this.entry, this.message, this.showAnswer);
+  const _SavedPracticeView(
+    this.entry,
+    this.message,
+    this.showAnswer, {
+    this.powerInput = false,
+  });
   final TextEditingValue entry;
   final String? message;
   final bool showAnswer;
+  final bool powerInput;
 }
 
 class _BankTrainerState extends State<BankTrainer> {
@@ -38,6 +58,7 @@ class _BankTrainerState extends State<BankTrainer> {
   String page = 'topics';
   String? inputMessage;
   bool showAnswer = false;
+  bool _powerInput = false;
   int reviewIndex = 0;
   int? historyIndex;
   final Map<int, _SavedPracticeView> savedViews = {};
@@ -55,26 +76,98 @@ class _BankTrainerState extends State<BankTrainer> {
   bool get _usesInput => _record?.usesInput ?? session!.usesInput;
   bool get _offerFinish => !session!.isFinished && session!.canFinish;
 
+  bool _restoring = false;
+
+  void _update(VoidCallback change) {
+    setState(change);
+    _persist();
+  }
+
+  Map<String, dynamic> _encodeView(_SavedPracticeView view) => {
+    'text': view.entry.text,
+    'base': view.entry.selection.baseOffset,
+    'extent': view.entry.selection.extentOffset,
+    'message': view.message,
+    'show_answer': view.showAnswer,
+    'power_input': view.powerInput,
+  };
+
+  _SavedPracticeView _decodeView(Map value) {
+    final rawText = value['text'] as String;
+    final text = displayPowers(rawText);
+    int offset(String key) {
+      final saved = (value[key] as int).clamp(-1, rawText.length);
+      return saved < 0
+          ? saved
+          : displayPowers(rawText.substring(0, saved)).length
+                .clamp(0, text.length);
+    }
+
+    return _SavedPracticeView(
+      TextEditingValue(
+        text: text,
+        selection: TextSelection(
+          baseOffset: offset('base'),
+          extentOffset: offset('extent'),
+        ),
+      ),
+      value['message'] as String?,
+      value['show_answer'] as bool,
+      powerInput: value['power_input'] as bool? ?? false,
+    );
+  }
+
+  void _persist() {
+    if (_restoring || session == null || widget.onSave == null) return;
+    widget.onSave!({
+      'page': page,
+      'history_index': historyIndex,
+      'review_index': reviewIndex,
+      'current': _encodeView(
+        _SavedPracticeView(
+          entry.value,
+          inputMessage,
+          showAnswer,
+          powerInput: _powerInput,
+        ),
+      ),
+      'saved_views': savedViews.map((k, v) => MapEntry('$k', _encodeView(v))),
+    });
+  }
+
+  void _goTopics() {
+    if (widget.onExit != null) {
+      _persist();
+      widget.onExit!();
+    } else {
+      _update(() => page = 'topics');
+    }
+  }
+
   void _saveView() {
     savedViews[historyIndex ?? -1] = _SavedPracticeView(
       entry.value,
       inputMessage,
       showAnswer,
+      powerInput: _powerInput,
     );
   }
 
   void _openTask(int? index) {
-    setState(() {
+    _update(() {
       if (page == 'practice') _saveView();
       historyIndex = index;
       final saved = savedViews[index ?? -1];
       entry.value =
           saved?.entry ??
           TextEditingValue(
-            text: index == null ? '' : session!.attempts[index].answer,
+            text: index == null
+                ? ''
+                : displayPowers(session!.attempts[index].answer),
           );
       inputMessage = saved?.message;
       showAnswer = saved?.showAnswer ?? false;
+      _powerInput = index == null && (saved?.powerInput ?? false);
       page = 'practice';
     });
   }
@@ -88,7 +181,7 @@ class _BankTrainerState extends State<BankTrainer> {
 
   void _returnToResults() {
     _saveView();
-    setState(() => page = 'results');
+    _update(() => page = 'results');
   }
 
   Widget _historyActions(bool compact) => IntrinsicHeight(
@@ -121,9 +214,62 @@ class _BankTrainerState extends State<BankTrainer> {
     ),
   );
 
-  bool get _complete => isCompleteAnswer(entry.text.replaceAll('·', '×'));
+  int get _entryCursor =>
+      entry.selection.isValid ? entry.selection.end : entry.text.length;
+  bool _canPowerAt(String text, int cursor) =>
+      cursor > 0 &&
+      cursor <= text.length &&
+      (RegExp(r'[0-9a-zA-Z)]').hasMatch(text[cursor - 1]) ||
+          isSuperscriptDigit(text[cursor - 1]));
+  bool get _canPower => _powerInput || _canPowerAt(entry.text, _entryCursor);
+  bool get _powerPending =>
+      _powerInput &&
+      (_entryCursor == 0 || !isSuperscriptDigit(entry.text[_entryCursor - 1]));
+  bool get _complete =>
+      !_powerPending && isCompleteAnswer(entry.text.replaceAll('·', '×'));
+
+  TextEditingValue _formatPowerEntry(
+    TextEditingValue oldValue,
+    TextEditingValue value,
+  ) {
+    if (!_powerInput) return value;
+    var prefix = 0;
+    while (prefix < oldValue.text.length &&
+        prefix < value.text.length &&
+        oldValue.text[prefix] == value.text[prefix]) {
+      prefix++;
+    }
+    var suffix = 0;
+    while (suffix < oldValue.text.length - prefix &&
+        suffix < value.text.length - prefix &&
+        oldValue.text[oldValue.text.length - 1 - suffix] ==
+            value.text[value.text.length - 1 - suffix]) {
+      suffix++;
+    }
+    if (!_canPowerAt(value.text, prefix)) {
+      _powerInput = false;
+      return value;
+    }
+    final inserted = value.text.substring(prefix, value.text.length - suffix);
+    final converted = StringBuffer();
+    for (final char in inserted.split('')) {
+      if (_powerInput && RegExp(r'^[0-9]$').hasMatch(char)) {
+        converted.write(superscriptDigit(char));
+      } else {
+        _powerInput = false;
+        converted.write(char);
+      }
+    }
+    return value.copyWith(
+      text:
+          value.text.substring(0, prefix) +
+          converted.toString() +
+          value.text.substring(value.text.length - suffix),
+    );
+  }
+
   bool get _unsupportedSymbol =>
-      RegExp(r'[^0-9a-zA-Z\s()+−×÷*/·-]').hasMatch(entry.text);
+      RegExp(r'[^0-9a-zA-Z⁰¹²³⁴⁵⁶⁷⁸⁹^\s()+−×÷*/·-]').hasMatch(entry.text);
 
   List<TaskAttempt> get _errors =>
       session!.attempts.where((a) => !a.correct).toList();
@@ -203,19 +349,19 @@ class _BankTrainerState extends State<BankTrainer> {
           SecondaryAction(
             label: 'Чему мы научились',
             compact: compact,
-            onPressed: () => setState(() => page = 'recap'),
+            onPressed: () => _update(() => page = 'recap'),
           ),
           SecondaryAction(
             label: 'К темам',
             compact: compact,
-            onPressed: () => setState(() => page = 'topics'),
+            onPressed: _goTopics,
           ),
           if (_errors.isNotEmpty)
             PrimaryAction(
               label: 'Разобрать ошибки',
               wide: wide,
               compact: compact,
-              onPressed: () => setState(() {
+              onPressed: () => _update(() {
                 reviewIndex = 0;
                 page = 'review';
               }),
@@ -231,7 +377,7 @@ class _BankTrainerState extends State<BankTrainer> {
             label: 'Назад',
             compact: compact,
             onPressed: reviewIndex > 0
-                ? () => setState(() => reviewIndex--)
+                ? () => _update(() => reviewIndex--)
                 : null,
           ),
           if (_errors.length > 1)
@@ -239,11 +385,11 @@ class _BankTrainerState extends State<BankTrainer> {
               SecondaryAction(
                 label: 'Следующая ошибка',
                 compact: compact,
-                onPressed: () => setState(() => reviewIndex++),
+                onPressed: () => _update(() => reviewIndex++),
               )
             else
               OutlinedButton.icon(
-                onPressed: () => setState(() => reviewIndex = 0),
+                onPressed: () => _update(() => reviewIndex = 0),
                 icon: const Icon(Icons.restart_alt),
                 label: const Text('К первой ошибке'),
                 style: OutlinedButton.styleFrom(
@@ -259,7 +405,7 @@ class _BankTrainerState extends State<BankTrainer> {
             label: 'К итогам',
             wide: wide,
             compact: compact,
-            onPressed: () => setState(() => page = 'results'),
+            onPressed: () => _update(() => page = 'results'),
           ),
         ],
       );
@@ -268,13 +414,14 @@ class _BankTrainerState extends State<BankTrainer> {
       label: page == 'recap' ? 'К итогам' : 'Начать практику',
       wide: wide,
       compact: compact,
-      onPressed: () => setState(() {
+      onPressed: () => _update(() {
         if (page == 'recap') {
           page = 'results';
           return;
         }
         session = PracticeSession(bank: bank, settings: settings);
         page = 'practice';
+        _powerInput = false;
         entry.clear();
       }),
     );
@@ -285,7 +432,23 @@ class _BankTrainerState extends State<BankTrainer> {
     final selection = entry.selection;
     final start = selection.isValid ? selection.start : entry.text.length;
     final end = selection.isValid ? selection.end : entry.text.length;
-    setState(() {
+    if (symbol == '^') {
+      if (!_canPower) return;
+      _update(() {
+        _powerInput = !_powerInput;
+        entry.selection = TextSelection.collapsed(offset: end);
+        inputMessage = null;
+      });
+      return;
+    }
+    _update(() {
+      if (_powerInput &&
+          _canPowerAt(entry.text, start) &&
+          RegExp(r'^[0-9]$').hasMatch(symbol)) {
+        symbol = superscriptDigit(symbol);
+      } else {
+        _powerInput = false;
+      }
       entry.value = TextEditingValue(
         text: entry.text.replaceRange(start, end, symbol),
         selection: TextSelection.collapsed(offset: start + symbol.length),
@@ -296,8 +459,9 @@ class _BankTrainerState extends State<BankTrainer> {
 
   void _clear() {
     if (_checked) return;
-    setState(() {
+    _update(() {
       entry.clear();
+      _powerInput = false;
       inputMessage = null;
     });
   }
@@ -316,11 +480,12 @@ class _BankTrainerState extends State<BankTrainer> {
               .toString()
               .length
         : start;
-    setState(() {
+    _update(() {
       entry.value = TextEditingValue(
         text: entry.text.replaceRange(previous, end, ''),
         selection: TextSelection.collapsed(offset: previous),
       );
+      if (entry.text.isEmpty) _powerInput = false;
       inputMessage = null;
     });
   }
@@ -361,22 +526,59 @@ class _BankTrainerState extends State<BankTrainer> {
   }
 
   Future<TaskBank> _load() async {
-    final read = widget.readText ?? rootBundle.loadString;
-    final manifest =
-        jsonDecode(await read('bank/manifest.json')) as Map<String, dynamic>;
-    final config = manifest['practice'] as Map<String, dynamic>;
-    settings = PracticeSettings(
-      minimumAnswers: config['minimum_answers'] as int,
-      successWindow: config['success_window'] as int,
-      passPercent: config['pass_percent'] as int,
-      extraTasksPerError: config['extra_tasks_per_error'] as int,
-      inputPercent: config['input_percent'] as int? ?? 70,
-    );
-    return TaskBank.load('bank/manifest.json', read);
+    if (widget.initialSession != null) {
+      _restoring = true;
+      session = widget.initialSession;
+      settings = session!.settings;
+      page = session!.isFinished ? 'results' : 'practice';
+      final view = widget.initialView;
+      if (view != null) {
+        final savedPage = view['page'] as String;
+        if ([
+          'practice',
+          'results',
+          'review',
+          'recap',
+          'explanation',
+        ].contains(savedPage)) {
+          page = savedPage;
+        }
+        historyIndex = view['history_index'] as int?;
+        if (historyIndex != null &&
+            (historyIndex! < 0 || historyIndex! >= session!.attempts.length)) {
+          throw const FormatException('Invalid saved history position');
+        }
+        reviewIndex = view['review_index'] as int;
+        final current = _decodeView(view['current'] as Map);
+        entry.value = current.entry;
+        inputMessage = current.message;
+        showAnswer = current.showAnswer;
+        _powerInput = current.powerInput;
+        (view['saved_views'] as Map).forEach(
+          (k, v) => savedViews[int.parse(k as String)] = _decodeView(v as Map),
+        );
+      }
+      _restoring = false;
+      entry.addListener(_persist);
+      return session!.bank;
+    }
+    final prepared = widget.loadPractice != null
+        ? await widget.loadPractice!()
+        : GeneratedSession.start(
+            family: 'numeric',
+            source: await (widget.readText ?? rootBundle.loadString)(
+              'bank/templates/common_factor.json',
+            ),
+            id: 'practice-${DateTime.now().microsecondsSinceEpoch}',
+            seed: DateTime.now().microsecondsSinceEpoch,
+          ).practice;
+    settings = prepared.settings;
+    return prepared.bank;
   }
 
   @override
   void dispose() {
+    entry.removeListener(_persist);
     entry.dispose();
     super.dispose();
   }
@@ -385,7 +587,7 @@ class _BankTrainerState extends State<BankTrainer> {
     final s = session!;
     if (_checked || (!_history && s.isFinished)) return;
     if (!_complete) {
-      setState(
+      _update(
         () => inputMessage = _unsupportedSymbol
             ? 'Эта запись пока не поддерживается. Ответ не оценён.'
             : 'Ты не закончил запись. Допиши ответ',
@@ -393,7 +595,8 @@ class _BankTrainerState extends State<BankTrainer> {
       return;
     }
     final verdict = checkFactorAnswer(_task, entry.text);
-    setState(() {
+    _update(() {
+      _powerInput = false;
       inputMessage = null;
       if (verdict == AnswerVerdict.incomplete) {
         inputMessage = 'Заверши запись ответа.';
@@ -419,17 +622,18 @@ class _BankTrainerState extends State<BankTrainer> {
         _openTask(next);
       } else if (s.isFinished) {
         _saveView();
-        setState(() => page = 'results');
+        _update(() => page = 'results');
       } else {
         _openTask(null);
         if (s.checked) _next();
       }
       return;
     }
-    setState(() {
+    _update(() {
       s.advance();
       savedViews.remove(-1);
       entry.clear();
+      _powerInput = false;
       inputMessage = null;
       showAnswer = false;
     });
@@ -438,7 +642,7 @@ class _BankTrainerState extends State<BankTrainer> {
   void _finish() {
     final s = session!;
     if (!s.canFinish || s.isFinished) return;
-    setState(() {
+    _update(() {
       _saveView();
       s.finish();
       page = 'results';
@@ -548,8 +752,14 @@ class _BankTrainerState extends State<BankTrainer> {
                               controller: entry,
                               readOnly: _checked,
                               autofocus: false,
+                              inputFormatters: [
+                                TextInputFormatter.withFunction(
+                                  _formatPowerEntry,
+                                ),
+                              ],
                               style: TextStyle(
                                 fontFamily: 'Caladea',
+                                fontFamilyFallback: const ['Carlito'],
                                 fontSize: compact ? 28 : 32,
                                 color: c.ink,
                               ),
@@ -569,12 +779,12 @@ class _BankTrainerState extends State<BankTrainer> {
                                     : null,
                               ),
                               onChanged: (_) =>
-                                  setState(() => inputMessage = null),
+                                  _update(() => inputMessage = null),
                               onTapOutside: (_) {
                                 if (!_checked &&
                                     entry.text.isNotEmpty &&
                                     !_complete) {
-                                  setState(
+                                  _update(
                                     () => inputMessage = _unsupportedSymbol
                                         ? 'Эта запись пока не поддерживается. Ответ не оценён.'
                                         : 'Ты не закончил запись. Допиши ответ',
@@ -630,6 +840,8 @@ class _BankTrainerState extends State<BankTrainer> {
               TextFieldTapRegion(
                 child: AnswerKeyboard(
                   key: ValueKey('keyboard-${task.id}'),
+                  powerInput: _powerInput,
+                  powerEnabled: _canPower,
                   message: message,
                   requiredDigits: RegExp(r'[0-9]')
                       .allMatches(task.expectedAnswer)
@@ -673,10 +885,23 @@ class _BankTrainerState extends State<BankTrainer> {
                       key: const ValueKey('bank-feedback'),
                       style: screenText(24, feedbackColor, heading: true),
                     ),
+                  if (_checked && !correct && task.demoChoices != null) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      answerFeedback(task, entry.text)?.hint ?? 'Проверь обратным действием: раскрой скобки и сравни каждое слагаемое с исходным выражением.',
+                      key: const ValueKey('bank-error-hint'),
+                      style: screenText(17, c.ink, height: 1.5),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Подсказка · демонстрационный вариант',
+                      style: screenText(12, c.sub),
+                    ),
+                  ],
                   if (_checked && !correct && !showAnswer) ...[
                     const SizedBox(height: 20),
                     OutlinedButton(
-                      onPressed: () => setState(() => showAnswer = true),
+                      onPressed: () => _update(() => showAnswer = true),
                       child: const Text('Узнать, как правильно'),
                     ),
                   ],
@@ -763,7 +988,7 @@ class _BankTrainerState extends State<BankTrainer> {
                     borderRadius: BorderRadius.circular(16),
                     onTap: _checked
                         ? null
-                        : () => setState(() {
+                        : () => _update(() {
                             entry.text = options[i];
                             inputMessage = null;
                           }),
@@ -827,7 +1052,7 @@ class _BankTrainerState extends State<BankTrainer> {
           successes: [s?.successPercent.floor()],
           completedStates: [s?.canFinish ?? false],
           onGeneratePdf: (_) => _openPdfGenerator(),
-          onTopicSelected: (_) => setState(() {
+          onTopicSelected: (_) => _update(() {
             page = s == null
                 ? 'start'
                 : s.isFinished
@@ -842,9 +1067,9 @@ class _BankTrainerState extends State<BankTrainer> {
           task: s!.currentTask,
           skill: s.currentBlock.skill,
           successPercent: s.successPercent,
-          onTopics: () => setState(() => page = 'topics'),
+          onTopics: _goTopics,
           onContinue: () {
-            setState(() => page = 'practice');
+            _update(() => page = 'practice');
             _next();
           },
         );
@@ -859,7 +1084,7 @@ class _BankTrainerState extends State<BankTrainer> {
             ? 'Закрепление'
             : 'Практика',
         topic: bank.title,
-        onTopics: () => setState(() => page = 'topics'),
+        onTopics: _goTopics,
         showSuccess: s != null,
         successPercent: s?.successPercent ?? 0,
         visibleScrollbar: true,

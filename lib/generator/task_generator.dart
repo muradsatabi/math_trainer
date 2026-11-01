@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 
+import '../bank/factor_answer_checker.dart' show expandedPolynomial;
+
 enum TaskOrder { grouped, shuffled, increasing }
 
 class ExerciseTemplate {
@@ -12,10 +14,14 @@ class ExerciseTemplate {
     required this.example,
     this.active = true,
     this.combined = false,
+    this.operation = 'factor',
+    this.flat = false,
   });
   final String id, title, family, example;
   final List<String> features;
   final bool active, combined;
+  final String operation;
+  final bool flat;
   int get level => features.length + 1;
 
   factory ExerciseTemplate.fromJson(Map<String, dynamic> json) =>
@@ -26,6 +32,8 @@ class ExerciseTemplate {
         features: (json['features'] as List).cast<String>(),
         example: json['example'] as String,
         active: json['status'] == 'active',
+        operation: json['operation'] as String? ?? 'factor',
+        flat: json['flat'] as bool? ?? false,
       );
 }
 
@@ -85,9 +93,11 @@ class GeneratedExercise {
     this.templateId,
     this.level,
     this.expression,
-    this.answer,
-  );
+    this.answer, {
+    this.operation = 'factor',
+  });
   final String templateId, expression, answer;
+  final String operation;
   final int level;
 }
 
@@ -96,7 +106,38 @@ class TemplateTaskGenerator {
   final Random random;
   static const maxPerTemplate = 100;
   static const maxTotal = 1000;
+  static const maxVariants = 100;
   static const _letters = 'abcdefghkmnpqrstuvwxyz';
+
+  List<List<GeneratedExercise>> generateVariants({
+    required List<ExerciseTemplate> templates,
+    required Map<String, int> quantities,
+    required int count,
+    TaskOrder order = TaskOrder.grouped,
+  }) {
+    if (count < 1 || count > maxVariants) {
+      throw ArgumentError(
+        'Количество вариантов должно быть от 1 до $maxVariants.',
+      );
+    }
+    final result = <List<GeneratedExercise>>[];
+    final seen = <String>{};
+    var attempts = 0;
+    while (result.length < count) {
+      if (++attempts > count * 100) {
+        throw StateError('Не удалось получить достаточно разных вариантов.');
+      }
+      final tasks = generate(
+        templates: templates,
+        quantities: quantities,
+        order: order,
+      );
+      // A different order of the same expressions is not a new worksheet.
+      final expressions = tasks.map((t) => t.expression).toList()..sort();
+      if (seen.add(jsonEncode(expressions))) result.add(tasks);
+    }
+    return List.unmodifiable(result);
+  }
 
   List<GeneratedExercise> generate({
     required List<ExerciseTemplate> templates,
@@ -141,6 +182,37 @@ class TemplateTaskGenerator {
   }
 
   GeneratedExercise _exercise(ExerciseTemplate template) {
+    if (template.operation == 'expand') {
+      final pool = _letters.split('')..shuffle(random);
+      final letters = <String, String>{};
+      final numbers = <String, String>{'1': '1'};
+      var cursor = 0;
+      final pattern = template.example.split('→').first.trim();
+      final expression = pattern.replaceAllMapped(
+        RegExp(r'[a-zA-Z]|\^\d+|\d+'),
+        (match) {
+          final token = match[0]!;
+          if (token.startsWith('^')) return token;
+          if (int.tryParse(token) != null) {
+            return numbers.putIfAbsent(token, () {
+              var value = '${2 + random.nextInt(11)}';
+              while (numbers.values.contains(value)) {
+                value = '${2 + random.nextInt(11)}';
+              }
+              return value;
+            });
+          }
+          return letters.putIfAbsent(token, () => pool[cursor++]);
+        },
+      );
+      return GeneratedExercise(
+        template.id,
+        template.level,
+        expression,
+        expandedPolynomial(expression),
+        operation: 'expand',
+      );
+    }
     final f = template.features.toSet();
     final pool = _letters.split('')..shuffle(random);
     var cursor = 0;

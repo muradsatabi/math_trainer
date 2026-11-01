@@ -39,6 +39,7 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    await tap('generator-level-2');
     await tester.enterText(find.byKey(const ValueKey('quantity-all')), '2');
     await tester.pumpAndSettle();
     await tap('apply-quantity-all');

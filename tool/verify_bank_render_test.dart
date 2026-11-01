@@ -1,3 +1,5 @@
+import '../test/support/practice_fixture.dart';
+
 // Pixel captures of the real widget tree. These are not browser screenshots.
 import 'dart:io';
 import 'dart:convert';
@@ -9,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:math_trainer/bank_trainer.dart';
 import 'package:math_trainer/main.dart';
-import 'package:math_trainer/bank/task_bank.dart';
 import 'package:math_trainer/practice/answer_choices.dart';
 
 void main() {
@@ -75,9 +76,7 @@ void main() {
           themeMode: theme,
           home: RepaintBoundary(
             key: capture,
-            child: BankTrainer(
-              readText: (p) async => File(p).readAsStringSync(),
-            ),
+            child: BankTrainer(loadPractice: () => fixturePractice(fixtureText)),
           ),
         ),
       );
@@ -109,9 +108,9 @@ void main() {
         expect(tester.takeException(), isNull);
       }
 
-      final bank = await TaskBank.load(
-        'bank/manifest.json',
-        (p) async => File(p).readAsStringSync(),
+      final bank = await fixtureBank(
+        'fixture/config.json',
+        (p) async => await fixtureText(p),
       );
       await save('choice');
       final choices = answerChoices(bank.blocks.first.tasks.first);
@@ -263,7 +262,7 @@ void main() {
             key: capture,
             child: BankTrainer(
               key: UniqueKey(),
-              readText: (p) async => File(p).readAsStringSync(),
+              loadPractice: () => fixturePractice(fixtureText),
             ),
           ),
         ),

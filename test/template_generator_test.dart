@@ -17,6 +17,57 @@ void main() {
   );
   final options = generationOptions(templates);
 
+  test('30 distinct variants keep 35 tasks and template counts, export with answers', () async {
+    final selected = templates
+        .where((t) => t.active && t.family == 'numeric')
+        .toList();
+    final quantities = {for (final t in selected) t.id: 5};
+    final variants = TemplateTaskGenerator(
+      seed: 61,
+    ).generateVariants(templates: selected, quantities: quantities, count: 30);
+    expect(variants.length, 30);
+    final signatures = <String>{};
+    for (final tasks in variants) {
+      expect(tasks.length, 35);
+      expect(tasks.map((t) => t.expression).toSet().length, 35);
+      for (final t in selected) {
+        expect(tasks.where((task) => task.templateId == t.id).length, 5);
+      }
+      signatures.add(
+        (tasks.map((t) => t.expression).toList()..sort()).join('|'),
+      );
+    }
+    expect(signatures.length, 30);
+    final repeated = TemplateTaskGenerator(
+      seed: 61,
+    ).generateVariants(templates: selected, quantities: quantities, count: 30);
+    expect(
+      repeated.map((v) => v.map((t) => t.expression).toList()).toList(),
+      variants.map((v) => v.map((t) => t.expression).toList()).toList(),
+    );
+    for (final count in [0, 101]) {
+      expect(
+        () => TemplateTaskGenerator().generateVariants(
+          templates: selected,
+          quantities: quantities,
+          count: count,
+        ),
+        throwsArgumentError,
+      );
+    }
+    final bytes = await buildWorksheetVariantsPdf(
+      variants: variants,
+      textFont: ByteData.sublistView(
+        File('assets/fonts/Carlito-Regular.ttf').readAsBytesSync(),
+      ),
+      mathFont: ByteData.sublistView(
+        File('assets/fonts/Caladea-Regular.ttf').readAsBytesSync(),
+      ),
+      includeAnswers: true,
+    );
+    File('.dart_tool/worksheet-30-variants.pdf').writeAsBytesSync(bytes);
+  });
+
   test(
     'all active templates and combinations produce unique exact identities',
     () {
@@ -159,21 +210,24 @@ void main() {
     final tasks = TemplateTaskGenerator(seed: 12)
         .generate(templates: options, quantities: {options.first.id: 21});
     for (final landscape in [false, true]) {
-      final bytes = await buildWorksheetPdf(
-        exercises: tasks,
-        textFont: ByteData.sublistView(
-          File('assets/fonts/Carlito-Regular.ttf').readAsBytesSync(),
-        ),
-        mathFont: ByteData.sublistView(
-          File('assets/fonts/Caladea-Regular.ttf').readAsBytesSync(),
-        ),
-        landscape: landscape,
-        includeAnswers: true,
-      );
-      File(
-        '.dart_tool/worksheet-${landscape ? 'landscape' : 'portrait'}-answers.pdf',
-      ).writeAsBytesSync(bytes);
-      expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
+      for (final columns in [1, 2, 3]) {
+        final bytes = await buildWorksheetPdf(
+          exercises: tasks,
+          textFont: ByteData.sublistView(
+            File('assets/fonts/Carlito-Regular.ttf').readAsBytesSync(),
+          ),
+          mathFont: ByteData.sublistView(
+            File('assets/fonts/Caladea-Regular.ttf').readAsBytesSync(),
+          ),
+          landscape: landscape,
+          columns: columns,
+          includeAnswers: true,
+        );
+        File(
+          '.dart_tool/worksheet-${landscape ? 'landscape' : 'portrait'}-$columns-columns-answers.pdf',
+        ).writeAsBytesSync(bytes);
+        expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
+      }
     }
   });
 }

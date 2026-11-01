@@ -150,6 +150,125 @@ class PracticeSession {
     _nextTask();
   }
 
+  Map<String, dynamic> toJson() => {
+    'schema_version': 1,
+    'bank': bank.toJson(),
+    'settings': {
+      'minimum_answers': settings.minimumAnswers,
+      'success_window': settings.successWindow,
+      'pass_percent': settings.passPercent,
+      'extra_tasks_per_error': settings.extraTasksPerError,
+      'input_percent': settings.inputPercent,
+    },
+    'attempts': _attempts
+        .map(
+          (a) => {
+            'task_id': a.task.id,
+            'block_id': a.blockId,
+            'answer': a.answer,
+            'correct': a.correct,
+            'is_extra': a.isExtra,
+            'uses_input': a.usesInput,
+          },
+        )
+        .toList(),
+    'extra_blocks': _extraBlocks,
+    'task_cursors': _taskCursors.map((k, v) => MapEntry('$k', v)),
+    'error_streaks': _errorStreaks.map((k, v) => MapEntry('$k', v)),
+    'primary_cursor': _primaryCursor,
+    'review_cursor': _reviewCursor,
+    'block_index': _blockIndex,
+    'task_id': _task.id,
+    'is_extra': _isExtra,
+    'checked': _checked,
+    'uses_input': _usesInput,
+    'finished': _finished,
+  };
+
+  factory PracticeSession.fromJson(Map<String, dynamic> json) {
+    if (json['schema_version'] != 1) {
+      throw const FormatException('Session version');
+    }
+    final bank = TaskBank.fromSnapshot(Map<String, dynamic>.from(json['bank']));
+    final config = json['settings'] as Map;
+    final s = PracticeSession(
+      bank: bank,
+      settings: PracticeSettings(
+        minimumAnswers: config['minimum_answers'] as int,
+        successWindow: config['success_window'] as int,
+        passPercent: config['pass_percent'] as int,
+        extraTasksPerError: config['extra_tasks_per_error'] as int,
+        inputPercent: config['input_percent'] as int,
+      ),
+    );
+    final tasks = {
+      for (final b in bank.blocks)
+        for (final t in b.tasks) t.id: t,
+    };
+    s._blockIndex = json['block_index'] as int;
+    if (s._blockIndex < 0 || s._blockIndex >= bank.blocks.length) {
+      throw const FormatException('Session block');
+    }
+    s._task =
+        tasks[json['task_id']] ?? (throw const FormatException('Session task'));
+    if (!s.currentBlock.tasks.contains(s._task)) {
+      throw const FormatException('Task outside block');
+    }
+    s._attempts.addAll(
+      (json['attempts'] as List).map((a) {
+        final task =
+            tasks[a['task_id']] ??
+            (throw const FormatException('Attempt task'));
+        if (!bank.blocks.any(
+          (b) => b.id == a['block_id'] && b.tasks.contains(task),
+        )) {
+          throw const FormatException('Attempt block');
+        }
+        return TaskAttempt(
+          task: task,
+          blockId: a['block_id'] as String,
+          answer: a['answer'] as String,
+          correct: a['correct'] as bool,
+          isExtra: a['is_extra'] as bool,
+          usesInput: a['uses_input'] as bool,
+        );
+      }),
+    );
+    s._extraBlocks.addAll((json['extra_blocks'] as List).cast<int>());
+    if (s._extraBlocks.any((b) => b < 0 || b >= bank.blocks.length)) {
+      throw const FormatException('Extra blocks');
+    }
+    void restoreMap(String key, Map<int, int> target) {
+      target.clear();
+      (json[key] as Map).forEach((k, v) {
+        final index = int.parse(k as String);
+        if (index < 0 || index >= bank.blocks.length || v is! int || v < 0) {
+          throw const FormatException('Session cursor');
+        }
+        target[index] = v;
+      });
+    }
+
+    restoreMap('task_cursors', s._taskCursors);
+    restoreMap('error_streaks', s._errorStreaks);
+    s._primaryCursor = json['primary_cursor'] as int;
+    s._reviewCursor = json['review_cursor'] as int;
+    if (s._primaryCursor < 0 ||
+        s._primaryCursor > bank.blocks.length ||
+        s._reviewCursor < 0) {
+      throw const FormatException('Session position');
+    }
+    s._isExtra = json['is_extra'] as bool;
+    s._checked = json['checked'] as bool;
+    s._usesInput = json['uses_input'] as bool;
+    s._finished = json['finished'] as bool;
+    if (s._checked &&
+        (s._attempts.isEmpty || s._attempts.last.task.id != s._task.id)) {
+      throw const FormatException('Checked task');
+    }
+    return s;
+  }
+
   void _nextTask() {
     final recent = recentAttempts;
     _usesInput =

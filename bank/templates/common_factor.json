@@ -9,7 +9,19 @@
       "features": [],
       "example": "2a + 2b → 2(a + b)",
       "status": "active",
-      "parents": []
+      "parents": [],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/equal_coefficients/template.md",
+      "source_sha256": "aa3ccb6381be02222e2caf5ea8ecb3e1ddeb38dad93ec16e6fed43851ae995d3",
+      "source_text": "# Шаблон: одинаковый числовой коэффициент в сумме двух слагаемых\r\n\r\nID шаблона: `numeric_common_factor_tpl_001`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\n## Образец\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a + 2b\r\n```\r\n\r\nОбразец результата:\r\n\r\n```text\r\n2(a + b)\r\n```\r\n\r\n## Действие ученика\r\n\r\nРаспознать одинаковый числовой множитель в обоих слагаемых и записать сумму как произведение этого числа на сумму оставшихся букв.\r\n\r\n## Структура шаблона\r\n\r\n- Два слагаемых, соединённые плюсом.\r\n- В каждом слагаемом одна буква; буквы разные.\r\n- Перед каждой буквой стоит один и тот же положительный целый коэффициент больше единицы.\r\n- Коэффициент записан непосредственно перед буквой, без отдельного знака умножения.\r\n- В образце результата этот коэффициент находится перед скобками; внутри остаётся сумма двух букв.\r\n\r\n## Ответы и границы текущего шага\r\n\r\nРанее сохранённое правило допускает расположение вынесенного числа после скобок. Образец с числом перед скобками служит единообразным представлением и не отменяет исходных допустимых ответов.\r\n\r\nСохраняется исходное примечание: «Допустимые ответы не исчерпывают все варианты. Наибольший множитель не требуется». Окончательный алгоритм проверки ответа и особые случаи вынесения единицы, отрицательных или дробных множителей сейчас не решаются.\r\n\r\nПодтверждённые связи показаны в [графе темы](../../graph.md), собранном из записей о родителях соответствующих шаблонов. Выделение подготовительных действий и выбор стартового шаблона рассматриваются отдельно. Первый рассмотренный шаблон не становится автоматически обязательным началом обучения. Количество будущих заданий остаётся отложенным.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/equal_coefficients/template.md#sha256=aa3ccb6381be02222e2caf5ea8ecb3e1ddeb38dad93ec16e6fed43851ae995d3",
+        "content_sha256": "812e6e155615c365a552be4f767661e90f4bf5d6d51082f5e78bc77dcb5038f4"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_002",
@@ -22,7 +34,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/subtraction/template.md",
+      "source_sha256": "a810c517b410c9bfc23730bd2ca440fe9a796b556bae011d9034c748fe8e22ac",
+      "source_text": "# Шаблон: одинаковый числовой коэффициент при вычитании\r\n\r\nID шаблона: `numeric_common_factor_tpl_002`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a − 2b = 2(a − b)\r\n```\r\n\r\nДва слагаемых, разные буквы, одинаковый положительный целый коэффициент больше единицы перед каждой буквой. По сравнению с исходным шаблоном плюс заменён минусом. Действие: вынести одинаковый числовой множитель, сохранив вычитание внутри скобок.\r\n\r\n[Непосредственный необходимый предшественник](dependencies.md). Другие параллельные ветви не обязательны для этого шаблона. Ранжирование по сложности отложено.\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/subtraction/template.md#sha256=a810c517b410c9bfc23730bd2ca440fe9a796b556bae011d9034c748fe8e22ac",
+        "content_sha256": "1fa8b2df9fe225bdfc1a44cd58a981ede323c49e3198c0d00f797467eb2d6ea7"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_003",
@@ -35,7 +59,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/factor_position/template.md",
+      "source_sha256": "bcaa95608c3f2d59be3cc51ce7aff1c022b3b1faa7c5994c55d030bc4038116c",
+      "source_text": "# Шаблон: другая позиция числового множителя при сложении\r\n\r\nID шаблона: `numeric_common_factor_tpl_003`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\na · 2 + 2 · b = 2(a + b)\r\n```\r\n\r\nДва слагаемых, сложение, разные буквы и одинаковый положительный целый числовой множитель больше единицы. По сравнению с исходным шаблоном изменяется позиция числового множителя в записи произведения. Действие: узнать общий множитель независимо от его позиции и вынести его за скобки.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/factor_position/template.md#sha256=bcaa95608c3f2d59be3cc51ce7aff1c022b3b1faa7c5994c55d030bc4038116c",
+        "content_sha256": "9a07f034b5035927727bfa8fe3998a8e6b5293887ca640ca717b8d66d92f4945"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_004",
@@ -48,7 +84,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/three_terms/template.md",
+      "source_sha256": "03c8178e2a4a13a3dd0e5072cfa172600f8b4f0a0cae97af7434622427161aaa",
+      "source_text": "# Шаблон: одинаковый числовой коэффициент в сумме трёх слагаемых\r\n\r\nID шаблона: `numeric_common_factor_tpl_004`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a + 2b + 2c = 2(a + b + c)\r\n```\r\n\r\nТри слагаемых, соединённые плюсами; в каждом одна своя буква, перед буквами одинаковый положительный целый коэффициент больше единицы. По сравнению с исходным шаблоном добавлено третье слагаемое. Действие: вынести общий числовой множитель из всех трёх слагаемых, ничего не пропустив.\r\n\r\n[Непосредственный необходимый предшественник](dependencies.md). Другие параллельные ветви не обязательны для этого шаблона. Ранжирование по сложности отложено.\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/three_terms/template.md#sha256=03c8178e2a4a13a3dd0e5072cfa172600f8b4f0a0cae97af7434622427161aaa",
+        "content_sha256": "cc1078b979e8e571bae315a1fd7047b384a094ec143242f319d11beb0e5adee5"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_005",
@@ -61,7 +109,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/unit_remainder/template.md",
+      "source_sha256": "4148fffba47fb80c4d015c6ad7ac77a7f5116f1fd04884930f2c3dac3f04412b",
+      "source_text": "# Шаблон: одно слагаемое без буквы\r\n\r\nID шаблона: `numeric_common_factor_tpl_005`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a + 2 = 2(a + 1)\r\n```\r\n\r\nДва слагаемых, сложение. Первое — произведение положительного целого числа больше единицы на букву, второе — само это число. Действие: при вынесении числа сохранить единицу, полученную от числового слагаемого.\r\n\r\n[Необходимый непосредственный предшественник](dependencies.md) — исходный шаблон. Другие три параллельные ветви не являются необходимыми предшественниками. Ранжирование по сложности отложено.\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/unit_remainder/template.md#sha256=4148fffba47fb80c4d015c6ad7ac77a7f5116f1fd04884930f2c3dac3f04412b",
+        "content_sha256": "23d08bf432291e0b7de17a836c3359270cd081e8c1cedad681e607ea6e903b82"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_006",
@@ -74,7 +134,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/different_coefficients/template.md",
+      "source_sha256": "305742e8f655f9a3638a98727a181c6c5592b0747dbf72c36ca26b99bd03ae69",
+      "source_text": "# Шаблон: разные числовые коэффициенты\r\n\r\nID шаблона: `numeric_common_factor_tpl_006`.\r\n\r\nРабочий статус: **В работе**. [Реестр шаблонов](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a + 4b = 2(a + 2b)\r\n```\r\n\r\nДва слагаемых, сложение, по одной разной букве в каждом. Коэффициенты — разные положительные целые числа с общим целым множителем больше единицы. В образце оба коэффициента записаны перед буквами.\r\n\r\nНовое действие: найти общий числовой множитель разных коэффициентов и разделить каждый коэффициент на него. Образец использует наименьшие подходящие числа; диапазон коэффициентов для будущей генерации пока не определён.\r\n\r\n[Непосредственный необходимый предшественник](dependencies.md) — исходный шаблон. Это пятая параллельная ветвь, а не комбинация предыдущих четырёх. Ранжирование по сложности отложено.\r\n\r\nИсходное правило о необязательности наибольшего множителя сохраняется. Ответ в образце не задаёт исчерпывающий список допустимых ответов или окончательный алгоритм их проверки.\r\n\r\nНаибольший общий множитель не требуется по ранее сохранённому правилу. Полный алгоритм проверки ответа остаётся открытым; образец не задаёт исчерпывающего списка допустимых записей.\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/different_coefficients/template.md#sha256=305742e8f655f9a3638a98727a181c6c5592b0747dbf72c36ca26b99bd03ae69",
+        "content_sha256": "91da62d78ffd7c00ccf0141ea3f605bd56e39a74223ad77e0553418e240fa429"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_007",
@@ -87,7 +159,19 @@
       "status": "active",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/two_letters/template.md",
+      "source_sha256": "30fd40eaec133437b9c1f54c9cffbc596a68ab4e91d5498498ba0af4b5000fa7",
+      "source_text": "# Шаблон: две буквы в каждом слагаемом\r\n\r\nID шаблона: `numeric_common_factor_tpl_007`.\r\n\r\nДата: 17 октября 2026 года. Содержание одобрено владельцем.\r\nРабочий статус: **В работе**. Назначен владельцем. Общий список статусов — в [реестре](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2ab + 2cd = 2(ab + cd)\r\n```\r\n\r\nДва слагаемых с плюсом, одинаковый положительный целый коэффициент больше единицы. В каждом слагаемом произведение двух разных букв; все четыре буквы разные. Выносится только число, произведения букв остаются внутри скобок.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/numeric_common_factor/templates/two_letters/template.md#sha256=30fd40eaec133437b9c1f54c9cffbc596a68ab4e91d5498498ba0af4b5000fa7",
+        "content_sha256": "fb2f8ec9db061fb2e274181504fa7c819fdd1ff1cea1d36da21871621def72f2"
+      }
     },
     {
       "id": "numeric_common_factor_tpl_008",
@@ -100,7 +184,12 @@
       "status": "deferred",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/letter_powers/template.md",
+      "source_sha256": "1160e279ff58b4fa1f39b0ecce9f36210625dd7913a075608ae2741de1eca44f",
+      "source_text": "# Шаблон: степени букв\r\n\r\nID шаблона: `numeric_common_factor_tpl_008`.\r\n\r\nДата: 17 октября 2026 года. Содержание одобрено владельцем.\r\nРабочий статус: **Отложен**. По последнему указанию владельца 30 октября 2026 года шаблоны 8–11 отложены. Согласованное выражение и зависимости сохраняются; номер в тематическом согласовании — 8. Общий список статусов — в [реестре](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n2a² + 2b² = 2(a² + b²)\r\n```\r\n\r\nДва слагаемых с плюсом, одинаковый положительный целый коэффициент. В каждом слагаемом квадрат своей буквы. Выносится только число; степени сохраняются.\r\n\r\nТекущий образец использует показатель 2. Допустимый диапазон показателей для будущих заданий не выбран.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n"
     },
     {
       "id": "numeric_common_factor_tpl_009",
@@ -113,7 +202,12 @@
       "status": "deferred",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/negative_factor/template.md",
+      "source_sha256": "0644761b6ad694e5b3ecd54d3df1221f1d2b5b51e5b18998eeca4f6c62b5551b",
+      "source_text": "# Шаблон: отрицательный общий множитель\r\n\r\nID шаблона: `numeric_common_factor_tpl_009`.\r\n\r\nДата: 17 октября 2026 года. Содержание одобрено владельцем.\r\nРабочий статус: **Отложен**. По последнему указанию владельца 30 октября 2026 года шаблоны 8–11 отложены. Согласованное выражение и зависимости сохраняются; номер в тематическом согласовании — 9. Общий список статусов — в [реестре](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n(−2)a + (−2)b = −2(a + b)\r\n```\r\n\r\nДва слагаемых с плюсом, разные буквы и одинаковый отрицательный коэффициент. Выносится этот отрицательный коэффициент. Запись через сумму произведений сохраняет отличие этого направления от вычитания при положительных коэффициентах.\r\n\r\nЗапись −2a − 2b и связь её формы с другими шаблонами отдельно не разрабатывались.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n"
     },
     {
       "id": "numeric_common_factor_tpl_010",
@@ -126,7 +220,12 @@
       "status": "deferred",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/fraction_factor/template.md",
+      "source_sha256": "d2149c574531a82aa6fbb638d546ef31b6f68f3eb6c585c110f94614ecbeda05",
+      "source_text": "# Шаблон: обыкновенный дробный коэффициент\r\n\r\nID шаблона: `numeric_common_factor_tpl_010`.\r\n\r\nДата: 17 октября 2026 года. Содержание одобрено владельцем.\r\nРабочий статус: **Отложен**. По последнему указанию владельца 30 октября 2026 года шаблоны 8–11 отложены. Согласованное выражение и зависимости сохраняются; номер в тематическом согласовании — 10. Общий список статусов — в [реестре](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n(1/2)a + (1/2)b = (1/2)(a + b)\r\n```\r\n\r\nДва слагаемых с плюсом, разные буквы, одинаковый положительный коэффициент в форме обыкновенной дроби. Выносится эта дробь.\r\n\r\nДля положительных дробей нет наименьшего значения. В образце выбрана простая дробь 1/2; диапазоны будущих подстановок не определены.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n"
     },
     {
       "id": "numeric_common_factor_tpl_011",
@@ -139,7 +238,12 @@
       "status": "deferred",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/decimal_factor/template.md",
+      "source_sha256": "2dac0a58debb22ee35297467f9bad2a71b9de121c18471d6b2f0075bc819dc51",
+      "source_text": "# Шаблон: десятичный коэффициент\r\n\r\nID шаблона: `numeric_common_factor_tpl_011`.\r\n\r\nДата: 17 октября 2026 года. Содержание одобрено владельцем.\r\nРабочий статус: **Отложен**. По последнему указанию владельца 30 октября 2026 года шаблоны 8–11 отложены. Согласованное выражение и зависимости сохраняются; номер в тематическом согласовании — 11. Общий список статусов — в [реестре](../README.md).\r\n\r\nУсловие: **Вынеси общий множитель за скобки.**\r\n\r\n```text\r\n0,1a + 0,1b = 0,1(a + b)\r\n```\r\n\r\nДва слагаемых с плюсом, разные буквы, одинаковый положительный коэффициент в десятичной записи. Выносится этот коэффициент.\r\n\r\nДля положительных десятичных дробей нет наименьшего значения. В образце выбрана 0,1 как простая запись с одним десятичным знаком; диапазоны будущих подстановок не определены.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n"
     },
     {
       "id": "numeric_common_factor_tpl_012",
@@ -152,7 +256,12 @@
       "status": "deferred",
       "parents": [
         "numeric_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/numeric_common_factor/templates/bracket_factor/template.md",
+      "source_sha256": "86da3d49ffc07affd52246a1b30aff6b7f54daa417ccc4c571a1175efe822aef",
+      "source_text": "# Шаблон: скобка как множитель внутри слагаемого\r\n\r\nID шаблона: `numeric_common_factor_tpl_012`.\r\n\r\nДата: 30 октября 2026 года.\r\nРабочий статус: **Отложен**. По указанию владельца сохранён как самостоятельный шаблон второго уровня. Номер в тематическом согласовании — 12.\r\n\r\nУсловие: **Вынеси общий числовой множитель за скобки.**\r\n\r\n```text\r\n2(a + b) + 2c → 2((a + b) + c)\r\n```\r\n\r\nНовое требование: при вынесении числа сохранить целиком выражение в исходной скобке. В одном слагаемом числовой коэффициент умножается на сумму в скобках, в другом — на отдельную букву. Коэффициенты одинаковые, положительные целые, больше единицы; между слагаемыми плюс.\r\n\r\nВ записи результата внутренняя скобка сохранена, чтобы показать действие. Это не устанавливает требования к обязательному виду всех допустимых ответов.\r\n\r\n[Непосредственные зависимости](dependencies.md). [Реестр шаблонов](../README.md).\r\n"
     },
     {
       "id": "literal_common_factor_tpl_001",
@@ -161,7 +270,19 @@
       "features": [],
       "example": "ab + ac → a(b + c)",
       "status": "active",
-      "parents": []
+      "parents": [],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/common_letter/template.md",
+      "source_sha256": "7d5f07cd6a35aba241b832b6938aa85421e6ba735bbdb84c6e01b60e8e9693d9",
+      "source_text": "# Шаблон: общая буква в сумме двух произведений\r\n\r\nID: `literal_common_factor_tpl_001`.\r\n\r\nДата согласования: 30 октября 2026 года.\r\nУровень: **первый** — прямо назначен владельцем.\r\nРабочий статус: **В работе**.\r\nСогласование: владелец подтвердил предложенный исходный шаблон в тематическом чате.\r\n\r\n## Образец\r\n\r\n```text\r\nab + ac → a(b + c)\r\n```\r\n\r\n## Действие и структура\r\n\r\nРаспознать общую букву `a` в двух слагаемых и вынести её за скобки, сохранив внутри сумму оставшихся множителей `b` и `c`.\r\n\r\n- Два слагаемых, соединённые плюсом.\r\n- Каждое слагаемое — произведение двух букв.\r\n- Общая буква стоит первой в обоих произведениях.\r\n- Оставшиеся буквы различны; числовых коэффициентов, степеней и исходных скобок нет.\r\n\r\nОбразец представляет шаблон; серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа этим согласованием не определены.\r\n\r\nШаблон принят как исходный первого уровня. Выбор подготовительных действий и обязательных предпосылок остаётся отдельным вопросом; зависимости на шаблоны числовой темы автоматически не назначаются.\r\n\r\n[Непосредственные предшественники](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/common_letter/template.md#sha256=7d5f07cd6a35aba241b832b6938aa85421e6ba735bbdb84c6e01b60e8e9693d9",
+        "content_sha256": "58db43a159e92a485c5c0e9b3c3fe23f70994a8b00ee01f2c107d896de192373"
+      }
     },
     {
       "id": "literal_common_factor_tpl_002",
@@ -174,7 +295,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/subtraction/template.md",
+      "source_sha256": "43715b2f5b42179cac0ea0f8f7863e64f26eab46a8fe6b8df3878a8e7016ba36",
+      "source_text": "# Шаблон: Вычитание\r\n\r\nID: `literal_common_factor_tpl_002`.\r\nДата согласования: 30 октября 2026 года.\r\nУровень: **второй**.\r\nРабочий статус: **В работе**.\r\nСогласование: владелец утвердил шаблон и предложенного непосредственного родителя в тематическом чате.\r\n\r\n## Образец\r\n\r\n```text\r\nab − ac → a(b − c)\r\n```\r\n\r\n## Новое требование\r\n\r\nСохранить знак вычитания внутри скобок.\r\n\r\n## Структура\r\n\r\nДва слагаемых; общая буква стоит первой в обоих произведениях. По сравнению с исходным шаблоном изменён только знак между слагаемыми.\r\n\r\nЭто самостоятельное продолжение исходного шаблона первого уровня. Другие параллельные шаблоны второго уровня не являются необходимыми предшественниками. Серии конкретных заданий не создаются; диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/subtraction/template.md#sha256=43715b2f5b42179cac0ea0f8f7863e64f26eab46a8fe6b8df3878a8e7016ba36",
+        "content_sha256": "c6abbeb9e33346bbbfc7b7e96cbe92f41b7b6c2dc8e17ad770d13deee32b00f3"
+      }
     },
     {
       "id": "literal_common_factor_tpl_003",
@@ -187,7 +320,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/factor_position/template.md",
+      "source_sha256": "278a7e039b0350a1f3743be92d784e459d3e5a5a164053aa6466e4e1d7a28190",
+      "source_text": "# Шаблон: Другая позиция общей буквы\r\n\r\nID: `literal_common_factor_tpl_003`.\r\nДата согласования: 30 октября 2026 года.\r\nУровень: **второй**.\r\nРабочий статус: **В работе**.\r\nСогласование: владелец утвердил шаблон и предложенного непосредственного родителя в тематическом чате.\r\n\r\n## Образец\r\n\r\n```text\r\nba + ac → a(b + c)\r\n```\r\n\r\n## Новое требование\r\n\r\nРаспознать общую букву независимо от её позиции в произведении.\r\n\r\n## Структура\r\n\r\nДва слагаемых, соединённые плюсом. Общая буква a стоит второй в первом произведении и первой во втором; оставшиеся множители b и c различны.\r\n\r\nЭто самостоятельное продолжение исходного шаблона первого уровня. Другие параллельные шаблоны второго уровня не являются необходимыми предшественниками. Серии конкретных заданий не создаются; диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/factor_position/template.md#sha256=278a7e039b0350a1f3743be92d784e459d3e5a5a164053aa6466e4e1d7a28190",
+        "content_sha256": "cda248da7e8508fd2f8f2636d98bb5c2c0fc966d89e0343895e905ae26155e25"
+      }
     },
     {
       "id": "literal_common_factor_tpl_004",
@@ -200,7 +345,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/three_terms/template.md",
+      "source_sha256": "1fcf78f337efe91a63b59a8b4a832bb9b34673a452b9444f4fab4ad8e19b07e4",
+      "source_text": "# Шаблон: Три слагаемых\r\n\r\nID: `literal_common_factor_tpl_004`.\r\nДата согласования: 30 октября 2026 года.\r\nУровень: **второй**.\r\nРабочий статус: **В работе**.\r\nСогласование: владелец утвердил шаблон и предложенного непосредственного родителя в тематическом чате.\r\n\r\n## Образец\r\n\r\n```text\r\nab + ac + ad → a(b + c + d)\r\n```\r\n\r\n## Новое требование\r\n\r\nВынести общую букву из всех трёх слагаемых, ничего не пропустив.\r\n\r\n## Структура\r\n\r\nТри слагаемых, соединённые плюсами. Общая буква a стоит первой в каждом произведении; остальные множители b, c и d различны.\r\n\r\nЭто самостоятельное продолжение исходного шаблона первого уровня. Другие параллельные шаблоны второго уровня не являются необходимыми предшественниками. Серии конкретных заданий не создаются; диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/three_terms/template.md#sha256=1fcf78f337efe91a63b59a8b4a832bb9b34673a452b9444f4fab4ad8e19b07e4",
+        "content_sha256": "69cec21d8e6a8402d5f2b28469fe2f3f1b56a33a3f5be6152948587f85f18574"
+      }
     },
     {
       "id": "literal_common_factor_tpl_005",
@@ -213,7 +370,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/unit_remainder/template.md",
+      "source_sha256": "aadf5dc3ff54035355b85e3bfad884c2c3065e57137b11d4e4466341037ce227",
+      "source_text": "# Шаблон: Единица в скобках\r\n\r\nID шаблона: `literal_common_factor_tpl_005`.\r\nРабочий статус: **В работе**.\r\n\r\n## Образец\r\n\r\n```text\r\nab + a → a(b + 1)\r\n```\r\n\r\n## Новое требование\r\n\r\nСохранить единицу от слагаемого, равного выносимой букве.\r\n\r\n## Структура\r\n\r\nДва слагаемых соединены плюсом; второе равно общей букве. Используется a = a · 1.\r\n\r\nНепосредственный родитель — исходный шаблон первого уровня. Необходимые знания вне темы учитываются отдельно: в частности, наличие степеней или скобок не назначает автоматически родителей из других тем. Серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/unit_remainder/template.md#sha256=aadf5dc3ff54035355b85e3bfad884c2c3065e57137b11d4e4466341037ce227",
+        "content_sha256": "1599a89a10e387f2a07106c260cd26290badd9359cd3bc2020f34c7782bcccf0"
+      }
     },
     {
       "id": "literal_common_factor_tpl_006",
@@ -226,7 +395,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/two_remaining_letters/template.md",
+      "source_sha256": "73d1605006ad941a3140bdc5de9c211d6765d65a8773b79c9a833b70b834694a",
+      "source_text": "# Шаблон: Две оставшиеся буквы в каждом слагаемом\r\n\r\nID шаблона: `literal_common_factor_tpl_006`.\r\nРабочий статус: **В работе**.\r\n\r\n## Образец\r\n\r\n```text\r\nabc + ade → a(bc + de)\r\n```\r\n\r\n## Новое требование\r\n\r\nПосле вынесения общей буквы сохранить произведения двух оставшихся букв.\r\n\r\n## Структура\r\n\r\nДва слагаемых, сложение; общая буква a стоит первой. После её вынесения остаются произведения bc и de.\r\n\r\nНепосредственный родитель — исходный шаблон первого уровня. Необходимые знания вне темы учитываются отдельно: в частности, наличие степеней или скобок не назначает автоматически родителей из других тем. Серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/two_remaining_letters/template.md#sha256=73d1605006ad941a3140bdc5de9c211d6765d65a8773b79c9a833b70b834694a",
+        "content_sha256": "76fabee32810915a09aa96ce53de82474487f3ab50254483ce30a05d9f677e66"
+      }
     },
     {
       "id": "literal_common_factor_tpl_007",
@@ -239,7 +420,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/remaining_letter_powers/template.md",
+      "source_sha256": "252248828c8c1b8390fe5cc59d024100b10d302a59f248bd6c756ded6bf5c234",
+      "source_text": "# Шаблон: Сохранение степеней остальных букв\r\n\r\nID шаблона: `literal_common_factor_tpl_007`.\r\nРабочий статус: **В работе**.\r\n\r\n## Образец\r\n\r\n```text\r\nab² + ac² → a(b² + c²)\r\n```\r\n\r\n## Новое требование\r\n\r\nСохранить степени остальных букв при вынесении общей буквы.\r\n\r\n## Структура\r\n\r\nОбщая буква a не возведена в степень. Квадраты b² и c² сохраняются целиком.\r\n\r\nНепосредственный родитель — исходный шаблон первого уровня. Необходимые знания вне темы учитываются отдельно: в частности, наличие степеней или скобок не назначает автоматически родителей из других тем. Серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/remaining_letter_powers/template.md#sha256=252248828c8c1b8390fe5cc59d024100b10d302a59f248bd6c756ded6bf5c234",
+        "content_sha256": "afceb16e4f90b0c6ba17ed1b215ebaca6bfd667b94ed1d707794c0849f78f260"
+      }
     },
     {
       "id": "literal_common_factor_tpl_008",
@@ -252,7 +445,19 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/factor_from_power/template.md",
+      "source_sha256": "a5ecd4e08071cadb05d688c9849b77ff6e00b2e237869ccb117677b1dda21443",
+      "source_text": "# Шаблон: Выделение общей буквы из степени\r\n\r\nID шаблона: `literal_common_factor_tpl_008`.\r\nРабочий статус: **В работе**.\r\n\r\n## Образец\r\n\r\n```text\r\na²b + ac → a(ab + c)\r\n```\r\n\r\n## Новое требование\r\n\r\nВыделить одну общую букву из её степени: a² = a · a.\r\n\r\n## Структура\r\n\r\nВ первом слагаемом общая буква входит в квадрате, во втором — в первой степени. После вынесения a в первом слагаемом остаётся ab.\r\n\r\nНепосредственный родитель — исходный шаблон первого уровня. Необходимые знания вне темы учитываются отдельно: в частности, наличие степеней или скобок не назначает автоматически родителей из других тем. Серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/factor_from_power/template.md#sha256=a5ecd4e08071cadb05d688c9849b77ff6e00b2e237869ccb117677b1dda21443",
+        "content_sha256": "95aa48c949438b46c85689198c57e6cc33f179cc476f136f3660066c10315764"
+      }
     },
     {
       "id": "literal_common_factor_tpl_009",
@@ -265,7 +470,20 @@
       "status": "active",
       "parents": [
         "literal_common_factor_tpl_001"
-      ]
+      ],
+      "revision": 2,
+      "methodical_status": "approved",
+      "source_path": "bank/literal_common_factor/templates/bracket_factor/template.md",
+      "source_sha256": "897dcdc9bab9739154980a0d7f4623e764fbfc024c762cf3aec1f8b07933989c",
+      "source_text": "# Шаблон: Скобка внутри слагаемого\r\n\r\nID шаблона: `literal_common_factor_tpl_009`.\r\nРабочий статус: **В работе**.\r\n\r\n## Образец\r\n\r\n```text\r\na(b + c) + ad → a((b + c) + d)\r\n```\r\n\r\n## Новое требование\r\n\r\nСохранить целиком выражение в исходной скобке.\r\n\r\n## Структура\r\n\r\nВ первом слагаемом a умножается на сумму в скобках, во втором — на букву. Внутренняя скобка сохранена в образце для показа действия; обязательность такой формы всех ответов этим не устанавливается.\r\n\r\nНепосредственный родитель — исходный шаблон первого уровня. Необходимые знания вне темы учитываются отдельно: в частности, наличие степеней или скобок не назначает автоматически родителей из других тем. Серии конкретных заданий не создаются. Диапазоны подстановок и полный перечень допустимых форм ответа не определены.\r\n\r\n[Непосредственный предшественник](dependencies.md). [Реестр](../README.md).\r\n",
+      "approval": {
+        "decision": "approved",
+        "approved_by": "project_owner",
+        "recorded_at": "2026-11-01",
+        "source_ref": "bank/literal_common_factor/templates/bracket_factor/template.md#sha256=897dcdc9bab9739154980a0d7f4623e764fbfc024c762cf3aec1f8b07933989c",
+        "content_sha256": "9ebb443c29e932b0de8ed5b46f7c4150b5ed0d173e991f2823a49f24355d4c50"
+      }
     }
-  ]
+  ],
+  "$schema": "../template.schema.json"
 }

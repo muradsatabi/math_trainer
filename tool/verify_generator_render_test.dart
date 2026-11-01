@@ -74,10 +74,18 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('generator-level-3')));
         await tester.pumpAndSettle();
         expect(
-          find.text('Выбрано шаблонов: 59 · Заданий: 590'),
+          find.text('Выбрано шаблонов: 45 · Заданий: 225'),
           findsOneWidget,
         );
         await capture('combinations');
+        final format = find.byKey(const ValueKey('pdf-test-mode'));
+        await tester.ensureVisible(format);
+        await tester.pumpAndSettle();
+        await tester.tap(format);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Тест — четыре ответа').last);
+        await tester.pumpAndSettle();
+        await capture('test-settings');
       });
     }
   }

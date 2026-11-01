@@ -1,6 +1,8 @@
+import 'practice/power_notation.dart';
+
 // Checks the form of a record, without comparing it with the task's answer.
 bool isCompleteAnswer(String record) {
-  final text = record.replaceAll(RegExp(r'\s+'), '');
+  final text = normalizePowers(record).replaceAll(RegExp(r'\s+'), '');
   if (text.isEmpty) return false;
   var depth = 0;
   var needsOperand = true;
@@ -8,6 +10,13 @@ bool isCompleteAnswer(String record) {
     final symbol = text[i];
     if (RegExp(r'[0-9a-zA-Z]').hasMatch(symbol)) {
       needsOperand = false;
+    } else if (symbol == '^') {
+      if (needsOperand ||
+          i + 1 >= text.length ||
+          !RegExp(r'[0-9]').hasMatch(text[i + 1])) {
+        return false;
+      }
+      needsOperand = true;
     } else if (symbol == '(') {
       depth++;
       needsOperand = true;

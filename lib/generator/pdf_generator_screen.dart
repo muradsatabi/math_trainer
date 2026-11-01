@@ -13,9 +13,11 @@ class PdfGeneratorScreen extends StatefulWidget {
     this.exporter,
     this.catalogText,
     this.pdfBuilder,
+    this.family,
   });
   final PdfExporter? exporter;
   final String? catalogText;
+  final String? family;
   final Future<Uint8List> Function(List<GeneratedExercise>)? pdfBuilder;
   @override
   State<PdfGeneratorScreen> createState() => _PdfGeneratorScreenState();
@@ -23,18 +25,22 @@ class PdfGeneratorScreen extends StatefulWidget {
 
 class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
   late final Future<List<ExerciseTemplate>> loading = _load();
-  final levels = <int>{1, 2};
-  final families = <String>{'numeric', 'literal'};
+  final levels = <int>{1};
+  late final families = widget.family == null
+      ? <String>{'numeric', 'literal'}
+      : <String>{widget.family!};
   final selected = <String>{};
   final quantities = <String, int>{};
   final templateOrder = <String>[];
   final quantityControllers = <String, TextEditingController>{};
-  final commonQuantity = TextEditingController(text: '10');
+  final commonQuantity = TextEditingController(text: '5');
+  final variantQuantity = TextEditingController(text: '1');
   TaskOrder order = TaskOrder.grouped;
 
   @override
   void dispose() {
     commonQuantity.dispose();
+    variantQuantity.dispose();
     for (final controller in quantityControllers.values) {
       controller.dispose();
     }
@@ -108,7 +114,9 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
 
   bool busy = false;
   bool landscape = true;
+  int columns = 2;
   bool includeAnswers = false;
+  bool testMode = false;
   String? error;
   String? success;
 
@@ -134,17 +142,24 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
     try {
       // Yield to paint the progress state before doing bounded local work.
       await Future<void>.delayed(Duration.zero);
-      final tasks = TemplateTaskGenerator().generate(
+      final variants = TemplateTaskGenerator().generateVariants(
         templates: options,
         quantities: counts,
+        count: int.parse(variantQuantity.text),
         order: order,
       );
-      final bytes = await (widget.pdfBuilder ?? _buildPdf)(tasks);
+      final bytes = widget.pdfBuilder == null
+          ? await _buildPdf(variants)
+          : await widget.pdfBuilder!(variants.expand((v) => v).toList());
       final filename =
           'math-worksheet-${DateTime.now().millisecondsSinceEpoch}.pdf';
       await (widget.exporter ?? downloadPdf)(bytes, filename);
       if (mounted) {
-        setState(() => success = 'PDF готов: ${tasks.length} заданий.');
+        setState(
+          () => success = variants.length == 1
+              ? 'PDF готов: ${variants.first.length} заданий.'
+              : 'PDF готов: ${variants.length} вариантов по ${variants.first.length} заданий.',
+        );
       }
     } catch (_) {
       if (mounted) {
@@ -157,17 +172,19 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
     }
   }
 
-  Future<Uint8List> _buildPdf(List<GeneratedExercise> tasks) async {
+  Future<Uint8List> _buildPdf(List<List<GeneratedExercise>> variants) async {
     final fonts = await Future.wait([
       rootBundle.load('assets/fonts/Carlito-Regular.ttf'),
       rootBundle.load('assets/fonts/Caladea-Regular.ttf'),
     ]);
-    return buildWorksheetPdf(
-      exercises: tasks,
+    return buildWorksheetVariantsPdf(
+      variants: variants,
       textFont: fonts[0],
       mathFont: fonts[1],
       landscape: landscape,
+      columns: columns,
       includeAnswers: includeAnswers,
+      testMode: testMode,
     );
   }
 
@@ -197,6 +214,7 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
             );
           }
           final templates = snapshot.data!;
+          final flat = templates.every((t) => t.flat);
           final options = generationOptions(templates);
           final visible = options
               .where(
@@ -211,11 +229,14 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
           final commonValue = int.tryParse(commonQuantity.text) ?? 0;
           final counts = {
             for (final t in visible)
-              if (selected.contains(t.id)) t.id: quantities[t.id] ?? 10,
+              if (selected.contains(t.id)) t.id: quantities[t.id] ?? 5,
           };
           final total = counts.values.fold(0, (a, b) => a + b);
+          final variantCount = int.tryParse(variantQuantity.text) ?? 0;
           final valid =
               counts.isNotEmpty &&
+              variantCount >= 1 &&
+              variantCount <= TemplateTaskGenerator.maxVariants &&
               total <= TemplateTaskGenerator.maxTotal &&
               counts.values.every(
                 (v) => v >= 1 && v <= TemplateTaskGenerator.maxPerTemplate,
@@ -233,7 +254,15 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Общий множитель за скобками',
+                              widget.family == 'numeric_bracket'
+                                  ? 'Умножение на скобку — числовой множитель'
+                                  : widget.family == 'literal_bracket'
+                                  ? 'Умножение на скобку — буквенный множитель'
+                                  : widget.family == 'numeric'
+                                  ? 'Численный общий множитель'
+                                  : widget.family == 'literal'
+                                  ? 'Буквенный общий множитель'
+                                  : 'Общий множитель за скобками',
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                             const SizedBox(height: 6),
@@ -242,85 +271,96 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                               'Числа и буквы будут меняться; повторов в наборе не будет.',
                             ),
                             const SizedBox(height: 20),
-                            Text(
-                              'Какие шаблоны использовать',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              children: [
-                                for (final entry in {
-                                  'numeric': 'Числовой множитель',
-                                  'literal': 'Буквенный множитель',
-                                }.entries)
-                                  FilterChip(
-                                    label: Text(entry.value),
-                                    selected: families.contains(entry.key),
-                                    onSelected: busy
-                                        ? null
-                                        : (yes) => setState(() {
-                                            if (yes) {
-                                              families.add(entry.key);
-                                            } else {
-                                              families.remove(entry.key);
-                                            }
-                                          }),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Уровни сочетаний',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              children: [
-                                for (var level = 1; level <= 6; level++)
-                                  FilterChip(
-                                    key: ValueKey('generator-level-$level'),
-                                    label: Text('$level'),
-                                    selected: levels.contains(level),
-                                    onSelected: busy
-                                        ? null
-                                        : (yes) => setState(() {
-                                            if (yes) {
-                                              levels.add(level);
-                                              selected.addAll(
-                                                options
-                                                    .where(
-                                                      (t) => t.level == level,
-                                                    )
-                                                    .map((t) => t.id),
-                                              );
-                                            } else {
-                                              levels.remove(level);
-                                            }
-                                          }),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. '
-                              'Это состав задания, а не оценка трудности.',
-                              style: TextStyle(color: colors.onSurfaceVariant),
-                            ),
-                            if (levels.any((v) => v > 2))
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  'Сочетания автоматически составлены из рабочих направлений '
-                                  'и доступны для пробы; отдельного методического согласования они ещё не проходили.',
-                                  style: TextStyle(
-                                    color: colors.onSurfaceVariant,
-                                  ),
+                            if (widget.family == null) ...[
+                              Text(
+                                'Какие шаблоны использовать',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                children: [
+                                  for (final entry
+                                      in {
+                                        'numeric': 'Числовой множитель',
+                                        'literal': 'Буквенный множитель',
+                                      }.entries.where(
+                                        (entry) =>
+                                            widget.family == null ||
+                                            entry.key == widget.family,
+                                      ))
+                                    FilterChip(
+                                      label: Text(entry.value),
+                                      selected: families.contains(entry.key),
+                                      onSelected: busy || widget.family != null
+                                          ? null
+                                          : (yes) => setState(() {
+                                              if (yes) {
+                                                families.add(entry.key);
+                                              } else {
+                                                families.remove(entry.key);
+                                              }
+                                            }),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                            if (!flat) ...[
+                              Text(
+                                'Уровни сочетаний',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                children: [
+                                  for (var level = 1; level <= 6; level++)
+                                    FilterChip(
+                                      key: ValueKey('generator-level-$level'),
+                                      label: Text('$level'),
+                                      selected: levels.contains(level),
+                                      onSelected: busy
+                                          ? null
+                                          : (yes) => setState(() {
+                                              if (yes) {
+                                                levels.add(level);
+                                                selected.addAll(
+                                                  options
+                                                      .where(
+                                                        (t) => t.level == level,
+                                                      )
+                                                      .map((t) => t.id),
+                                                );
+                                              } else {
+                                                levels.remove(level);
+                                              }
+                                            }),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. '
+                                'Это состав задания, а не оценка трудности.',
+                                style: TextStyle(
+                                  color: colors.onSurfaceVariant,
                                 ),
                               ),
+                              if (levels.any((v) => v > 2))
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    'Сочетания автоматически составлены из рабочих направлений '
+                                    'и доступны для пробы; отдельного методического согласования они ещё не проходили.',
+                                    style: TextStyle(
+                                      color: colors.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                            ],
                             const SizedBox(height: 16),
                             Wrap(
                               spacing: 8,
@@ -469,11 +509,18 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                 ),
                               ),
                             ExpansionTile(
-                              title: const Text('Отложенные шаблоны'),
+                              title: Text(
+                                flat
+                                    ? 'Не подключены к генерации'
+                                    : 'Отложенные шаблоны',
+                              ),
                               subtitle: const Text('Не участвуют в генерации'),
                               children: [
                                 for (final t in templates.where(
-                                  (t) => !t.active,
+                                  (t) =>
+                                      !t.active &&
+                                      (widget.family == null ||
+                                          t.family == widget.family),
                                 ))
                                   ListTile(
                                     enabled: false,
@@ -493,19 +540,20 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                 labelText: 'Порядок заданий',
                                 border: OutlineInputBorder(),
                               ),
-                              items: const [
-                                DropdownMenuItem(
+                              items: [
+                                const DropdownMenuItem(
                                   value: TaskOrder.grouped,
                                   child: Text('Группами по шаблонам'),
                                 ),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   value: TaskOrder.shuffled,
                                   child: Text('Вперемешку'),
                                 ),
-                                DropdownMenuItem(
-                                  value: TaskOrder.increasing,
-                                  child: Text('По возрастанию уровня'),
-                                ),
+                                if (!flat)
+                                  const DropdownMenuItem(
+                                    value: TaskOrder.increasing,
+                                    child: Text('По возрастанию уровня'),
+                                  ),
                               ],
                               onChanged: busy
                                   ? null
@@ -535,6 +583,79 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                       landscape = value!;
                                       success = null;
                                     }),
+                            ),
+                            const SizedBox(height: 12),
+                            DropdownButtonFormField<int>(
+                              key: const ValueKey('pdf-columns'),
+                              initialValue: columns,
+                              decoration: const InputDecoration(
+                                labelText: 'Количество столбцов',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: 1,
+                                  child: Text('Один столбец'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 2,
+                                  child: Text('Два столбца'),
+                                ),
+                                DropdownMenuItem(
+                                  value: 3,
+                                  child: Text('Три столбца'),
+                                ),
+                              ],
+                              onChanged: busy
+                                  ? null
+                                  : (value) => setState(() {
+                                      columns = value!;
+                                      success = null;
+                                    }),
+                            ),
+                            const SizedBox(height: 16),
+                            DropdownButtonFormField<bool>(
+                              key: const ValueKey('pdf-test-mode'),
+                              isExpanded: true,
+                              initialValue: testMode,
+                              decoration: const InputDecoration(
+                                labelText: 'Формат работы',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                  value: false,
+                                  child: Text('Обычные задания'),
+                                ),
+                                DropdownMenuItem(
+                                  value: true,
+                                  child: Text('Тест — четыре ответа'),
+                                ),
+                              ],
+                              onChanged: busy
+                                  ? null
+                                  : (value) => setState(() {
+                                      testMode = value!;
+                                      success = null;
+                                    }),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Количество вариантов работы',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            _quantityInput(
+                              'variants',
+                              variantQuantity,
+                              !busy,
+                              (_) => setState(() {
+                                success = null;
+                              }),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              'Каждый вариант — с новой страницы, с теми же шаблонами и количеством заданий. От 1 до 100 вариантов.',
                             ),
                             CheckboxListTile(
                               key: const ValueKey('include-answers'),
@@ -583,13 +704,21 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                             'Выбрано шаблонов: ${counts.length} · Заданий: $total',
                             key: const ValueKey('generator-summary'),
                           ),
+                          if (variantCount > 1)
+                            Text(
+                              'Вариантов: $variantCount · В каждом: $total · Всего заданий: ${total * variantCount}',
+                            ),
                           if (!valid)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 counts.isEmpty
                                     ? 'Выберите хотя бы один шаблон.'
-                                    : 'От 1 до 100 заданий на шаблон; не больше 1000 в одном PDF.',
+                                    : variantCount < 1 ||
+                                          variantCount >
+                                              TemplateTaskGenerator.maxVariants
+                                    ? 'Введите от 1 до 100 вариантов.'
+                                    : 'От 1 до 100 заданий на шаблон; не больше 1000 в каждом варианте.',
                                 style: TextStyle(color: colors.error),
                               ),
                             ),
@@ -695,7 +824,9 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${t.family == 'numeric' ? 'Числовой' : 'Буквенный'} · Уровень ${t.level}',
+                  t.flat
+                      ? 'Шаблон · без назначения уровня'
+                      : '${t.family == 'numeric' ? 'Числовой' : 'Буквенный'} · Уровень ${t.level}',
                   style: TextStyle(
                     fontSize: 12,
                     color: colors.onSurfaceVariant,
@@ -718,7 +849,7 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
             t.id,
             quantityControllers.putIfAbsent(
               t.id,
-              () => TextEditingController(text: '${quantities[t.id] ?? 10}'),
+              () => TextEditingController(text: '${quantities[t.id] ?? 5}'),
             ),
             checked && !busy,
             (value) => setState(() {

@@ -60,9 +60,6 @@ flutter:
   uses-material-design: true
   assets:
     - bank/templates/
-    - bank/manifest.json
-    - bank/blocks/
-    - bank/skills/
     - assets/fonts/carlito-OFL.txt
     - assets/fonts/caladea-OFL.txt
 
