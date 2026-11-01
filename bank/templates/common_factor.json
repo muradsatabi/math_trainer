@@ -485,5 +485,13 @@
       }
     }
   ],
-  "$schema": "../template.schema.json"
+  "$schema": "../template.schema.json",
+  "publication_probe": {
+    "schema_version": 1,
+    "kind": "methodical_chat_roundtrip",
+    "source_chat_id": "6ac9fc5d-9454-83eb-8330-c0bdaa000a90",
+    "base_commit": "a70d6f74d138ed525d18f0a7993ad46255db320a",
+    "unchanged_template_id": "numeric_common_factor_tpl_001",
+    "unchanged_content_sha256": "812e6e155615c365a552be4f767661e90f4bf5d6d51082f5e78bc77dcb5038f4"
+  }
 }
