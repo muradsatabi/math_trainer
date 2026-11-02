@@ -2,6 +2,9 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
+import sync_template_bank
 from template_bank import content_digest
 from sync_template_bank import apply_downloads
 
@@ -15,6 +18,42 @@ def document(revision):
 
 
 class SyncTests(unittest.TestCase):
+    def test_windows_transport_keeps_tls_and_reads_utf8(self):
+        response=subprocess.CompletedProcess([],0,'{"title":"Степени"}')
+        with patch.object(sync_template_bank.sys,'platform','win32'), \
+             patch.object(sync_template_bank.subprocess,'CREATE_NO_WINDOW',0,create=True), \
+             patch.object(sync_template_bank.subprocess,'run',return_value=response) as run:
+            self.assertEqual(sync_template_bank.api('commits/main'),{'title':'Степени'})
+            command=run.call_args.args[0]
+            self.assertIn('Invoke-RestMethod',command[-1])
+            self.assertNotIn('SkipCertificateCheck',command[-1])
+            self.assertNotIn('shell',run.call_args.kwargs)
+            self.assertTrue(run.call_args.kwargs['check'])
+            run.side_effect=subprocess.CalledProcessError(1,command)
+            with self.assertRaises(subprocess.CalledProcessError):
+                sync_template_bank.api('commits/main')
+
+    def test_windows_transport_rejects_injected_path(self):
+        with patch.object(sync_template_bank.sys,'platform','win32'), \
+             patch.object(sync_template_bank.subprocess,'run') as run:
+            with self.assertRaises(ValueError):
+                sync_template_bank.api("commits/main'; Write-Output x")
+            run.assert_not_called()
+
+    def test_windows_line_endings_are_preserved_and_tracked_correctly(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);path=root/'bank/templates/sample.json';path.parent.mkdir(parents=True)
+            first=document(1)+b'\n'
+            path.write_bytes(first.replace(b'\n',b'\r\n'))
+            self.assertEqual(apply_downloads(root,{'bank/templates/sample.json':first},'one',lambda *_:False),0)
+            second=document(2)+b'\n'
+            apply_downloads(root,{'bank/templates/sample.json':second},'two',lambda *_:False)
+            self.assertEqual(path.read_bytes(),second.replace(b'\n',b'\r\n'))
+            # The next publication can replace the watcher's own pending edit.
+            third=document(3)+b'\n'
+            apply_downloads(root,{'bank/templates/sample.json':third},'three',lambda *_:True)
+            self.assertEqual(path.read_bytes(),third.replace(b'\n',b'\r\n'))
+
     def test_local_edits_are_never_overwritten(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);path=root/'bank/templates/sample.json';path.parent.mkdir(parents=True)
