@@ -1,7 +1,7 @@
 import 'task_bank.dart';
 import '../practice/power_notation.dart';
 
-enum AnswerVerdict { correct, incorrect, incomplete, unsupported }
+enum AnswerVerdict { correct, incorrect, incomplete, unsupported, partial }
 
 /// Exact equality for the supported integer polynomials; null means unsupported.
 /// Does not decide whether the required method/form has been demonstrated.
@@ -31,11 +31,36 @@ AnswerVerdict checkFactorAnswer(BankTask task, String answer) {
     }
     if (task.operation == 'expand') {
       return entered.unexpanded || !_collectedMonomials(answer)
-          ? AnswerVerdict.incorrect
+          ? entered.shape.replaceAll(RegExp(r'[\[\]]'), '') ==
+                    original.shape.replaceAll(RegExp(r'[\[\]]'), '')
+                ? AnswerVerdict.incorrect
+                : AnswerVerdict.partial
           : AnswerVerdict.correct;
     }
     if (examples.any((e) => _Parser(e).parse().shape == entered.shape)) {
       return AnswerVerdict.correct;
+    }
+    if (task.requireCompleteFactor) {
+      final expected = _Parser(task.expectedAnswer).parse().factored;
+      final actual = entered.factored;
+      if (expected != null &&
+          actual != null &&
+          expected.outside.length == 1 &&
+          actual.outside.length == 1) {
+        final target = expected.outside.entries.single;
+        final extracted = actual.outside.entries.single;
+        if (extracted.key.isEmpty &&
+            extracted.value.abs() == 1 &&
+            (target.key.isNotEmpty || target.value.abs() > 1)) {
+          return AnswerVerdict.incorrect;
+        }
+        final remainder = _monomialQuotient(target, extracted);
+        if (remainder != null) {
+          return remainder.key.isEmpty && remainder.value.abs() == 1
+              ? AnswerVerdict.correct
+              : AnswerVerdict.partial;
+        }
+      }
     }
     // A sum alone cannot demonstrate the requested extraction.
     if (!entered.hasFactoredSum) return AnswerVerdict.incorrect;
@@ -63,7 +88,10 @@ bool _collectedMonomials(String answer) {
 /// Canonical expanded integer polynomial for the supported expression subset.
 /// Used by the bracket generator; unsupported syntax never becomes an exercise.
 String expandedPolynomial(String expression) {
-  final polynomial = _Parser(expression).parse().value;
+  return _polynomialText(_Parser(expression).parse().value);
+}
+
+String _polynomialText(Map<String, int> polynomial) {
   final terms = <String>[];
   for (final entry in polynomial.entries) {
     final counts = <String, int>{};
@@ -119,6 +147,89 @@ Map<String, int> _multiply(Map<String, int> a, Map<String, int> b) {
   return result;
 }
 
+MapEntry<String, int>? _monomialQuotient(
+  MapEntry<String, int> numerator,
+  MapEntry<String, int> denominator,
+) {
+  if (denominator.value == 0 || numerator.value % denominator.value != 0) {
+    return null;
+  }
+  var letters = numerator.key;
+  for (final letter in denominator.key.split('')) {
+    final index = letters.indexOf(letter);
+    if (index < 0) return null;
+    letters = letters.replaceRange(index, index + 1, '');
+  }
+  return MapEntry(letters, numerator.value ~/ denominator.value);
+}
+
+/// Only a proven proper part of the task's required outer monomial is used.
+String? partialFactorExample(BankTask task) {
+  if (!task.requireCompleteFactor || task.operation != 'factor') return null;
+  final form = _Parser(task.expectedAnswer).parse().factored;
+  if (form == null || form.outside.length != 1) return null;
+  final target = form.outside.entries.single;
+  MapEntry<String, int>? part;
+  if (target.key.isNotEmpty && target.value.abs() > 1) {
+    part = MapEntry('', target.value.abs());
+  } else if (target.key.length > 1) {
+    part = MapEntry(target.key[0], 1);
+  } else if (target.key.isEmpty) {
+    for (var divisor = 2; divisor * divisor <= target.value.abs(); divisor++) {
+      if (target.value % divisor == 0) {
+        part = MapEntry('', divisor);
+        break;
+      }
+    }
+  }
+  if (part == null) return null;
+  final quotient = <String, int>{};
+  for (final term in _Parser(task.expression).parse().value.entries) {
+    final divided = _monomialQuotient(term, part);
+    if (divided == null) return null;
+    quotient[divided.key] = divided.value;
+  }
+  final result =
+      '${_polynomialText({part.key: part.value})}(${_polynomialText(quotient)})';
+  return checkFactorAnswer(task, result) == AnswerVerdict.partial
+      ? result
+      : null;
+}
+
+String partialAnswerHint(BankTask task, [String? answer]) {
+  if (task.operation == 'expand') {
+    return 'Равенство сохранено, но преобразование ещё не закончено. Раскрой оставшиеся скобки и выполни умножение чисел и одинаковых букв. В следующем задании этого типа доведи запись до конца.';
+  }
+  String? remaining;
+  if (answer != null) {
+    try {
+      final expected = _Parser(task.expectedAnswer).parse().factored;
+      final actual = _Parser(answer).parse().factored;
+      if (expected?.outside.length == 1 && actual?.outside.length == 1) {
+        final quotient = _monomialQuotient(
+          expected!.outside.entries.single,
+          actual!.outside.entries.single,
+        );
+        if (quotient != null) {
+          remaining = _polynomialText({quotient.key: quotient.value.abs()});
+        }
+      }
+    } on FormatException {
+      // A generic cue remains safe for an unsupported spelling.
+    } on _Incomplete {
+      // Syntax incompleteness is never counted as a partial mathematical answer.
+    }
+  }
+  return 'Ты сохранил значение выражения и верно вынес часть общего множителя. '
+      'Но в скобках ещё остался общий множитель${remaining == null ? '' : ' $remaining'}. '
+      'Его тоже можно вынести. В следующем задании этого типа доведи вынесение до конца.';
+}
+
+class _Factored {
+  _Factored(this.outside, this.inside);
+  final Map<String, int> outside, inside;
+}
+
 class _Node {
   _Node(
     this.shape,
@@ -127,6 +238,7 @@ class _Node {
     this.groupedSum = false,
     this.hasFactoredSum = false,
     this.unexpanded = false,
+    this.factored,
   });
   final String shape;
   final Map<String, int> value;
@@ -134,6 +246,7 @@ class _Node {
   final bool groupedSum;
   final bool hasFactoredSum;
   final bool unexpanded;
+  final _Factored? factored;
 }
 
 class _Incomplete implements Exception {}
@@ -181,6 +294,28 @@ class _Parser {
         RegExp(r'^[0-9a-zA-Z]$').hasMatch(symbol)) {
       if (symbol == '*') position++;
       final other = _unary();
+      _Factored? form;
+      if (node.factored != null &&
+          !other.sum &&
+          !other.groupedSum &&
+          other.factored == null) {
+        form = _Factored(
+          _multiply(node.factored!.outside, other.value),
+          node.factored!.inside,
+        );
+      } else if (other.factored != null &&
+          !node.sum &&
+          !node.groupedSum &&
+          node.factored == null) {
+        form = _Factored(
+          _multiply(other.factored!.outside, node.value),
+          other.factored!.inside,
+        );
+      } else if (node.groupedSum && !other.sum && !other.groupedSum) {
+        form = _Factored(other.value, node.value);
+      } else if (other.groupedSum && !node.sum && !node.groupedSum) {
+        form = _Factored(node.value, other.value);
+      }
       node = _Node(
         '${node.shape}*${other.shape}',
         _multiply(node.value, other.value),
@@ -194,6 +329,7 @@ class _Parser {
             other.unexpanded ||
             node.groupedSum ||
             other.groupedSum,
+        factored: form,
       );
     }
     return node;
@@ -210,6 +346,14 @@ class _Parser {
             node.value.map((key, value) => MapEntry(key, -value)),
             hasFactoredSum: node.hasFactoredSum,
             unexpanded: node.unexpanded || node.groupedSum,
+            factored: node.factored == null
+                ? null
+                : _Factored(
+                    node.factored!.outside.map(
+                      (key, value) => MapEntry(key, -value),
+                    ),
+                    node.factored!.inside,
+                  ),
           )
         : node;
   }
@@ -267,6 +411,7 @@ class _Parser {
         groupedSum: node.sum || node.groupedSum,
         hasFactoredSum: node.hasFactoredSum,
         unexpanded: node.unexpanded,
+        factored: node.factored,
       );
     }
     if (RegExp(r'^[0-9]$').hasMatch(symbol)) {

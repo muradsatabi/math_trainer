@@ -68,18 +68,20 @@ class GeneratedSession {
           tasks: [
             for (var i = 0; i < items.length; i++)
               withDemoChoices(
-                BankTask(
-                  id: '$id/${template.id}/${i + 1}',
-                  revision: 1,
-                  instruction: template.operation == 'expand'
-                      ? 'Раскрой скобки'
-                      : 'Вынеси общий множитель за скобки',
-                  expression: items[i].expression,
-                  expectedAnswer: items[i].answer,
-                  acceptedExamples: const [],
-                  methodicalStatus: 'generated',
-                  templateId: template.id,
-                  operation: template.operation,
+                withCompleteFactorRule(
+                  BankTask(
+                    id: '$id/${template.id}/${i + 1}',
+                    revision: 1,
+                    instruction: template.operation == 'expand'
+                        ? 'Раскрой скобки'
+                        : 'Вынеси общий множитель за скобки',
+                    expression: items[i].expression,
+                    expectedAnswer: items[i].answer,
+                    acceptedExamples: const [],
+                    methodicalStatus: 'generated',
+                    templateId: template.id,
+                    operation: template.operation,
+                  ),
                 ),
               ),
           ],
@@ -124,7 +126,9 @@ class GeneratedSession {
       final tasks = (block as Map)['tasks'] as List;
       for (var i = 0; i < tasks.length; i++) {
         final task = BankTask.fromJson(Map<String, dynamic>.from(tasks[i]));
-        if (!tried.contains(task.id)) tasks[i] = withDemoChoices(task).toJson();
+        if (!tried.contains(task.id)) {
+          tasks[i] = withDemoChoices(withCompleteFactorRule(task)).toJson();
+        }
       }
     }
     return GeneratedSession.fromJson(snapshot);
@@ -132,7 +136,7 @@ class GeneratedSession {
 
   Map<String, dynamic> toJson() => {
     'schema_version': 1,
-    'generator_version': 2,
+    'generator_version': 3,
     'id': id,
     'created_at': createdAt,
     'template_source': templateSource,
@@ -143,7 +147,7 @@ class GeneratedSession {
 
   factory GeneratedSession.fromJson(Map<String, dynamic> json) {
     if (json['schema_version'] != 1 ||
-        ![1, 2].contains(json['generator_version'])) {
+        ![1, 2, 3].contains(json['generator_version'])) {
       throw const FormatException('Unsupported session snapshot');
     }
     final practice = PracticeSession.fromJson(

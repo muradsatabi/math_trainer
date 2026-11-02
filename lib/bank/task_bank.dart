@@ -1,18 +1,26 @@
 /// Demonstration feedback saved with a generated exercise, not approved content.
 class DemoAnswerChoice {
-  const DemoAnswerChoice(this.answer, {this.errorId, this.hint});
+  const DemoAnswerChoice(
+    this.answer, {
+    this.errorId,
+    this.hint,
+    this.isPartial = false,
+  });
   final String answer;
   final String? errorId, hint;
+  final bool isPartial;
   Map<String, dynamic> toJson() => {
     'answer': answer,
     if (errorId != null) 'error_id': errorId,
     if (hint != null) 'hint': hint,
+    if (isPartial) 'is_partial': true,
   };
   factory DemoAnswerChoice.fromJson(Map<String, dynamic> json) =>
       DemoAnswerChoice(
         json['answer'] as String,
         errorId: json['error_id'] as String?,
         hint: json['hint'] as String?,
+        isPartial: json['is_partial'] as bool? ?? false,
       );
 }
 
@@ -28,6 +36,7 @@ class BankTask {
     required this.methodicalStatus,
     this.templateId,
     this.operation = 'factor',
+    this.requireCompleteFactor = false,
     List<DemoAnswerChoice>? demoChoices,
   }) : demoChoices = demoChoices == null
            ? null
@@ -55,6 +64,7 @@ class BankTask {
   final String methodicalStatus;
   final String? templateId;
   final String operation;
+  final bool requireCompleteFactor;
   final List<DemoAnswerChoice>? demoChoices;
 
   Map<String, dynamic> toJson() => {
@@ -67,6 +77,7 @@ class BankTask {
     'methodical_status': methodicalStatus,
     if (templateId != null) 'template_id': templateId,
     if (operation != 'factor') 'operation': operation,
+    if (requireCompleteFactor) 'require_complete_factor': true,
     if (demoChoices != null)
       'demo_choices_v1': demoChoices!.map((c) => c.toJson()).toList(),
   };
@@ -81,6 +92,7 @@ class BankTask {
     methodicalStatus: json['methodical_status'] as String,
     templateId: json['template_id'] as String?,
     operation: json['operation'] as String? ?? 'factor',
+    requireCompleteFactor: json['require_complete_factor'] as bool? ?? false,
     demoChoices: (json['demo_choices_v1'] as List?)
         ?.map((v) => DemoAnswerChoice.fromJson(Map<String, dynamic>.from(v)))
         .toList(),

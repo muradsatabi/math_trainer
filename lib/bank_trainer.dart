@@ -65,13 +65,13 @@ class _BankTrainerState extends State<BankTrainer> {
   TaskAttempt? get _record =>
       _history ? session!.attempts[historyIndex!] : null;
   BankTask get _task => _record?.task ?? session!.currentTask;
-  BankBlock get _block => _history
-      ? session!.bank.blocks.firstWhere((b) => b.id == _record!.blockId)
-      : session!.currentBlock;
   bool get _checked => _history || session!.checked;
   bool get _correct => _history
       ? _record!.correct
       : session!.checked && session!.attempts.last.correct;
+  bool get _partial =>
+      _checked &&
+      (_history ? _record!.partial : session!.attempts.last.partial);
   bool get _usesInput => _record?.usesInput ?? session!.usesInput;
   bool get _offerFinish => !session!.isFinished && session!.canFinish;
 
@@ -271,7 +271,7 @@ class _BankTrainerState extends State<BankTrainer> {
       RegExp(r'[^0-9a-zA-Z⁰¹²³⁴⁵⁶⁷⁸⁹^\s()+−×÷*/·-]').hasMatch(entry.text);
 
   List<TaskAttempt> get _errors =>
-      session!.attempts.where((a) => !a.correct).toList();
+      session!.attempts.where((a) => !a.correct && !a.partial).toList();
 
   Widget _actions(
     BuildContext context,
@@ -320,9 +320,33 @@ class _BankTrainerState extends State<BankTrainer> {
           ),
         ),
       );
-      final historyActions = _history
-          ? _historyActions(compact)
-          : const SizedBox.shrink();
+      final historyActions = Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_checked && !_correct && !_partial && !showAnswer)
+            OutlinedButton(
+              key: const ValueKey('bank-reveal-answer'),
+              onPressed: () => _update(() => showAnswer = true),
+              style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
+              child: const Text('Узнать, как правильно'),
+            ),
+          if (_offerFinish) ...[
+            const SizedBox(height: 8),
+            FilledButton(
+              key: const ValueKey('bank-finish'),
+              onPressed: _finish,
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 50)),
+              child: const Text('Завершить занятие'),
+            ),
+          ],
+          if (_history) ...[
+            if (_checked && !_correct && !_partial && !showAnswer)
+              const SizedBox(height: 8),
+            _historyActions(compact),
+          ],
+        ],
+      );
       return LayoutBuilder(
         builder: (context, bounds) => bounds.maxWidth < 720
             ? Column(
@@ -330,7 +354,12 @@ class _BankTrainerState extends State<BankTrainer> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   left,
-                  if (_history) ...[const SizedBox(height: 8), historyActions],
+                  if (_offerFinish ||
+                      _history ||
+                      (_checked && !_correct && !_partial && !showAnswer)) ...[
+                    const SizedBox(height: 8),
+                    historyActions,
+                  ],
                 ],
               )
             : DemoColumns(wide: wide, left: left, right: historyActions),
@@ -604,8 +633,12 @@ class _BankTrainerState extends State<BankTrainer> {
             'Эта форма записи пока не поддерживается проверкой. '
             'Она не засчитана как ошибка. Попробуй записать ответ иначе.';
       } else {
-        s.submit(answer: entry.text, correct: verdict == AnswerVerdict.correct);
-        showAnswer = s.needsDetailedExplanation;
+        s.submit(
+          answer: entry.text,
+          correct: verdict == AnswerVerdict.correct,
+          partial: verdict == AnswerVerdict.partial,
+        );
+        showAnswer = false;
         if (verdict == AnswerVerdict.incorrect && s.needsDetailedExplanation) {
           page = 'explanation';
         }
@@ -674,7 +707,7 @@ class _BankTrainerState extends State<BankTrainer> {
         if (s != null) ...[
           const SizedBox(height: 12),
           _text(
-            'Решено: ${s.attempts.length}. '
+            'Решено: ${s.gradedAttempts.length}. '
             'Пройдено блоков: ${s.initialBlocksAnswered} из ${bank.blocks.length}.',
             c,
           ),
@@ -692,7 +725,9 @@ class _BankTrainerState extends State<BankTrainer> {
         (_unsupportedSymbol
             ? 'Эта запись пока не поддерживается. Ответ не оценён.'
             : null);
-    final feedbackColor = correct
+    final feedbackColor = _partial
+        ? Color(c.dark ? 0xffffd36b : 0xff8a5a00)
+        : correct
         ? Color(c.dark ? 0xff86d6a2 : 0xff287a45)
         : Color(c.dark ? 0xfff0aaa5 : 0xffa74743);
     return DemoColumns(
@@ -733,6 +768,8 @@ class _BankTrainerState extends State<BankTrainer> {
                             decoration: BoxDecoration(
                               color: !_checked
                                   ? c.paper
+                                  : _partial
+                                  ? Color(c.dark ? 0xff493d22 : 0xfffff5d8)
                                   : correct
                                   ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
                                   : Color(c.dark ? 0xff452e36 : 0xfffff0ee),
@@ -741,6 +778,8 @@ class _BankTrainerState extends State<BankTrainer> {
                                 width: 2,
                                 color: !_checked
                                     ? c.blue
+                                    : _partial
+                                    ? Color(c.dark ? 0xffffd36b : 0xffb78219)
                                     : correct
                                     ? Color(c.dark ? 0xff68c98b : 0xff28934c)
                                     : Color(c.dark ? 0xffb97e84 : 0xffcf7772),
@@ -772,7 +811,11 @@ class _BankTrainerState extends State<BankTrainer> {
                                 ),
                                 suffixIcon: _checked
                                     ? Icon(
-                                        correct ? Icons.check : Icons.close,
+                                        _partial
+                                            ? Icons.hourglass_bottom
+                                            : correct
+                                            ? Icons.check
+                                            : Icons.close,
                                         color: feedbackColor,
                                       )
                                     : null,
@@ -860,6 +903,22 @@ class _BankTrainerState extends State<BankTrainer> {
                 ),
               ),
             ],
+            if (_usesInput && _checked && showAnswer) ...[
+              const SizedBox(height: 12),
+              Container(
+                key: const ValueKey('bank-revealed-answer'),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Color(c.dark ? 0xff233e35 : 0xffeaf6ee),
+                  border: Border.all(
+                    color: Color(c.dark ? 0xff68c98b : 0xff28934c),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: DemoMath(task.expectedAnswer, size: compact ? 25 : 30),
+              ),
+            ],
             if (!_usesInput && message != null) ...[
               const SizedBox(height: 12),
               _text(message, c, size: 16),
@@ -867,80 +926,70 @@ class _BankTrainerState extends State<BankTrainer> {
           ],
         ),
       ),
-      right: _checked || _offerFinish
-          ? Container(
-              key: const ValueKey('bank-feedback-panel'),
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: c.help,
-                borderRadius: BorderRadius.circular(20),
+      right: Container(
+        key: const ValueKey('bank-feedback-panel'),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: c.help,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (!_checked) ...[
+              Text('Подсказка', style: screenText(24, c.ink, heading: true)),
+              const SizedBox(height: 16),
+              Text(
+                task.operation == 'expand'
+                    ? 'Множитель перед скобками относится к каждому слагаемому внутри. Следи за числами, буквами и знаками.'
+                    : 'Найди множитель, который есть в каждом слагаемом. Раздели на него каждое слагаемое и проверь результат обратным умножением.',
+                style: screenText(17, c.ink, height: 1.5),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (_checked)
-                    Text(
-                      correct ? 'Абсолютно верно!' : 'Пока не получилось!',
-                      key: const ValueKey('bank-feedback'),
-                      style: screenText(24, feedbackColor, heading: true),
-                    ),
-                  if (_checked && !correct && task.demoChoices != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      answerFeedback(task, entry.text)?.hint ?? 'Проверь обратным действием: раскрой скобки и сравни каждое слагаемое с исходным выражением.',
-                      key: const ValueKey('bank-error-hint'),
-                      style: screenText(17, c.ink, height: 1.5),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Подсказка · демонстрационный вариант',
-                      style: screenText(12, c.sub),
-                    ),
-                  ],
-                  if (_checked && !correct && !showAnswer) ...[
-                    const SizedBox(height: 20),
-                    OutlinedButton(
-                      onPressed: () => _update(() => showAnswer = true),
-                      child: const Text('Узнать, как правильно'),
-                    ),
-                  ],
-                  if (_checked && showAnswer) ...[
-                    const SizedBox(height: 16),
-                    _text('Правильная запись', c),
-                    const SizedBox(height: 8),
-                    DemoMath(task.expectedAnswer, size: 28),
-                    const SizedBox(height: 12),
-                    _text(_block.skill, c, size: 16),
-                  ],
-                  if (_offerFinish) ...[
-                    if (_checked) const Divider(height: 32),
-                    Text(
-                      'Целевая успешность достигнута',
-                      key: const ValueKey('bank-finish-notice'),
-                      style: screenText(22, c.ink, heading: true),
-                    ),
-                    const SizedBox(height: 12),
-                    _text(
-                      'Можно завершить занятие или продолжить практику.',
-                      c,
-                      size: 17,
-                    ),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      key: const ValueKey('bank-finish'),
-                      onPressed: _finish,
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size(0, 50),
-                        backgroundColor: c.blue,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Завершить занятие'),
-                    ),
-                  ],
-                ],
+            ],
+            if (_checked)
+              Text(
+                _partial
+                    ? 'Верно, но не до конца'
+                    : correct
+                    ? 'Абсолютно верно!'
+                    : 'Пока не получилось!',
+                key: const ValueKey('bank-feedback'),
+                style: screenText(24, feedbackColor, heading: true),
               ),
-            )
-          : const SizedBox.shrink(),
+            if (_checked && !correct) ...[
+              const SizedBox(height: 16),
+              Text(
+                (_partial
+                        ? partialAnswerHint(task, entry.text)
+                        : answerFeedback(task, entry.text)?.hint) ??
+                    'Проверь обратным действием: раскрой скобки и сравни каждое слагаемое с исходным выражением.',
+                key: const ValueKey('bank-error-hint'),
+                style: screenText(17, c.ink, height: 1.5),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Подсказка · демонстрационный вариант',
+                style: screenText(12, c.sub),
+              ),
+            ],
+            if (_offerFinish) ...[
+              if (_checked) const Divider(height: 32),
+              Text(
+                'Целевая успешность достигнута',
+                key: const ValueKey('bank-finish-notice'),
+                style: screenText(22, c.ink, heading: true),
+              ),
+              const SizedBox(height: 12),
+              _text(
+                'Можно завершить занятие или продолжить практику.',
+                c,
+                size: 17,
+              ),
+              const SizedBox(height: 16),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
@@ -955,16 +1004,26 @@ class _BankTrainerState extends State<BankTrainer> {
             builder: (context) {
               final selected = entry.text == options[i];
               final correct = _correct;
-              final borderColor = selected
+              final revealed =
+                  _checked && showAnswer && options[i] == task.expectedAnswer;
+              final borderColor = revealed
+                  ? Color(c.dark ? 0xff68c98b : 0xff28934c)
+                  : selected
                   ? _checked
-                        ? correct
+                        ? _partial
+                              ? Color(c.dark ? 0xffffd36b : 0xffb78219)
+                              : correct
                               ? Color(c.dark ? 0xff68c98b : 0xff28934c)
                               : Color(c.dark ? 0xffb97e84 : 0xffcf7772)
                         : c.blue
                   : c.line;
-              final background = selected
+              final background = revealed
+                  ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
+                  : selected
                   ? _checked
-                        ? correct
+                        ? _partial
+                              ? Color(c.dark ? 0xff493d22 : 0xfffff5d8)
+                              : correct
                               ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
                               : Color(c.dark ? 0xff452e36 : 0xfffff0ee)
                         : c.help
@@ -978,7 +1037,7 @@ class _BankTrainerState extends State<BankTrainer> {
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
                       color: borderColor,
-                      width: selected ? 2 : 1,
+                      width: selected || revealed ? 2 : 1,
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -1007,10 +1066,14 @@ class _BankTrainerState extends State<BankTrainer> {
                                 height: 1.2,
                               ),
                             ),
-                            if (selected && _checked) ...[
+                            if ((selected && _checked) || revealed) ...[
                               const SizedBox(width: 12),
                               Icon(
-                                correct ? Icons.check : Icons.close,
+                                revealed || correct
+                                    ? Icons.check
+                                    : _partial
+                                    ? Icons.hourglass_bottom
+                                    : Icons.close,
                                 color: borderColor,
                               ),
                             ],
@@ -1154,7 +1217,7 @@ class _BankTrainerState extends State<BankTrainer> {
                 if (page == 'results' && s != null) ...[
                   const SizedBox(height: 16),
                   _text(
-                    'Ошибок: ${s.attempts.where((a) => !a.correct).length}',
+                    'Ошибок: ${s.attempts.where((a) => !a.correct && !a.partial).length}',
                     c,
                   ),
                 ],

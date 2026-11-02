@@ -59,6 +59,10 @@ List<String> answerChoices(BankTask task) {
 /// typed spellings. Does not infer the student's thinking from an arbitrary input.
 DemoAnswerChoice? answerFeedback(BankTask task, String answer) {
   for (final choice in task.demoChoices ?? <DemoAnswerChoice>[]) {
+    if (choice.isPartial &&
+        checkFactorAnswer(task, answer) == AnswerVerdict.partial) {
+      return choice;
+    }
     if (choice.errorId != null &&
         equivalentExpressions(choice.answer, answer) == true) {
       return choice;
@@ -145,6 +149,15 @@ BankTask withDemoChoices(BankTask task) {
     }
   }
   final position = task.id.codeUnits.fold(0, (sum, c) => sum + c) % 4;
+  final partial = partialFactorExample(task);
+  if (partial != null &&
+      task.id.codeUnits.fold(0, (sum, c) => sum + c) % 3 == 0) {
+    choices[choices.length - 1] = DemoAnswerChoice(
+      partial,
+      isPartial: true,
+      hint: partialAnswerHint(task, partial),
+    );
+  }
   choices.insert(position, DemoAnswerChoice(task.expectedAnswer));
   return BankTask(
     id: task.id,
@@ -156,7 +169,28 @@ BankTask withDemoChoices(BankTask task) {
     methodicalStatus: task.methodicalStatus,
     templateId: task.templateId,
     operation: task.operation,
+    requireCompleteFactor: task.requireCompleteFactor,
     demoChoices: choices,
+  );
+}
+
+BankTask withCompleteFactorRule(BankTask task) {
+  if (task.methodicalStatus != 'generated' ||
+      task.operation != 'factor' ||
+      task.requireCompleteFactor) {
+    return task;
+  }
+  return BankTask(
+    id: task.id,
+    revision: task.revision,
+    instruction: 'Вынеси общий множитель полностью',
+    expression: task.expression,
+    expectedAnswer: task.expectedAnswer,
+    acceptedExamples: task.acceptedExamples,
+    methodicalStatus: task.methodicalStatus,
+    templateId: task.templateId,
+    operation: task.operation,
+    requireCompleteFactor: true,
   );
 }
 

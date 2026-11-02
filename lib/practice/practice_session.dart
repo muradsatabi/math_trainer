@@ -34,6 +34,7 @@ class TaskAttempt {
     required this.correct,
     required this.isExtra,
     this.usesInput = false,
+    this.partial = false,
   });
   final BankTask task;
   final String blockId;
@@ -41,6 +42,7 @@ class TaskAttempt {
   final bool correct;
   final bool isExtra;
   final bool usesInput;
+  final bool partial;
 }
 
 /// One initial task per block. After an error, require a consecutive correct
@@ -80,9 +82,14 @@ class PracticeSession {
   int get currentBlockErrorStreak => _errorStreaks[_blockIndex] ?? 0;
   bool get needsDetailedExplanation => currentBlockErrorStreak >= 3;
 
+  List<TaskAttempt> get gradedAttempts =>
+      _attempts.where((a) => !a.partial).toList();
   List<TaskAttempt> get recentAttempts => List.unmodifiable(
-    _attempts.skip(
-      (_attempts.length - settings.successWindow).clamp(0, _attempts.length),
+    gradedAttempts.skip(
+      (gradedAttempts.length - settings.successWindow).clamp(
+        0,
+        gradedAttempts.length,
+      ),
     ),
   );
 
@@ -113,9 +120,16 @@ class PracticeSession {
   }
 
   /// Called only after a supported answer has been checked, never for previews.
-  void submit({required String answer, required bool correct}) {
+  void submit({
+    required String answer,
+    required bool correct,
+    bool partial = false,
+  }) {
     if (_checked || _finished) {
       throw StateError('This task cannot be submitted again');
+    }
+    if (partial && correct) {
+      throw ArgumentError('Partial is not a completed success');
     }
     _attempts.add(
       TaskAttempt(
@@ -125,8 +139,14 @@ class PracticeSession {
         correct: correct,
         isExtra: _isExtra,
         usesInput: _usesInput,
+        partial: partial,
       ),
     );
+    if (partial) {
+      // Neutral: retain the current block and any remaining reinforcement debt.
+      _checked = true;
+      return;
+    }
     if (_isExtra) {
       _extraBlocks.removeAt(0);
     } else if (_primaryCursor < bank.blocks.length) {
@@ -151,7 +171,7 @@ class PracticeSession {
   }
 
   Map<String, dynamic> toJson() => {
-    'schema_version': 1,
+    'schema_version': 2,
     'bank': bank.toJson(),
     'settings': {
       'minimum_answers': settings.minimumAnswers,
@@ -169,6 +189,7 @@ class PracticeSession {
             'correct': a.correct,
             'is_extra': a.isExtra,
             'uses_input': a.usesInput,
+            if (a.partial) 'partial': true,
           },
         )
         .toList(),
@@ -186,7 +207,7 @@ class PracticeSession {
   };
 
   factory PracticeSession.fromJson(Map<String, dynamic> json) {
-    if (json['schema_version'] != 1) {
+    if (![1, 2].contains(json['schema_version'])) {
       throw const FormatException('Session version');
     }
     final bank = TaskBank.fromSnapshot(Map<String, dynamic>.from(json['bank']));
@@ -216,6 +237,9 @@ class PracticeSession {
     }
     s._attempts.addAll(
       (json['attempts'] as List).map((a) {
+        if (a['partial'] == true && a['correct'] == true) {
+          throw const FormatException('Conflicting attempt result');
+        }
         final task =
             tasks[a['task_id']] ??
             (throw const FormatException('Attempt task'));
@@ -231,6 +255,7 @@ class PracticeSession {
           correct: a['correct'] as bool,
           isExtra: a['is_extra'] as bool,
           usesInput: a['uses_input'] as bool,
+          partial: a['partial'] as bool? ?? false,
         );
       }),
     );
@@ -270,6 +295,8 @@ class PracticeSession {
   }
 
   void _nextTask() {
+    final repeatPartial =
+        _checked && _attempts.isNotEmpty && _attempts.last.partial;
     final recent = recentAttempts;
     _usesInput =
         settings.inputPercent == 0 ||
@@ -278,7 +305,9 @@ class PracticeSession {
                 settings.successWindow * settings.inputPercent);
     _checked = false;
     _isExtra = _extraBlocks.isNotEmpty;
-    _blockIndex = _isExtra
+    _blockIndex = repeatPartial
+        ? _blockIndex
+        : _isExtra
         ? _extraBlocks.first
         : _primaryCursor < bank.blocks.length
         ? _primaryCursor

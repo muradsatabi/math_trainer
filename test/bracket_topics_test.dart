@@ -29,15 +29,15 @@ void main() {
       operation: 'expand',
     );
     final three = task('2(a+b+c)', '2a+2b+2c');
-    expect(checkFactorAnswer(three, '2(a+b)+2c'), AnswerVerdict.incorrect);
+    expect(checkFactorAnswer(three, '2(a+b)+2c'), AnswerVerdict.partial);
     expect(checkFactorAnswer(three, '2((a+b+c))'), AnswerVerdict.incorrect);
     expect(
       checkFactorAnswer(task('a(a+b)', 'a²+ab'), 'a*a+ab'),
-      AnswerVerdict.incorrect,
+      AnswerVerdict.partial,
     );
     expect(
       checkFactorAnswer(task('2(2a+b)', '4a+2b'), '2*2a+2b'),
-      AnswerVerdict.incorrect,
+      AnswerVerdict.partial,
     );
     expect(
       checkFactorAnswer(task('−(a+b)', '−a−b'), '−(a+b)'),
