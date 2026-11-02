@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import '../bank/task_bank.dart';
 import '../completion_screens.dart' show DemoMath;
 import '../demo_screens.dart';
+import 'demo_topic_lesson.dart';
 
-/// Mandatory viewing mechanics; approved step-by-step content is added later.
+/// Mandatory viewing with provisional lessons, replaceable by approved content.
 class RequiredExplanationScreen extends StatefulWidget {
   const RequiredExplanationScreen({
     super.key,
     required this.topic,
+    required this.topicId,
     required this.task,
     required this.skill,
     required this.successPercent,
@@ -18,7 +20,7 @@ class RequiredExplanationScreen extends StatefulWidget {
     required this.onTopics,
   });
 
-  final String topic, skill;
+  final String topic, topicId, skill;
   final BankTask task;
   final double successPercent;
   final VoidCallback onContinue, onTopics;
@@ -81,6 +83,10 @@ class _RequiredExplanationScreenState extends State<RequiredExplanationScreen>
       onTopics: widget.onTopics,
       bodyBuilder: (context, wide, compact) {
         final c = ScreenColors(context);
+        final lesson = DemoTopicLesson.forTopic(
+          widget.topicId,
+          widget.task.operation,
+        );
         return SharedField(
           wide: wide,
           compact: compact,
@@ -94,6 +100,30 @@ class _RequiredExplanationScreenState extends State<RequiredExplanationScreen>
               ),
               const SizedBox(height: 16),
               Text(widget.skill, style: screenText(20, c.ink)),
+              const SizedBox(height: 8),
+              Text('Пробное объяснение темы', style: screenText(15, c.sub)),
+              const SizedBox(height: 20),
+              Text(lesson.title, style: screenText(24, c.ink, heading: true)),
+              const SizedBox(height: 12),
+              Text(lesson.idea, style: screenText(18, c.ink)),
+              for (final section in lesson.sections) ...[
+                const SizedBox(height: 24),
+                Text(
+                  section.title,
+                  style: screenText(21, c.ink, heading: true),
+                ),
+                const SizedBox(height: 10),
+                Text(section.text, style: screenText(18, c.ink)),
+                if (section.formula != null) ...[
+                  const SizedBox(height: 12),
+                  DemoMath(section.formula!, size: compact ? 25 : 30),
+                ],
+              ],
+              const Divider(height: 40),
+              Text(
+                'Теперь вернёмся к твоему заданию',
+                style: screenText(23, c.ink, heading: true),
+              ),
               const SizedBox(height: 20),
               Text(widget.task.instruction, style: screenText(18, c.sub)),
               const SizedBox(height: 12),

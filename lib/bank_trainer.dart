@@ -1,6 +1,5 @@
 import 'generator/pdf_generator_screen.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -1064,6 +1063,7 @@ class _BankTrainerState extends State<BankTrainer> {
       if (page == 'explanation') {
         return RequiredExplanationScreen(
           topic: bank.title,
+          topicId: bank.topicId,
           task: s!.currentTask,
           skill: s.currentBlock.skill,
           successPercent: s.successPercent,
