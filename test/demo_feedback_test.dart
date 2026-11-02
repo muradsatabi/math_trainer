@@ -31,7 +31,7 @@ void main() {
   });
   for (final family in ['numeric', 'literal']) {
     test(
-      'every active $family template has three mapped errors, never equivalent distractors',
+      'every active $family template has mapped errors and optional neutral partial choice',
       () {
         for (var seed = 0; seed < 5; seed++) {
           final s = session(family, seed);
@@ -40,9 +40,28 @@ void main() {
             final errors = task.demoChoices!
                 .where((c) => c.errorId != null)
                 .toList();
-            expect(errors, hasLength(3));
-            expect(errors.map((c) => c.errorId).toSet(), hasLength(3));
-            expect(errors.map((c) => c.hint).toSet(), hasLength(3));
+            final partials = task.demoChoices!
+                .where((c) => c.isPartial)
+                .toList();
+            expect(partials.length, lessThanOrEqualTo(1));
+            expect(errors, hasLength(3 - partials.length));
+            expect(
+              errors.map((c) => c.errorId).toSet(),
+              hasLength(errors.length),
+            );
+            expect(errors.map((c) => c.hint).toSet(), hasLength(errors.length));
+            for (final partial in partials) {
+              expect(partial.errorId, isNull);
+              expect(
+                equivalentExpressions(partial.answer, task.expression),
+                isTrue,
+              );
+              expect(
+                checkFactorAnswer(task, partial.answer),
+                AnswerVerdict.partial,
+              );
+              expect(partial.hint, isNotEmpty);
+            }
             for (final error in errors) {
               expect(
                 equivalentExpressions(error.answer, task.expression),

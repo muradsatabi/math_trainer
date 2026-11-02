@@ -71,6 +71,13 @@ void main() {
             of: find.byKey(const ValueKey('bank-primary')),
             matching: find.byType(FilledButton),
           );
+          Future<void> tapVisible(Finder target) async {
+            await tester.ensureVisible(target);
+            await tester.pumpAndSettle();
+            await tester.tap(target);
+            await tester.pumpAndSettle();
+          }
+
           expect(
             find.descendant(of: power, matching: find.text('x')),
             findsOneWidget,
@@ -84,7 +91,7 @@ void main() {
           await tester.enterText(field, '2');
           await tester.pump();
           await tester.ensureVisible(power);
-          await tester.tap(power);
+          await tapVisible(power);
           await tester.pumpAndSettle();
           expect(tester.widget<FilledButton>(check).onPressed, isNull);
           expect(view!['current']['power_input'], isTrue);
@@ -96,12 +103,12 @@ void main() {
             isTrue,
           );
           await tester.ensureVisible(power);
-          await tester.tap(find.byKey(const ValueKey('bank-symbol-3')));
+          await tapVisible(find.byKey(const ValueKey('bank-symbol-3')));
           await tester.pumpAndSettle();
           expect(tester.widget<TextField>(field).controller!.text, '2³');
           expect(tester.widget<FilledButton>(check).onPressed, isNotNull);
-          await tester.tap(find.byKey(const ValueKey('bank-symbol-+')));
-          await tester.tap(find.byKey(const ValueKey('bank-symbol-4')));
+          await tapVisible(find.byKey(const ValueKey('bank-symbol-+')));
+          await tapVisible(find.byKey(const ValueKey('bank-symbol-4')));
           await tester.pumpAndSettle();
           expect(tester.widget<TextField>(field).controller!.text, '2³+4');
           expect(
@@ -110,16 +117,18 @@ void main() {
                 .powerInput,
             isFalse,
           );
-          await tester.tap(find.byKey(const ValueKey('bank-clear')));
+          await tapVisible(find.byKey(const ValueKey('bank-clear')));
           await tester.pumpAndSettle();
           await tester.enterText(field, 'a');
           await tester.pump();
-          await tester.tap(power);
+          await tester.ensureVisible(power);
+          await tapVisible(power);
           await tester.pump();
           await tester.enterText(field, 'a10');
           await tester.pumpAndSettle();
           expect(tester.widget<TextField>(field).controller!.text, 'a¹⁰');
-          await tester.tap(power);
+          await tester.ensureVisible(power);
+          await tapVisible(power);
           await tester.pump();
           expect(
             tester
@@ -139,7 +148,7 @@ void main() {
           expect(tester.widget<TextField>(field).controller!.text, '2³');
           await tester.enterText(field, session.currentTask.expectedAnswer);
           await tester.pumpAndSettle();
-          await tester.tap(check);
+          await tapVisible(check);
           await tester.pumpAndSettle();
           expect(find.text('Абсолютно верно!'), findsOneWidget);
           expect(tester.widget<OutlinedButton>(power).onPressed, isNull);
