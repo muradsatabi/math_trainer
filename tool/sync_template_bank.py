@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.request
@@ -41,6 +42,7 @@ def apply_downloads(root, downloads, commit, dirty_check=locally_changed):
     state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
     applied = state.get("files", {})
     updates = {}
+    file_states = {}
     all_ids = set()
     for relative, data in downloads.items():
         target = (root / relative).resolve()
@@ -52,7 +54,10 @@ def apply_downloads(root, downloads, commit, dirty_check=locally_changed):
             raise ValueError("Duplicate IDs across catalogs")
         all_ids.update(ids)
         old = target.read_bytes() if target.exists() else None
-        if old == data:
+        # Git may expose LF while a clean Windows checkout uses CRLF. Keep
+        # the local style instead of rewriting identical JSON on every sync.
+        if old is not None and old.replace(b"\r\n", b"\n") == data.replace(b"\r\n", b"\n"):
+            file_states[relative] = sha256(old)
             continue
         if old is not None:
             if dirty_check(root, relative) and applied.get(relative) != sha256(old):
@@ -60,7 +65,11 @@ def apply_downloads(root, downloads, commit, dirty_check=locally_changed):
             validate_transition(json.loads(old.decode("utf-8-sig")), current)
         elif not all(r["status"] != "active" or approval_valid(r) for r in ids.values()):
             raise ValueError("New active catalog lacks recorded approval")
-        updates[relative] = (old, data)
+        output = data
+        if old is not None and b"\r\n" in old:
+            output = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+        updates[relative] = (old, output)
+        file_states[relative] = sha256(output)
     state_path.parent.mkdir(parents=True, exist_ok=True)
     written = []
     try:
@@ -74,7 +83,7 @@ def apply_downloads(root, downloads, commit, dirty_check=locally_changed):
                 written.append(relative)
             staged_state = Path(staging) / "state.json"
             staged_state.write_text(json.dumps({"commit":commit,
-                "files":{p:sha256(data) for p,data in downloads.items()}},indent=2)+"\n", encoding="utf-8")
+                "files":file_states},indent=2)+"\n", encoding="utf-8")
             staged_state.replace(state_path)
     except Exception:
         for relative in reversed(written):
@@ -88,7 +97,26 @@ def apply_downloads(root, downloads, commit, dirty_check=locally_changed):
 
 
 def api(path):
-    request = urllib.request.Request(f"https://api.github.com/repos/{REPOSITORY}/{path}",
+    url = f"https://api.github.com/repos/{REPOSITORY}/{path}"
+    if sys.platform == "win32":
+        # Use the Windows trust store, including locally installed issuer CAs,
+        # rather than weakening TLS verification for a background Python process.
+        if not re.fullmatch(r"[A-Za-z0-9_./?=&-]+", path):
+            raise ValueError("Unexpected GitHub API path")
+        script = (
+            "$ErrorActionPreference='Stop';"
+            "[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new($false);"
+            f"Invoke-RestMethod -Uri '{url}' -TimeoutSec 30 "
+            "-Headers @{Accept='application/vnd.github+json';"
+            "'User-Agent'='math-trainer-template-sync'} | ConvertTo-Json -Depth 100 -Compress"
+        )
+        response = subprocess.run(
+            ["powershell.exe", "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script],
+            capture_output=True, encoding="utf-8", check=True, timeout=45,
+            creationflags=subprocess.CREATE_NO_WINDOW,
+        )
+        return json.loads(response.stdout.lstrip("\ufeff"))
+    request = urllib.request.Request(url,
         headers={"Accept":"application/vnd.github+json","User-Agent":"math-trainer-template-sync"})
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.load(response)
