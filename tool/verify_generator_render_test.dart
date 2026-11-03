@@ -78,6 +78,17 @@ void main() {
           findsOneWidget,
         );
         await capture('combinations');
+        final powers = find.byKey(const ValueKey('generator-feature-powers'));
+        await tester.ensureVisible(powers);
+        await tester.pumpAndSettle();
+        await tester.tap(powers);
+        await tester.pumpAndSettle();
+        expect(tester.widget<CheckboxListTile>(powers).value, false);
+        await tester.ensureVisible(
+          find.byKey(const ValueKey('generator-level-1')),
+        );
+        await tester.pumpAndSettle();
+        await capture('powers-excluded');
         final format = find.byKey(const ValueKey('pdf-test-mode'));
         await tester.ensureVisible(format);
         await tester.pumpAndSettle();

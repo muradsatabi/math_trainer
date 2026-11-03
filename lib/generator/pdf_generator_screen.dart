@@ -7,6 +7,28 @@ import 'pdf_download.dart';
 
 typedef PdfExporter = Future<void> Function(Uint8List bytes, String filename);
 
+String _featureGroup(String feature) =>
+    feature == 'factor_power' ? 'powers' : feature;
+
+String _templateTitle(ExerciseTemplate template) =>
+    template.family == 'literal' && template.features.contains('unit')
+    ? template.title.replaceAll(
+        'Остаток — единица',
+        'Свободное число в скобках',
+      )
+    : template.title;
+
+const _featureLabels = {
+  'powers': 'Степени',
+  'subtraction': 'Вычитание',
+  'position': 'Другой порядок множителей',
+  'three_terms': 'Три слагаемых',
+  'unit': 'Число в скобках без букв',
+  'different': 'Разные коэффициенты',
+  'two_letters': 'Две оставшиеся буквы',
+  'bracket': 'Скобки в слагаемом',
+};
+
 class PdfGeneratorScreen extends StatefulWidget {
   const PdfGeneratorScreen({
     super.key,
@@ -26,6 +48,7 @@ class PdfGeneratorScreen extends StatefulWidget {
 class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
   late final Future<List<ExerciseTemplate>> loading = _load();
   final levels = <int>{1};
+  final excludedFeatures = <String>{};
   late final families = widget.family == null
       ? <String>{'numeric', 'literal'}
       : <String>{widget.family!};
@@ -142,12 +165,13 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
     try {
       // Yield to paint the progress state before doing bounded local work.
       await Future<void>.delayed(Duration.zero);
-      final variants = TemplateTaskGenerator().generateVariants(
-        templates: options,
-        quantities: counts,
-        count: int.parse(variantQuantity.text),
-        order: order,
-      );
+      final variants = TemplateTaskGenerator(varyLiteralConstants: true)
+          .generateVariants(
+            templates: options,
+            quantities: counts,
+            count: int.parse(variantQuantity.text),
+            order: order,
+          );
       final bytes = widget.pdfBuilder == null
           ? await _buildPdf(variants)
           : await widget.pdfBuilder!(variants.expand((v) => v).toList());
@@ -216,9 +240,22 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
           final templates = snapshot.data!;
           final flat = templates.every((t) => t.flat);
           final options = generationOptions(templates);
+          final featureGroups =
+              options
+                  .where((t) => families.contains(t.family))
+                  .expand((t) => t.features)
+                  .map(_featureGroup)
+                  .toSet()
+                  .toList()
+                ..sort();
           final visible = options
               .where(
-                (t) => levels.contains(t.level) && families.contains(t.family),
+                (t) =>
+                    levels.contains(t.level) &&
+                    families.contains(t.family) &&
+                    !t.features.any(
+                      (f) => excludedFeatures.contains(_featureGroup(f)),
+                    ),
               )
               .toList();
           visible.sort(
@@ -307,60 +344,8 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                               ),
                               const SizedBox(height: 16),
                             ],
-                            if (!flat) ...[
-                              Text(
-                                'Уровни сочетаний',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(height: 8),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 4,
-                                children: [
-                                  for (var level = 1; level <= 6; level++)
-                                    FilterChip(
-                                      key: ValueKey('generator-level-$level'),
-                                      label: Text('$level'),
-                                      selected: levels.contains(level),
-                                      onSelected: busy
-                                          ? null
-                                          : (yes) => setState(() {
-                                              if (yes) {
-                                                levels.add(level);
-                                                selected.addAll(
-                                                  options
-                                                      .where(
-                                                        (t) => t.level == level,
-                                                      )
-                                                      .map((t) => t.id),
-                                                );
-                                              } else {
-                                                levels.remove(level);
-                                              }
-                                            }),
-                                    ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. '
-                                'Это состав задания, а не оценка трудности.',
-                                style: TextStyle(
-                                  color: colors.onSurfaceVariant,
-                                ),
-                              ),
-                              if (levels.any((v) => v > 2))
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    'Сочетания автоматически составлены из рабочих направлений '
-                                    'и доступны для пробы; отдельного методического согласования они ещё не проходили.',
-                                    style: TextStyle(
-                                      color: colors.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                            ],
+                            if (!flat)
+                              _levelsAndFeatures(options, featureGroups),
                             const SizedBox(height: 16),
                             Wrap(
                               spacing: 8,
@@ -473,13 +458,17 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                                             width: 280,
                                             child: Padding(
                                               padding: const EdgeInsets.all(16),
-                                              child: Text(visible[i].title),
+                                              child: Text(
+                                                _templateTitle(visible[i]),
+                                              ),
                                             ),
                                           ),
                                         ),
                                         childWhenDragging: Opacity(
                                           opacity: .3,
-                                          child: Text(visible[i].title),
+                                          child: Text(
+                                            _templateTitle(visible[i]),
+                                          ),
                                         ),
                                         child: DecoratedBox(
                                           decoration: BoxDecoration(
@@ -764,6 +753,112 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
     );
   }
 
+  Widget _levelsAndFeatures(
+    List<ExerciseTemplate> options,
+    List<String> groups,
+  ) {
+    final style = Theme.of(context).textTheme.titleMedium;
+    final levelsPanel = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Уровни сочетаний', style: style),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          children: [
+            for (var level = 1; level <= 6; level++)
+              FilterChip(
+                key: ValueKey('generator-level-$level'),
+                label: Text('$level'),
+                selected: levels.contains(level),
+                onSelected: busy
+                    ? null
+                    : (yes) => setState(() {
+                        if (yes) {
+                          levels.add(level);
+                          selected.addAll(
+                            options
+                                .where((t) => t.level == level)
+                                .map((t) => t.id),
+                          );
+                        } else {
+                          levels.remove(level);
+                        }
+                        success = null;
+                      }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. Это состав задания, а не оценка трудности.',
+        ),
+        if (levels.any((v) => v > 2)) ...[
+          const SizedBox(height: 8),
+          const Text(
+            'Сочетания автоматически составлены из рабочих направлений и доступны для пробы; отдельного методического согласования они ещё не проходили.',
+          ),
+        ],
+      ],
+    );
+    if (groups.isEmpty) return levelsPanel;
+    final featuresPanel = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Разрешённые усложнения', style: style),
+        const SizedBox(height: 6),
+        const Text(
+          'Снимите галочку, чтобы исключить признак во всех шаблонах и сочетаниях.',
+        ),
+        for (final group in groups)
+          CheckboxListTile(
+            key: ValueKey('generator-feature-$group'),
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text(
+              _featureLabels[group] ??
+                  options
+                      .firstWhere(
+                        (t) => t.features.any((f) => _featureGroup(f) == group),
+                      )
+                      .title,
+            ),
+            value: !excludedFeatures.contains(group),
+            onChanged: busy
+                ? null
+                : (allowed) => setState(() {
+                    if (allowed!) {
+                      excludedFeatures.remove(group);
+                    } else {
+                      excludedFeatures.add(group);
+                    }
+                    success = null;
+                  }),
+          ),
+      ],
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 700) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [levelsPanel, const SizedBox(height: 20), featuresPanel],
+          );
+        }
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: levelsPanel),
+            const SizedBox(width: 32),
+            Expanded(child: featuresPanel),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _templateRow(
     ExerciseTemplate t,
     ColorScheme colors, {
@@ -833,12 +928,14 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
                   ),
                 ),
                 Text(
-                  t.title,
+                  _templateTitle(t),
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
                 if (t.example.isNotEmpty)
                   Text(
-                    t.example,
+                    t.family == 'literal' && t.features.contains('unit')
+                        ? 'ab + 3a → a(b + 3)'
+                        : t.example,
                     style: const TextStyle(fontFamily: 'Caladea', fontSize: 18),
                   ),
               ],

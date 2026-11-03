@@ -102,8 +102,12 @@ class GeneratedExercise {
 }
 
 class TemplateTaskGenerator {
-  TemplateTaskGenerator({int? seed}) : random = Random(seed);
+  TemplateTaskGenerator({int? seed, this.varyLiteralConstants = false})
+    : random = Random(seed);
   final Random random;
+  // PDF option: vary the free number without changing the canonical unit
+  // template used by existing practice sessions.
+  final bool varyLiteralConstants;
   static const maxPerTemplate = 100;
   static const maxTotal = 1000;
   static const maxVariants = 100;
@@ -249,6 +253,9 @@ class TemplateTaskGenerator {
       } while (coefficients.toSet().length == 1 ||
           coefficients.reduce((a, b) => a.gcd(b)) != 1);
     }
+    final literalConstant = !isNumeric && unit && varyLiteralConstants
+        ? 1 + random.nextInt(9)
+        : 1;
     final rightIndex = random.nextInt(unit ? count - 1 : count);
     final originals = <String>[];
     final answers = <String>[];
@@ -276,14 +283,14 @@ class TemplateTaskGenerator {
             : '$common${exponent == 2 ? '²' : '³'}';
         originals.add(
           rest.isEmpty
-              ? common
+              ? '${literalConstant == 1 ? '' : literalConstant}$common'
               : f.contains('position') && i == rightIndex
               ? '$rest$displayedCommon'
               : '$displayedCommon$rest',
         );
         answers.add(
           rest.isEmpty
-              ? '1'
+              ? '$literalConstant'
               : '${exponent == 3
                     ? '$common²'
                     : exponent == 2
