@@ -42,10 +42,12 @@ class _SavedPracticeView {
     this.message,
     this.showAnswer, {
     this.powerInput = false,
+    this.showHint = false,
   });
   final TextEditingValue entry;
   final String? message;
   final bool showAnswer;
+  final bool showHint;
   final bool powerInput;
 }
 
@@ -57,6 +59,7 @@ class _BankTrainerState extends State<BankTrainer> {
   String page = 'topics';
   String? inputMessage;
   bool showAnswer = false;
+  bool showHint = false;
   bool _powerInput = false;
   int reviewIndex = 0;
   int? historyIndex;
@@ -88,6 +91,7 @@ class _BankTrainerState extends State<BankTrainer> {
     'extent': view.entry.selection.extentOffset,
     'message': view.message,
     'show_answer': view.showAnswer,
+    'show_hint': view.showHint,
     'power_input': view.powerInput,
   };
 
@@ -113,6 +117,7 @@ class _BankTrainerState extends State<BankTrainer> {
       value['message'] as String?,
       value['show_answer'] as bool,
       powerInput: value['power_input'] as bool? ?? false,
+      showHint: value['show_hint'] as bool? ?? false,
     );
   }
 
@@ -128,6 +133,7 @@ class _BankTrainerState extends State<BankTrainer> {
           inputMessage,
           showAnswer,
           powerInput: _powerInput,
+          showHint: showHint,
         ),
       ),
       'saved_views': savedViews.map((k, v) => MapEntry('$k', _encodeView(v))),
@@ -149,7 +155,11 @@ class _BankTrainerState extends State<BankTrainer> {
       inputMessage,
       showAnswer,
       powerInput: _powerInput,
+      showHint: showHint,
     );
+    if (!_history && session!.checked) {
+      savedViews[session!.attempts.length - 1] = savedViews[-1]!;
+    }
   }
 
   void _openTask(int? index) {
@@ -166,6 +176,7 @@ class _BankTrainerState extends State<BankTrainer> {
           );
       inputMessage = saved?.message;
       showAnswer = saved?.showAnswer ?? false;
+      showHint = saved?.showHint ?? false;
       _powerInput = index == null && (saved?.powerInput ?? false);
       page = 'practice';
     });
@@ -324,13 +335,6 @@ class _BankTrainerState extends State<BankTrainer> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_checked && !_correct && !_partial && !showAnswer)
-            OutlinedButton(
-              key: const ValueKey('bank-reveal-answer'),
-              onPressed: () => _update(() => showAnswer = true),
-              style: OutlinedButton.styleFrom(minimumSize: const Size(0, 52)),
-              child: const Text('Узнать, как правильно'),
-            ),
           if (_offerFinish) ...[
             const SizedBox(height: 8),
             FilledButton(
@@ -340,11 +344,7 @@ class _BankTrainerState extends State<BankTrainer> {
               child: const Text('Завершить занятие'),
             ),
           ],
-          if (_history) ...[
-            if (_checked && !_correct && !_partial && !showAnswer)
-              const SizedBox(height: 8),
-            _historyActions(compact),
-          ],
+          if (_history) ...[_historyActions(compact)],
         ],
       );
       return LayoutBuilder(
@@ -354,9 +354,7 @@ class _BankTrainerState extends State<BankTrainer> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   left,
-                  if (_offerFinish ||
-                      _history ||
-                      (_checked && !_correct && !_partial && !showAnswer)) ...[
+                  if (_offerFinish || _history) ...[
                     const SizedBox(height: 8),
                     historyActions,
                   ],
@@ -581,6 +579,7 @@ class _BankTrainerState extends State<BankTrainer> {
         entry.value = current.entry;
         inputMessage = current.message;
         showAnswer = current.showAnswer;
+        showHint = current.showHint;
         _powerInput = current.powerInput;
         (view['saved_views'] as Map).forEach(
           (k, v) => savedViews[int.parse(k as String)] = _decodeView(v as Map),
@@ -639,6 +638,7 @@ class _BankTrainerState extends State<BankTrainer> {
           partial: verdict == AnswerVerdict.partial,
         );
         showAnswer = false;
+        showHint = false;
         if (verdict == AnswerVerdict.incorrect && s.needsDetailedExplanation) {
           page = 'explanation';
         }
@@ -662,12 +662,14 @@ class _BankTrainerState extends State<BankTrainer> {
       return;
     }
     _update(() {
+      _saveView();
       s.advance();
       savedViews.remove(-1);
       entry.clear();
       _powerInput = false;
       inputMessage = null;
       showAnswer = false;
+      showHint = false;
     });
   }
 
@@ -730,222 +732,19 @@ class _BankTrainerState extends State<BankTrainer> {
         : correct
         ? Color(c.dark ? 0xff86d6a2 : 0xff287a45)
         : Color(c.dark ? 0xfff0aaa5 : 0xffa74743);
-    return DemoColumns(
-      wide: wide,
-      narrowRightFirst: _checked || _offerFinish,
-      left: Container(
-        key: ValueKey(
-          'bank-task-${_history ? historyIndex! + 1 : s.attempts.length + (_checked ? 0 : 1)}',
-        ),
-        padding: EdgeInsets.only(right: wide ? 42 : 30),
-        decoration: BoxDecoration(
-          border: Border(right: BorderSide(color: c.line)),
-        ),
-        child: Column(
+    return LayoutBuilder(
+      builder: (context, bounds) {
+        final columns = bounds.maxWidth >= 720;
+        final hintContent = Column(
+          key: const ValueKey('bank-hint-content'),
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _text(task.instruction, c, size: compact ? 19 : 23),
-            SizedBox(height: compact ? 8 : 18),
-            DemoMath(task.expression, size: compact ? 36 : 54, height: 1.2),
-            SizedBox(height: compact ? 10 : 24),
-            Text(
-              _usesInput ? 'Собери ответ:' : 'Выбери ответ:',
-              style: screenText(compact ? 15 : 18, c.sub),
-            ),
-            const SizedBox(height: 12),
-            if (!_usesInput) _choiceCards(task, c, compact),
-            if (_usesInput) ...[
-              LayoutBuilder(
-                builder: (context, bounds) {
-                  final textActions = bounds.maxWidth >= 600;
-                  final canEdit = !_checked && entry.text.isNotEmpty;
-                  return TextFieldTapRegion(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: compact ? 56 : 72,
-                            decoration: BoxDecoration(
-                              color: !_checked
-                                  ? c.paper
-                                  : _partial
-                                  ? Color(c.dark ? 0xff493d22 : 0xfffff5d8)
-                                  : correct
-                                  ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
-                                  : Color(c.dark ? 0xff452e36 : 0xfffff0ee),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                width: 2,
-                                color: !_checked
-                                    ? c.blue
-                                    : _partial
-                                    ? Color(c.dark ? 0xffffd36b : 0xffb78219)
-                                    : correct
-                                    ? Color(c.dark ? 0xff68c98b : 0xff28934c)
-                                    : Color(c.dark ? 0xffb97e84 : 0xffcf7772),
-                              ),
-                            ),
-                            child: TextField(
-                              key: const ValueKey('bank-answer'),
-                              controller: entry,
-                              readOnly: _checked,
-                              autofocus: false,
-                              inputFormatters: [
-                                TextInputFormatter.withFunction(
-                                  _formatPowerEntry,
-                                ),
-                              ],
-                              style: TextStyle(
-                                fontFamily: 'Caladea',
-                                fontFamilyFallback: const ['Carlito'],
-                                fontSize: compact ? 28 : 32,
-                                color: c.ink,
-                              ),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: compact ? 22 : 24,
-                                  vertical: compact ? 6 : 14,
-                                ),
-                                suffixIcon: _checked
-                                    ? Icon(
-                                        _partial
-                                            ? Icons.hourglass_bottom
-                                            : correct
-                                            ? Icons.check
-                                            : Icons.close,
-                                        color: feedbackColor,
-                                      )
-                                    : null,
-                              ),
-                              onChanged: (_) =>
-                                  _update(() => inputMessage = null),
-                              onTapOutside: (_) {
-                                if (!_checked &&
-                                    entry.text.isNotEmpty &&
-                                    !_complete) {
-                                  _update(
-                                    () => inputMessage = _unsupportedSymbol
-                                        ? 'Эта запись пока не поддерживается. Ответ не оценён.'
-                                        : 'Ты не закончил запись. Допиши ответ',
-                                  );
-                                }
-                              },
-                              onSubmitted: (_) {
-                                if (!_checked) _check();
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        if (textActions)
-                          TextButton.icon(
-                            key: const ValueKey('bank-delete'),
-                            onPressed: canEdit ? _delete : null,
-                            icon: const Icon(
-                              Icons.backspace_outlined,
-                              size: 20,
-                            ),
-                            label: const Text('Удалить символ'),
-                          )
-                        else
-                          IconButton(
-                            key: const ValueKey('bank-delete'),
-                            onPressed: canEdit ? _delete : null,
-                            tooltip: 'Удалить символ',
-                            icon: const Icon(
-                              Icons.backspace_outlined,
-                              size: 20,
-                            ),
-                          ),
-                        if (textActions)
-                          TextButton(
-                            key: const ValueKey('bank-clear'),
-                            onPressed: canEdit ? _clear : null,
-                            child: const Text('Очистить'),
-                          )
-                        else
-                          IconButton(
-                            key: const ValueKey('bank-clear'),
-                            onPressed: canEdit ? _clear : null,
-                            tooltip: 'Очистить',
-                            icon: const Icon(Icons.clear_all, size: 22),
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              TextFieldTapRegion(
-                child: AnswerKeyboard(
-                  key: ValueKey('keyboard-${task.id}'),
-                  powerInput: _powerInput,
-                  powerEnabled: _canPower,
-                  message: message,
-                  requiredDigits: RegExp(r'[0-9]')
-                      .allMatches(task.expectedAnswer)
-                      .map((m) => m.group(0)!)
-                      .toSet()
-                      .toList(),
-                  letters:
-                      (RegExp(r'[a-zA-Z]')
-                          .allMatches(task.expression)
-                          .map((m) => m.group(0)!)
-                          .toSet()
-                          .toList()
-                        ..sort()),
-                  enabled: !_checked,
-                  compact: compact,
-                  onInsert: _insert,
-                ),
-              ),
-            ],
-            if (_usesInput && _checked && showAnswer) ...[
-              const SizedBox(height: 12),
-              Container(
-                key: const ValueKey('bank-revealed-answer'),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(c.dark ? 0xff233e35 : 0xffeaf6ee),
-                  border: Border.all(
-                    color: Color(c.dark ? 0xff68c98b : 0xff28934c),
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: DemoMath(task.expectedAnswer, size: compact ? 25 : 30),
-              ),
-            ],
-            if (!_usesInput && message != null) ...[
-              const SizedBox(height: 12),
-              _text(message, c, size: 16),
-            ],
-          ],
-        ),
-      ),
-      right: Container(
-        key: const ValueKey('bank-feedback-panel'),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: c.help,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (!_checked) ...[
-              Text('Подсказка', style: screenText(24, c.ink, heading: true)),
-              const SizedBox(height: 16),
+            if (!_checked)
               Text(
-                task.operation == 'expand'
-                    ? 'Множитель перед скобками относится к каждому слагаемому внутри. Следи за числами, буквами и знаками.'
-                    : 'Найди множитель, который есть в каждом слагаемом. Раздели на него каждое слагаемое и проверь результат обратным умножением.',
-                style: screenText(17, c.ink, height: 1.5),
+                'Подсказка доступна после ошибки',
+                style: screenText(17, c.sub, height: 1.5),
               ),
-            ],
             if (_checked)
               Text(
                 _partial
@@ -956,7 +755,16 @@ class _BankTrainerState extends State<BankTrainer> {
                 key: const ValueKey('bank-feedback'),
                 style: screenText(24, feedbackColor, heading: true),
               ),
-            if (_checked && !correct) ...[
+            if (_checked && !correct && !showHint) ...[
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                key: const ValueKey('bank-open-hint'),
+                onPressed: () => _update(() => showHint = true),
+                icon: const Icon(Icons.lightbulb_outline),
+                label: const Text('Открыть подсказку'),
+              ),
+            ],
+            if (_checked && !correct && showHint) ...[
               const SizedBox(height: 16),
               Text(
                 (_partial
@@ -988,8 +796,246 @@ class _BankTrainerState extends State<BankTrainer> {
               const SizedBox(height: 16),
             ],
           ],
-        ),
-      ),
+        );
+        return DemoColumns(
+          wide: wide,
+          narrowRightFirst: _checked || _offerFinish,
+          left: Container(
+            key: ValueKey(
+              'bank-task-${_history ? historyIndex! + 1 : s.attempts.length + (_checked ? 0 : 1)}',
+            ),
+            padding: EdgeInsets.only(right: wide ? 42 : 30),
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(color: c.line)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _text(task.instruction, c, size: compact ? 19 : 23),
+                SizedBox(height: compact ? 8 : 18),
+                DemoMath(task.expression, size: compact ? 36 : 54, height: 1.2),
+                SizedBox(height: compact ? 10 : 24),
+                Text(
+                  _usesInput ? 'Собери ответ:' : 'Выбери ответ:',
+                  style: screenText(compact ? 15 : 18, c.sub),
+                ),
+                const SizedBox(height: 12),
+                if (!_usesInput) _choiceCards(task, c, compact),
+                if (_usesInput) ...[
+                  LayoutBuilder(
+                    builder: (context, bounds) {
+                      final textActions = bounds.maxWidth >= 600;
+                      final canEdit = !_checked && entry.text.isNotEmpty;
+                      return TextFieldTapRegion(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: compact ? 56 : 72,
+                                decoration: BoxDecoration(
+                                  color: !_checked
+                                      ? c.paper
+                                      : _partial
+                                      ? Color(c.dark ? 0xff493d22 : 0xfffff5d8)
+                                      : correct
+                                      ? Color(c.dark ? 0xff233e35 : 0xffeaf6ee)
+                                      : Color(c.dark ? 0xff452e36 : 0xfffff0ee),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    width: 2,
+                                    color: !_checked
+                                        ? c.blue
+                                        : _partial
+                                        ? Color(
+                                            c.dark ? 0xffffd36b : 0xffb78219,
+                                          )
+                                        : correct
+                                        ? Color(
+                                            c.dark ? 0xff68c98b : 0xff28934c,
+                                          )
+                                        : Color(
+                                            c.dark ? 0xffb97e84 : 0xffcf7772,
+                                          ),
+                                  ),
+                                ),
+                                child: TextField(
+                                  key: const ValueKey('bank-answer'),
+                                  controller: entry,
+                                  readOnly: _checked,
+                                  autofocus: false,
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction(
+                                      _formatPowerEntry,
+                                    ),
+                                  ],
+                                  style: TextStyle(
+                                    fontFamily: 'Caladea',
+                                    fontFamilyFallback: const ['Carlito'],
+                                    fontSize: compact ? 28 : 32,
+                                    color: c.ink,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: compact ? 22 : 24,
+                                      vertical: compact ? 6 : 14,
+                                    ),
+                                    suffixIcon: _checked
+                                        ? Icon(
+                                            _partial
+                                                ? Icons.hourglass_bottom
+                                                : correct
+                                                ? Icons.check
+                                                : Icons.close,
+                                            color: feedbackColor,
+                                          )
+                                        : null,
+                                  ),
+                                  onChanged: (_) =>
+                                      _update(() => inputMessage = null),
+                                  onTapOutside: (_) {
+                                    if (!_checked &&
+                                        entry.text.isNotEmpty &&
+                                        !_complete) {
+                                      _update(
+                                        () => inputMessage = _unsupportedSymbol
+                                            ? 'Эта запись пока не поддерживается. Ответ не оценён.'
+                                            : 'Ты не закончил запись. Допиши ответ',
+                                      );
+                                    }
+                                  },
+                                  onSubmitted: (_) {
+                                    if (!_checked) _check();
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            if (textActions)
+                              TextButton.icon(
+                                key: const ValueKey('bank-delete'),
+                                onPressed: canEdit ? _delete : null,
+                                icon: const Icon(
+                                  Icons.backspace_outlined,
+                                  size: 20,
+                                ),
+                                label: const Text('Удалить символ'),
+                              )
+                            else
+                              IconButton(
+                                key: const ValueKey('bank-delete'),
+                                onPressed: canEdit ? _delete : null,
+                                tooltip: 'Удалить символ',
+                                icon: const Icon(
+                                  Icons.backspace_outlined,
+                                  size: 20,
+                                ),
+                              ),
+                            if (textActions)
+                              TextButton(
+                                key: const ValueKey('bank-clear'),
+                                onPressed: canEdit ? _clear : null,
+                                child: const Text('Очистить'),
+                              )
+                            else
+                              IconButton(
+                                key: const ValueKey('bank-clear'),
+                                onPressed: canEdit ? _clear : null,
+                                tooltip: 'Очистить',
+                                icon: const Icon(Icons.clear_all, size: 22),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextFieldTapRegion(
+                    child: AnswerKeyboard(
+                      key: ValueKey('keyboard-${task.id}'),
+                      powerInput: _powerInput,
+                      powerEnabled: _canPower,
+                      message: message,
+                      requiredDigits: RegExp(r'[0-9]')
+                          .allMatches(task.expectedAnswer)
+                          .map((m) => m.group(0)!)
+                          .toSet()
+                          .toList(),
+                      letters:
+                          (RegExp(r'[a-zA-Z]')
+                              .allMatches(task.expression)
+                              .map((m) => m.group(0)!)
+                              .toSet()
+                              .toList()
+                            ..sort()),
+                      enabled: !_checked,
+                      compact: compact,
+                      onInsert: _insert,
+                    ),
+                  ),
+                ],
+                if (_usesInput && _checked && showAnswer) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    key: const ValueKey('bank-revealed-answer'),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color(c.dark ? 0xff233e35 : 0xffeaf6ee),
+                      border: Border.all(
+                        color: Color(c.dark ? 0xff68c98b : 0xff28934c),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: DemoMath(
+                      task.expectedAnswer,
+                      size: compact ? 25 : 30,
+                    ),
+                  ),
+                ],
+                if (!_usesInput && message != null) ...[
+                  const SizedBox(height: 12),
+                  _text(message, c, size: 16),
+                ],
+              ],
+            ),
+          ),
+          right: SizedBox(
+            height: columns
+                ? bounds.minHeight.clamp(200.0, double.infinity)
+                : null,
+            child: Container(
+              key: const ValueKey('bank-feedback-panel'),
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: c.help,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (columns)
+                    Expanded(child: SingleChildScrollView(child: hintContent))
+                  else
+                    hintContent,
+                  if (_checked && !correct && !_partial && !showAnswer) ...[
+                    const SizedBox(height: 16),
+                    OutlinedButton.icon(
+                      key: const ValueKey('bank-reveal-answer'),
+                      onPressed: () => _update(() => showAnswer = true),
+                      icon: const Icon(Icons.check_circle_outline),
+                      label: const Text('Узнать, как правильно'),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -1151,6 +1197,7 @@ class _BankTrainerState extends State<BankTrainer> {
         showSuccess: s != null,
         successPercent: s?.successPercent ?? 0,
         visibleScrollbar: true,
+        fillBody: page == 'practice',
         scrollKey: page == 'practice'
             ? '${historyIndex ?? -1}-${_task.id}-$_checked'
             : page,

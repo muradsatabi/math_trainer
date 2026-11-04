@@ -1,3 +1,5 @@
+import '../bank/factor_answer_checker.dart';
+import 'answer_choices.dart';
 import '../bank/task_bank.dart';
 
 class PracticeSettings {
@@ -49,11 +51,15 @@ class TaskAttempt {
 /// streak on that block; another error resets the required streak.
 /// No new mathematical exercises are generated; source tasks rotate on reuse.
 class PracticeSession {
-  PracticeSession({required this.bank, required this.settings}) {
+  PracticeSession({required TaskBank bank, required this.settings})
+    // Preserve the public `bank:` constructor parameter while exposing a getter.
+    // ignore: prefer_initializing_formals
+    : _bank = bank {
     _nextTask();
   }
 
-  final TaskBank bank;
+  TaskBank _bank;
+  TaskBank get bank => _bank;
   final PracticeSettings settings;
   final List<TaskAttempt> _attempts = [];
   final List<int> _extraBlocks = [];
@@ -316,5 +322,47 @@ class PracticeSession {
     final cursor = _taskCursors[_blockIndex] ?? 0;
     _task = tasks[cursor % tasks.length];
     _taskCursors[_blockIndex] = cursor + 1;
+    if (repeatPartial &&
+        _attempts.last.task.operation == 'factor' &&
+        _attempts.last.task.methodicalStatus == 'generated') {
+      // Copy a suitable stock example into this session with its own ID. Never
+      // replace a task whose original alternatives may already be in history.
+      final stock = tasks
+          .where(
+            (t) =>
+                t.methodicalStatus == 'generated' &&
+                partialFactorExample(t) != null,
+          )
+          .toList();
+      if (stock.isNotEmpty) {
+        final source = stock.firstWhere(
+          (t) => t.expression != _attempts.last.task.expression,
+          orElse: () => stock[cursor % stock.length],
+        );
+        var id = '${source.id}/partial-followup-${_attempts.length}';
+        while (tasks.any((t) => t.id == id)) {
+          id = '$id-next';
+        }
+        _task = withPartialFollowupChoice(source, id);
+        final block = currentBlock;
+        _bank = TaskBank(
+          topicId: bank.topicId,
+          title: bank.title,
+          blocks: [
+            for (var i = 0; i < bank.blocks.length; i++)
+              if (i == _blockIndex)
+                BankBlock(
+                  id: block.id,
+                  title: block.title,
+                  skill: block.skill,
+                  sourceSectionId: block.sourceSectionId,
+                  tasks: [...tasks, _task],
+                )
+              else
+                bank.blocks[i],
+          ],
+        );
+      }
+    }
   }
 }

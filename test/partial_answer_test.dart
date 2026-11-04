@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:flutter/rendering.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,15 +52,15 @@ PracticeSession practice({bool input = false}) => PracticeSession(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
-    for (final font in ['Carlito', 'Caladea']) {
-      await (FontLoader(font)..addFont(
-            Future.value(
+    for (final font in ['Carlito', 'Caladea', 'MaterialIcons']) {
+      final data = font == 'MaterialIcons'
+          ? rootBundle.load('fonts/MaterialIcons-Regular.otf')
+          : Future.value(
               ByteData.sublistView(
                 File('assets/fonts/$font-Regular.ttf').readAsBytesSync(),
               ),
-            ),
-          ))
-          .load();
+            );
+      await (FontLoader(font)..addFont(data)).load();
     }
   });
   test('partial form is equivalent but distinct from error, syntax and completed factor', () {
@@ -91,6 +94,57 @@ void main() {
     expect(checkFactorAnswer(literal, '6(2a²+3ab)'), AnswerVerdict.partial);
     expect(checkFactorAnswer(literal, 'a(12a+18b)'), AnswerVerdict.partial);
     expect(checkFactorAnswer(literal, '(2a+3b)*6a'), AnswerVerdict.correct);
+  });
+  test('10k + 10d has comparable complete/partial pairs', () {
+    final t = withPartialFollowupChoice(
+      BankTask(
+        id: 'pair',
+        revision: 1,
+        instruction: 'Вынеси полностью',
+        expression: '10k+10d',
+        expectedAnswer: '10(k+d)',
+        acceptedExamples: const [],
+        methodicalStatus: 'generated',
+        templateId: 'pair',
+        requireCompleteFactor: true,
+      ),
+      'pair',
+    );
+    final choices = t.demoChoices!;
+    expect(choices.map((c) => c.answer.replaceAll(' ', '')).toSet(), {
+      '10(k+d)',
+      '10(k+10d)',
+      '2(5k+5d)',
+      '2(5k+10d)',
+    });
+    expect(choices, hasLength(4));
+    expect(
+      choices.where(
+        (c) => checkFactorAnswer(t, c.answer) == AnswerVerdict.correct,
+      ),
+      hasLength(1),
+    );
+    expect(choices.where((c) => c.isPartial), hasLength(1));
+    final errors = choices.where((c) => c.errorId != null).toList();
+    expect(errors, hasLength(2));
+    expect(
+      errors.map((c) => c.answer).where((a) => a.startsWith('2(')),
+      hasLength(1),
+    );
+    expect(
+      errors.map((c) => c.answer).where((a) => a.startsWith('10(')),
+      hasLength(1),
+    );
+    for (final c in choices) {
+      expect(
+        checkFactorAnswer(t, c.answer),
+        c.isPartial
+            ? AnswerVerdict.partial
+            : c.errorId == null
+            ? AnswerVerdict.correct
+            : AnswerVerdict.incorrect,
+      );
+    }
   });
   test('neutral history preserves denominator, error streak and reinforcement on reload', () {
     var s = practice();
@@ -127,6 +181,10 @@ void main() {
     s.advance();
     expect(s.currentTask.id, isNot(before));
     expect(s.currentBlock.id, 'probe');
+    expect(s.currentTask.demoChoices!.any((c) => c.isPartial), isTrue);
+    expect(s.currentTask.id, contains('/partial-followup-'));
+    s = PracticeSession.fromJson(jsonDecode(jsonEncode(s.toJson())));
+    expect(s.currentTask.demoChoices!.any((c) => c.isPartial), isTrue);
     for (final t in s.bank.blocks.single.tasks) {
       for (final c in t.demoChoices!.where((c) => c.isPartial)) {
         expect(c.errorId, isNull);
@@ -162,11 +220,15 @@ void main() {
     (conflicting['attempts'] as List).last['correct'] = true;
     expect(() => PracticeSession.fromJson(conflicting), throwsFormatException);
   });
-  for (final size in [const Size(1366, 768), const Size(390, 844)]) {
+  for (final size in [
+    const Size(1920, 1080),
+    const Size(1366, 768),
+    const Size(390, 844),
+  ]) {
     for (final theme in [ThemeMode.light, ThemeMode.dark]) {
       for (final input in [false, true]) {
         testWidgets(
-          'yellow result, footer reveal and neutral history $size $theme $input',
+          'yellow result, panel help and neutral history $size $theme $input',
           (tester) async {
             tester.view.physicalSize = size;
             tester.view.devicePixelRatio = 1;
@@ -184,15 +246,36 @@ void main() {
               (c) => c.isPartial,
             );
             Map<String, dynamic>? view;
+            final captureKey = GlobalKey();
+            Future<void> capture(String stage) async {
+              if (input) return;
+              final boundary =
+                  captureKey.currentContext!.findRenderObject()
+                      as RenderRepaintBoundary;
+              await tester.runAsync(() async {
+                final shot = await boundary.toImage(pixelRatio: 1);
+                final bytes = await shot.toByteData(
+                  format: ui.ImageByteFormat.png,
+                );
+                File(
+                  '.dart_tool/help-${size.width.toInt()}-${theme.name}-$stage.png',
+                ).writeAsBytesSync(bytes!.buffer.asUint8List());
+                shot.dispose();
+              });
+            }
+
             Future<void> mount() async {
               await tester.pumpWidget(const SizedBox.shrink());
               await tester.pumpWidget(
-                MathTrainerApp(
-                  themeMode: theme,
-                  home: BankTrainer(
-                    initialSession: s,
-                    initialView: view,
-                    onSave: (value) => view = value,
+                RepaintBoundary(
+                  key: captureKey,
+                  child: MathTrainerApp(
+                    themeMode: theme,
+                    home: BankTrainer(
+                      initialSession: s,
+                      initialView: view,
+                      onSave: (value) => view = value,
+                    ),
                   ),
                 ),
               );
@@ -200,6 +283,12 @@ void main() {
             }
 
             await mount();
+            expect(find.byKey(const ValueKey('bank-error-hint')), findsNothing);
+            expect(find.byKey(const ValueKey('bank-open-hint')), findsNothing);
+            expect(
+              find.byKey(const ValueKey('bank-reveal-answer')),
+              findsNothing,
+            );
             if (input) {
               await tester.enterText(
                 find.byKey(const ValueKey('bank-answer')),
@@ -250,7 +339,26 @@ void main() {
             await tester.pump();
             await tester.tap(find.byKey(const ValueKey('bank-primary')));
             await tester.pumpAndSettle();
+            final hint = find.byKey(const ValueKey('bank-error-hint'));
+            final openHint = find.byKey(const ValueKey('bank-open-hint'));
+            expect(hint, findsNothing);
+            expect(openHint, findsOneWidget);
+            expect(view!['current']['show_answer'], isFalse);
+            await capture('hidden');
+            if (!input) {
+              await tester.ensureVisible(openHint);
+              await tester.tap(openHint);
+              await tester.pumpAndSettle();
+              expect(hint, findsOneWidget);
+              expect(view!['current']['show_answer'], isFalse);
+              s = PracticeSession.fromJson(jsonDecode(jsonEncode(s.toJson())));
+              await mount();
+              expect(hint, findsOneWidget);
+              await capture('hint');
+            }
             final reveal = find.byKey(const ValueKey('bank-reveal-answer'));
+            await tester.ensureVisible(reveal);
+            await tester.pumpAndSettle();
             expect(
               (Offset.zero & size).contains(tester.getRect(reveal).center),
               isTrue,
@@ -260,13 +368,31 @@ void main() {
                 of: find.byKey(const ValueKey('bank-feedback-panel')),
                 matching: reveal,
               ),
-              findsNothing,
+              findsOneWidget,
             );
+            if (size.width >= 720) {
+              final panel = tester.getRect(
+                find.byKey(const ValueKey('bank-feedback-panel')),
+              );
+              expect(
+                tester.getRect(reveal).bottom,
+                closeTo(panel.bottom - 24, 1),
+              );
+              expect(
+                tester.getRect(reveal).width,
+                closeTo(panel.width - 48, 1),
+              );
+            }
             final graded = s.gradedAttempts.length;
             await tester.tap(reveal);
             await tester.pumpAndSettle();
             expect(s.gradedAttempts.length, graded);
             expect(view!['current']['show_answer'], isTrue);
+            await capture('answer');
+            if (input) {
+              expect(hint, findsNothing);
+              expect(openHint, findsOneWidget);
+            }
             if (input) {
               expect(
                 find.byKey(const ValueKey('bank-revealed-answer')),
@@ -292,6 +418,19 @@ void main() {
                 findsOneWidget,
               );
             }
+            await tester.tap(find.byKey(const ValueKey('bank-primary')));
+            await tester.pumpAndSettle();
+            expect(hint, findsNothing);
+            expect(openHint, findsNothing);
+            final previous = find.widgetWithText(
+              OutlinedButton,
+              'Предыдущее задание',
+            );
+            await tester.ensureVisible(previous);
+            await tester.tap(previous);
+            await tester.pumpAndSettle();
+            expect(view!['current']['show_answer'], isTrue);
+            expect(hint, input ? findsNothing : findsOneWidget);
             expect(tester.takeException(), isNull);
           },
         );

@@ -152,11 +152,7 @@ BankTask withDemoChoices(BankTask task) {
   final partial = partialFactorExample(task);
   if (partial != null &&
       task.id.codeUnits.fold(0, (sum, c) => sum + c) % 3 == 0) {
-    choices[choices.length - 1] = DemoAnswerChoice(
-      partial,
-      isPartial: true,
-      hint: partialAnswerHint(task, partial),
-    );
+    return withPartialFollowupChoice(task, task.id);
   }
   choices.insert(position, DemoAnswerChoice(task.expectedAnswer));
   return BankTask(
@@ -258,4 +254,71 @@ BankTask _expansionChoices(BankTask task) {
     operation: task.operation,
     demoChoices: choices,
   );
+}
+
+/// Two comparable pairs: full/partial factor, each with a valid and wrong form.
+/// A follow-up always uses this set; ordinary tasks use it selectively.
+BankTask withPartialFollowupChoice(BankTask task, String id) {
+  final rawPartial = partialFactorExample(task);
+  if (rawPartial == null) throw StateError('No supported partial factor');
+  final partialMatch = RegExp(r'^(.+?)\((.*)\)$').firstMatch(rawPartial)!;
+  final remaining = _sumTerms(partialMatch[2]!);
+  final orderedTerms = <String>[];
+  for (final term in _sumTerms(task.expression)) {
+    final index = remaining.indexWhere(
+      (candidate) =>
+          equivalentExpressions('${partialMatch[1]}($candidate)', term) == true,
+    );
+    if (index < 0) throw StateError('Cannot align partial terms: ${task.id}');
+    orderedTerms.add(remaining.removeAt(index));
+  }
+  final partial = '${partialMatch[1]}(${_joinTerms(orderedTerms)})';
+  DemoAnswerChoice missedLastTerm(String expression, String errorId) {
+    final match = RegExp(r'^(.+?)\((.*)\)$').firstMatch(expression)!;
+    final terms = _sumTerms(match[2]!);
+    final original = _sumTerms(task.expression).last;
+    final index = terms.lastIndexWhere(
+      (term) => equivalentExpressions('${match[1]}($term)', original) == true,
+    );
+    if (index < 0) throw StateError('Cannot align error terms: ${task.id}');
+    terms[index] = original;
+    return DemoAnswerChoice(
+      '${match[1]}(${_joinTerms(terms)})',
+      errorId: errorId,
+      hint:
+          'Проверь последнее слагаемое: оно осталось без деления на ${match[1]}. '
+          'Раздели на вынесенный множитель каждое слагаемое и проверь обратным умножением.',
+    );
+  }
+
+  final fullWrong = missedLastTerm(
+    task.expectedAnswer,
+    'last_term_not_divided',
+  );
+  final partialWrong = missedLastTerm(partial, 'partial_last_term_not_divided');
+  for (final wrong in [fullWrong, partialWrong]) {
+    if (checkFactorAnswer(task, wrong.answer) != AnswerVerdict.incorrect) {
+      throw StateError('Unsupported competing error: ${task.id}');
+    }
+  }
+  if (equivalentExpressions(fullWrong.answer, partialWrong.answer) != false) {
+    throw StateError('Competing errors must differ: ${task.id}');
+  }
+  final choices = [
+    DemoAnswerChoice(
+      partial,
+      isPartial: true,
+      hint: partialAnswerHint(task, partial),
+    ),
+    partialWrong,
+    DemoAnswerChoice(task.expectedAnswer),
+    fullWrong,
+  ];
+  final offset = id.codeUnits.fold(0, (sum, c) => sum + c) % choices.length;
+  final ordered = [...choices.skip(offset), ...choices.take(offset)];
+  return BankTask.fromJson({
+    ...task.toJson(),
+    'task_id': id,
+    'demo_choices_v1': ordered.map((c) => c.toJson()).toList(),
+  });
 }

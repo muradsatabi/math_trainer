@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:math_trainer/main.dart';
 import 'package:math_trainer/bank_trainer.dart';
+import 'package:math_trainer/generator/pdf_generator_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -83,7 +84,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(powers);
         await tester.pumpAndSettle();
-        expect(tester.widget<CheckboxListTile>(powers).value, false);
+        expect(tester.widget<FilterChip>(powers).selected, false);
         await tester.ensureVisible(
           find.byKey(const ValueKey('generator-level-1')),
         );
@@ -97,6 +98,22 @@ void main() {
         await tester.tap(find.text('Тест — четыре ответа').last);
         await tester.pumpAndSettle();
         await capture('test-settings');
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpWidget(
+          RepaintBoundary(
+            key: key,
+            child: MathTrainerApp(
+              themeMode: mode,
+              home: PdfGeneratorScreen(
+                family: 'numeric',
+                catalogText: File('bank/templates/common_factor.json')
+                    .readAsStringSync(),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await capture('numeric-compact-filters');
       });
     }
   }

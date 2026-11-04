@@ -127,7 +127,14 @@ class GeneratedSession {
       for (var i = 0; i < tasks.length; i++) {
         final task = BankTask.fromJson(Map<String, dynamic>.from(tasks[i]));
         if (!tried.contains(task.id)) {
-          tasks[i] = withDemoChoices(withCompleteFactorRule(task)).toJson();
+          var updated = withDemoChoices(withCompleteFactorRule(task));
+          if (updated.methodicalStatus == 'generated' &&
+              (updated.demoChoices ?? const <DemoAnswerChoice>[]).any(
+                (c) => c.isPartial,
+              )) {
+            updated = withPartialFollowupChoice(updated, updated.id);
+          }
+          tasks[i] = updated.toJson();
         }
       }
     }

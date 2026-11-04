@@ -855,6 +855,7 @@ class DemoPage extends StatelessWidget {
     this.topic = fullTopic,
     this.showSuccess = false,
     this.visibleScrollbar = false,
+    this.fillBody = false,
     this.footerBuilder,
     this.aboveFooterBuilder,
     this.successPercent = 0,
@@ -867,6 +868,7 @@ class DemoPage extends StatelessWidget {
   final bool showLabel;
   final bool showSuccess;
   final bool visibleScrollbar;
+  final bool fillBody;
   final DemoBodyBuilder? footerBuilder;
   final DemoBodyBuilder? aboveFooterBuilder;
   final double successPercent;
@@ -1141,19 +1143,29 @@ class DemoPage extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: scrollable(
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        side,
-                        low
-                            ? 12
-                            : compact
-                            ? 16
-                            : 24,
-                        side,
-                        vertical,
+                  child: LayoutBuilder(
+                    builder: (context, viewport) => scrollable(
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight:
+                              fillBody && viewport.maxWidth - side * 2 >= 720
+                              ? viewport.maxHeight
+                              : 0,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            side,
+                            low
+                                ? 12
+                                : compact
+                                ? 16
+                                : 24,
+                            side,
+                            vertical,
+                          ),
+                          child: bodyBuilder(context, wide, compact),
+                        ),
                       ),
-                      child: bodyBuilder(context, wide, compact),
                     ),
                   ),
                 ),
