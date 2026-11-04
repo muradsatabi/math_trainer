@@ -790,72 +790,130 @@ class _PdfGeneratorScreenState extends State<PdfGeneratorScreen> {
               ),
           ],
         ),
-        const SizedBox(height: 6),
-        const Text(
-          '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. Это состав задания, а не оценка трудности.',
-        ),
-        if (levels.any((v) => v > 2)) ...[
-          const SizedBox(height: 8),
+      ],
+    );
+    final colors = Theme.of(context).colorScheme;
+    final explanation = Container(
+      key: const ValueKey('generator-level-explanation'),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerHighest.withValues(alpha: .35),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           const Text(
-            'Сочетания автоматически составлены из рабочих направлений и доступны для пробы; отдельного методического согласования они ещё не проходили.',
+            '1 — основа; 2 — одно усложнение; 3–6 — сочетания от двух до пяти. Это состав задания, а не оценка трудности.',
+          ),
+          if (levels.any((v) => v > 2)) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Сочетания автоматически составлены из рабочих направлений и доступны для пробы; отдельного методического согласования они ещё не проходили.',
+              style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
+            ),
+          ],
+        ],
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 700) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  levelsPanel,
+                  const SizedBox(height: 12),
+                  explanation,
+                ],
+              );
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 5, child: levelsPanel),
+                const SizedBox(width: 24),
+                Expanded(flex: 6, child: explanation),
+              ],
+            );
+          },
+        ),
+        if (groups.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          Text('Разрешённые усложнения', style: style),
+          const SizedBox(height: 6),
+          const Text(
+            'Нажмите на усложнение, чтобы исключить или снова разрешить его во всех шаблонах и сочетаниях.',
+          ),
+          const SizedBox(height: 10),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              const spacing = 8.0;
+              final columns = constraints.maxWidth >= 660
+                  ? 3
+                  : constraints.maxWidth >= 340
+                  ? 2
+                  : 1;
+              final chipWidth =
+                  (constraints.maxWidth - spacing * (columns - 1)) / columns;
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: [
+                  for (final group in groups)
+                    SizedBox(
+                      width: chipWidth,
+                      height: 52,
+                      child: FilterChip(
+                        key: ValueKey('generator-feature-$group'),
+                        showCheckmark: false,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 8,
+                        ),
+                        label: SizedBox(
+                          width: chipWidth - 40,
+                          child: Text(
+                            _featureLabels[group] ??
+                                options
+                                    .firstWhere(
+                                      (t) => t.features.any(
+                                        (f) => _featureGroup(f) == group,
+                                      ),
+                                    )
+                                    .title,
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                        selected: !excludedFeatures.contains(group),
+                        onSelected: busy
+                            ? null
+                            : (allowed) => setState(() {
+                                if (allowed) {
+                                  excludedFeatures.remove(group);
+                                } else {
+                                  excludedFeatures.add(group);
+                                }
+                                success = null;
+                              }),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         ],
       ],
-    );
-    if (groups.isEmpty) return levelsPanel;
-    final featuresPanel = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Разрешённые усложнения', style: style),
-        const SizedBox(height: 6),
-        const Text(
-          'Снимите галочку, чтобы исключить признак во всех шаблонах и сочетаниях.',
-        ),
-        for (final group in groups)
-          CheckboxListTile(
-            key: ValueKey('generator-feature-$group'),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Text(
-              _featureLabels[group] ??
-                  options
-                      .firstWhere(
-                        (t) => t.features.any((f) => _featureGroup(f) == group),
-                      )
-                      .title,
-            ),
-            value: !excludedFeatures.contains(group),
-            onChanged: busy
-                ? null
-                : (allowed) => setState(() {
-                    if (allowed!) {
-                      excludedFeatures.remove(group);
-                    } else {
-                      excludedFeatures.add(group);
-                    }
-                    success = null;
-                  }),
-          ),
-      ],
-    );
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 700) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [levelsPanel, const SizedBox(height: 20), featuresPanel],
-          );
-        }
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: levelsPanel),
-            const SizedBox(width: 32),
-            Expanded(child: featuresPanel),
-          ],
-        );
-      },
     );
   }
 

@@ -109,12 +109,28 @@ void main() {
 
         final feature = find.byKey(const ValueKey('generator-feature-powers'));
         final level = find.byKey(const ValueKey('generator-level-1'));
-        expect(tester.widget<CheckboxListTile>(feature).value, true);
+        expect(tester.widget<FilterChip>(feature).selected, true);
+        expect(
+          tester.getRect(feature).top,
+          greaterThan(tester.getRect(level).bottom),
+        );
+        final explanation = find.byKey(
+          const ValueKey('generator-level-explanation'),
+        );
         if (size.width > 700) {
           expect(
-            tester.getRect(feature).left,
+            tester.getRect(explanation).left,
             greaterThan(tester.getRect(level).right),
           );
+          final first = tester.getRect(
+            find.byKey(const ValueKey('generator-feature-bracket')),
+          );
+          final second = tester.getRect(
+            find.byKey(const ValueKey('generator-feature-position')),
+          );
+          expect(first.top, tester.getRect(feature).top);
+          expect(second.top, first.top);
+          expect(second.left, greaterThan(first.right));
         } else {
           expect(
             tester.getRect(feature).top,
@@ -174,14 +190,14 @@ void main() {
         }
         // Turning every feature off leaves the base template, even on levels 2–3.
         final remaining = tester
-            .widgetList<CheckboxListTile>(find.byType(CheckboxListTile))
+            .widgetList<FilterChip>(find.byType(FilterChip))
             .where(
               (c) =>
                   c.key is ValueKey<String> &&
                   (c.key! as ValueKey<String>).value.startsWith(
                     'generator-feature-',
                   ) &&
-                  c.value == true,
+                  c.selected,
             )
             .map((c) => (c.key! as ValueKey<String>).value)
             .toList();

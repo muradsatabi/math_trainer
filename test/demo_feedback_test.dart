@@ -161,6 +161,15 @@ void main() {
             await tester.pump();
             await tester.tap(find.byKey(const ValueKey('bank-primary')));
             await tester.pumpAndSettle();
+            expect(find.text(wrong.hint!), findsNothing);
+            expect(
+              find.byKey(const ValueKey('bank-revealed-answer')),
+              findsNothing,
+            );
+            await tester.tap(find.byKey(const ValueKey('bank-open-hint')));
+            await tester.pumpAndSettle();
+            expect(saved!['current']['show_hint'], isTrue);
+            expect(saved!['current']['show_answer'], isFalse);
             expect(find.text(wrong.hint!), findsOneWidget);
             expect(
               find.text('Подсказка · демонстрационный вариант'),
