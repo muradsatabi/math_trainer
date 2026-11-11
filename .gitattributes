@@ -1,0 +1,5 @@
+# Keep generated documents and screenshots byte-for-byte.
+*.pdf binary
+*.pptx binary
+*.xlsx binary
+*.png binary

@@ -1,0 +1,764 @@
+[
+  {
+    "slide": 1,
+    "key": "nav_0",
+    "to": "overview",
+    "target": 2
+  },
+  {
+    "slide": 3,
+    "key": "nav_1",
+    "to": "prepare",
+    "target": 9
+  },
+  {
+    "slide": 3,
+    "key": "nav_2",
+    "to": "variants",
+    "target": 10
+  },
+  {
+    "slide": 3,
+    "key": "nav_3",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 3,
+    "key": "nav_4",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 3,
+    "key": "nav_5",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 4,
+    "key": "nav_6",
+    "to": "value",
+    "target": 5
+  },
+  {
+    "slide": 4,
+    "key": "nav_7",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 4,
+    "key": "nav_8",
+    "to": "method",
+    "target": 7
+  },
+  {
+    "slide": 4,
+    "key": "nav_9",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 4,
+    "key": "nav_10",
+    "to": "prepare",
+    "target": 9
+  },
+  {
+    "slide": 4,
+    "key": "nav_11",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 4,
+    "key": "nav_12",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 4,
+    "key": "nav_13",
+    "to": "team",
+    "target": 20
+  },
+  {
+    "slide": 4,
+    "key": "nav_14",
+    "to": "overview",
+    "target": 2
+  },
+  {
+    "slide": 4,
+    "key": "nav_15",
+    "to": "client",
+    "target": 22
+  },
+  {
+    "slide": 1,
+    "key": "nav_16",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 1,
+    "key": "nav_17",
+    "to": "overview",
+    "target": 2
+  },
+  {
+    "slide": 1,
+    "key": "nav_18",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 2,
+    "key": "nav_19",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 2,
+    "key": "nav_20",
+    "to": "cover",
+    "target": 1
+  },
+  {
+    "slide": 2,
+    "key": "nav_21",
+    "to": "cycle",
+    "target": 3
+  },
+  {
+    "slide": 2,
+    "key": "nav_22",
+    "to": "value",
+    "target": 5
+  },
+  {
+    "slide": 2,
+    "key": "nav_23",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 3,
+    "key": "nav_24",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 3,
+    "key": "nav_25",
+    "to": "overview",
+    "target": 2
+  },
+  {
+    "slide": 3,
+    "key": "nav_26",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 3,
+    "key": "nav_27",
+    "to": "example",
+    "target": 8
+  },
+  {
+    "slide": 3,
+    "key": "nav_28",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 4,
+    "key": "nav_29",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 4,
+    "key": "nav_30",
+    "to": "cycle",
+    "target": 3
+  },
+  {
+    "slide": 4,
+    "key": "nav_31",
+    "to": "value",
+    "target": 5
+  },
+  {
+    "slide": 4,
+    "key": "nav_32",
+    "to": "cycle",
+    "target": 3
+  },
+  {
+    "slide": 5,
+    "key": "nav_33",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 5,
+    "key": "nav_34",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 5,
+    "key": "nav_35",
+    "to": "usp",
+    "target": 6
+  },
+  {
+    "slide": 5,
+    "key": "nav_36",
+    "to": "usp",
+    "target": 6
+  },
+  {
+    "slide": 5,
+    "key": "nav_37",
+    "to": "absence",
+    "target": 14
+  },
+  {
+    "slide": 6,
+    "key": "nav_38",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 6,
+    "key": "nav_39",
+    "to": "value",
+    "target": 5
+  },
+  {
+    "slide": 6,
+    "key": "nav_40",
+    "to": "method",
+    "target": 7
+  },
+  {
+    "slide": 6,
+    "key": "nav_41",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 6,
+    "key": "nav_42",
+    "to": "client",
+    "target": 22
+  },
+  {
+    "slide": 7,
+    "key": "nav_43",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 7,
+    "key": "nav_44",
+    "to": "usp",
+    "target": 6
+  },
+  {
+    "slide": 7,
+    "key": "nav_45",
+    "to": "example",
+    "target": 8
+  },
+  {
+    "slide": 7,
+    "key": "nav_46",
+    "to": "example",
+    "target": 8
+  },
+  {
+    "slide": 7,
+    "key": "nav_47",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 8,
+    "key": "nav_48",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 8,
+    "key": "nav_49",
+    "to": "method",
+    "target": 7
+  },
+  {
+    "slide": 8,
+    "key": "nav_50",
+    "to": "prepare",
+    "target": 9
+  },
+  {
+    "slide": 8,
+    "key": "nav_51",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 8,
+    "key": "nav_52",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 9,
+    "key": "nav_53",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 9,
+    "key": "nav_54",
+    "to": "example",
+    "target": 8
+  },
+  {
+    "slide": 9,
+    "key": "nav_55",
+    "to": "variants",
+    "target": 10
+  },
+  {
+    "slide": 9,
+    "key": "nav_56",
+    "to": "variants",
+    "target": 10
+  },
+  {
+    "slide": 9,
+    "key": "nav_57",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 10,
+    "key": "nav_58",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 10,
+    "key": "nav_59",
+    "to": "prepare",
+    "target": 9
+  },
+  {
+    "slide": 10,
+    "key": "nav_60",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 10,
+    "key": "nav_61",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 10,
+    "key": "nav_62",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 11,
+    "key": "nav_63",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 11,
+    "key": "nav_64",
+    "to": "variants",
+    "target": 10
+  },
+  {
+    "slide": 11,
+    "key": "nav_65",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 11,
+    "key": "nav_66",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 11,
+    "key": "nav_67",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 12,
+    "key": "nav_68",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 12,
+    "key": "nav_69",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 12,
+    "key": "nav_70",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 12,
+    "key": "nav_71",
+    "to": "example",
+    "target": 8
+  },
+  {
+    "slide": 12,
+    "key": "nav_72",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 13,
+    "key": "nav_73",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 13,
+    "key": "nav_74",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 13,
+    "key": "nav_75",
+    "to": "absence",
+    "target": 14
+  },
+  {
+    "slide": 13,
+    "key": "nav_76",
+    "to": "absence",
+    "target": 14
+  },
+  {
+    "slide": 13,
+    "key": "nav_77",
+    "to": "method",
+    "target": 7
+  },
+  {
+    "slide": 14,
+    "key": "nav_78",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 14,
+    "key": "nav_79",
+    "to": "next",
+    "target": 13
+  },
+  {
+    "slide": 14,
+    "key": "nav_80",
+    "to": "working",
+    "target": 15
+  },
+  {
+    "slide": 14,
+    "key": "nav_81",
+    "to": "prepare",
+    "target": 9
+  },
+  {
+    "slide": 14,
+    "key": "nav_82",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 15,
+    "key": "nav_83",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 15,
+    "key": "nav_84",
+    "to": "absence",
+    "target": 14
+  },
+  {
+    "slide": 15,
+    "key": "nav_85",
+    "to": "practice",
+    "target": 16
+  },
+  {
+    "slide": 15,
+    "key": "nav_86",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 15,
+    "key": "nav_87",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 16,
+    "key": "nav_88",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 16,
+    "key": "nav_89",
+    "to": "working",
+    "target": 15
+  },
+  {
+    "slide": 16,
+    "key": "nav_90",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 16,
+    "key": "nav_91",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 16,
+    "key": "nav_92",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 17,
+    "key": "nav_93",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 17,
+    "key": "nav_94",
+    "to": "practice",
+    "target": 16
+  },
+  {
+    "slide": 17,
+    "key": "nav_95",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 17,
+    "key": "nav_96",
+    "to": "working",
+    "target": 15
+  },
+  {
+    "slide": 17,
+    "key": "nav_97",
+    "to": "decisions",
+    "target": 21
+  },
+  {
+    "slide": 18,
+    "key": "nav_98",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 18,
+    "key": "nav_99",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 18,
+    "key": "nav_100",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 18,
+    "key": "nav_101",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 18,
+    "key": "nav_102",
+    "to": "results",
+    "target": 12
+  },
+  {
+    "slide": 19,
+    "key": "nav_103",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 19,
+    "key": "nav_104",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 19,
+    "key": "nav_105",
+    "to": "team",
+    "target": 20
+  },
+  {
+    "slide": 19,
+    "key": "nav_106",
+    "to": "paper",
+    "target": 11
+  },
+  {
+    "slide": 19,
+    "key": "nav_107",
+    "to": "decisions",
+    "target": 21
+  },
+  {
+    "slide": 20,
+    "key": "nav_108",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 20,
+    "key": "nav_109",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 20,
+    "key": "nav_110",
+    "to": "decisions",
+    "target": 21
+  },
+  {
+    "slide": 20,
+    "key": "nav_111",
+    "to": "model",
+    "target": 18
+  },
+  {
+    "slide": 20,
+    "key": "nav_112",
+    "to": "decisions",
+    "target": 21
+  },
+  {
+    "slide": 21,
+    "key": "nav_113",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 21,
+    "key": "nav_114",
+    "to": "team",
+    "target": 20
+  },
+  {
+    "slide": 21,
+    "key": "nav_115",
+    "to": "client",
+    "target": 22
+  },
+  {
+    "slide": 21,
+    "key": "nav_116",
+    "to": "scope",
+    "target": 17
+  },
+  {
+    "slide": 21,
+    "key": "nav_117",
+    "to": "pilot",
+    "target": 19
+  },
+  {
+    "slide": 22,
+    "key": "nav_118",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 22,
+    "key": "nav_119",
+    "to": "decisions",
+    "target": 21
+  },
+  {
+    "slide": 22,
+    "key": "nav_120",
+    "to": "sources",
+    "target": 23
+  },
+  {
+    "slide": 22,
+    "key": "nav_121",
+    "to": "working",
+    "target": 15
+  },
+  {
+    "slide": 22,
+    "key": "nav_122",
+    "to": "usp",
+    "target": 6
+  },
+  {
+    "slide": 23,
+    "key": "nav_123",
+    "to": "map",
+    "target": 4
+  },
+  {
+    "slide": 23,
+    "key": "nav_124",
+    "to": "client",
+    "target": 22
+  },
+  {
+    "slide": 23,
+    "key": "nav_125",
+    "to": "overview",
+    "target": 2
+  },
+  {
+    "slide": 23,
+    "key": "nav_126",
+    "to": "scope",
+    "target": 17
+  }
+]
